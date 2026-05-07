@@ -1,0 +1,93 @@
+{
+  "name": "Ahmed Ekram Alsada",
+  "role": "DevOps Engineer",
+  "email": "ahmedekramalsada@gmail.com",
+  "linkedin": "ahmedekramalsada",
+  "github": "ahmedekramalsada",
+
+  "summary": "Junior DevOps Engineer with strong hands-on experience across the DevOps lifecycle, including CI/ CD pipelines, infrastructure as code, and cloud-native deployments. Proficient in AWS services, Docker, Kubernetes, and Helm, with practical experience using Terraform and Ansible for automation and provisioning. Skilled in building CI/ CD workflows with Jenkins, monitoring systems using Prometheus, Grafana, and CloudWatch, and managing Linux-based environments with a solid understanding of networking and security best practices.",
+
+  "skills": {
+    "Containerization & Orchestration": ["Docker", "Kubernetes", "Helm"],
+    "Infrastructure & Automation": ["Terraform", "Ansible", "Linux", "Bash"],
+    "Cloud Platforms": ["AWS EC2", "S3", "IAM", "VPC", "CloudWatch"],
+    "Networking & Security": ["CCNA-level Networking", "Security Hardening"],
+    "CI/CD & Monitoring": ["Git", "Jenkins", "SonarQube"],
+    "Virtualization": ["Proxmox", "VMware"]
+  },
+
+  "experience": [
+    {
+      "title": "DevOps Intern",
+      "company": "National Telecommunication Institute (NTI), Smart Village",
+      "date": "Sep 2025 – Apr 2026",
+      "tasks": [
+  "Completed 600+ hours of intensive, enterprise-style training covering technical, communication, and professional skills.",
+  "Administered Linux-based cloud environments, applying networking and security best practices.",
+  "Managed infrastructure as code solutions to provision, configure, and maintain scalable systems.",
+  "Built and optimized CI/CD workflows to automate build, test, and deployment processes.",
+  "Deployed and operated containerized applications in cloud-native environments, ensuring reliability and scalability.",
+  "Implemented monitoring and observability to track system performance, availability, and resource utilization.",
+  "Delivered multiple hands-on projects focused on automation, stability, and operational efficiency.",
+  "Strengthened team collaboration, communication, and task ownership through structured, project-based training."
+       ]
+    }
+  ],
+
+  "projects": [
+    {
+      "title": "My Portfolio Website",
+      "tech": "HTML, CSS, JavaScript",
+      "image": "preview.webp",
+      "link": "https://github.com/ahmedekramalsada/Portfolio.git",
+      "points": [
+        "Developed a modern and fully responsive portfolio website.",
+        "Integrated a JSON-based dynamic content system.",
+        "Deployed using GitHub Pages with a custom domain."
+      ]
+    },
+    {
+      "title": "Company Website",
+      "tech": "HTML, CSS, JavaScript",
+      "image": "companywebsite.webp",
+      "link": "https://www.alhossancompany.online/home",
+      "points": [
+        "Built a professional and responsive company website.",
+        "Deployed on Google Apps Script with a custom domain."
+      ]
+    },
+    {
+      "title": "CI/CD Pipeline Automation",
+      "tech": "Git, Jenkins, Docker, SonarQube",
+      "image": "",
+      "link": "",
+      "points": [
+        "Automated build, test, and deployment pipelines.",
+        "Integrated SonarQube for code quality and security scanning.",
+        "Reduced deployment time and eliminated manual errors."
+      ]
+    },
+    {
+      "title": "AWS Infrastructure Deployment",
+      "tech": "AWS EC2, S3, IAM, VPC",
+      "image": "",
+      "link": "",
+      "points": [
+        "Designed and deployed scalable and secure cloud infrastructure.",
+        "Configured VPC networking, subnets, routing, and IAM roles.",
+        "Implemented monitoring and alerting using CloudWatch."
+      ]
+    }
+  ],
+
+  "education": {
+    "degree": "Bachelor of Engineering in Communications and Electronics Engineering",
+    "school": "Modern Academy University",
+    "year": "2023"
+  },
+
+  "languages": [
+    "Arabic – Native",
+    "English – Intermediate"
+  ]
+}
