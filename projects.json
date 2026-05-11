@@ -1,22 +1,221 @@
 {
-    "projects": [
-        {
-            "title": "Portfolio",
-            "tech": "Various",
-            "image": "images/projects/Portfolio.webp",
-            "link": "https://github.com/ahmedekramalsada/Portfolio",
-            "points": [
-                "Developed on GitHub."
-            ]
-        },
-        {
-            "title": "Final Project",
-            "tech": "Various",
-            "image": "",
-            "link": "https://github.com/ahmedekramalsada/final-project",
-            "points": [
-                "Developed on GitHub."
-            ]
-        }
-    ]
+  "stats": {
+    "total_repos": 11,
+    "total_stars": 0,
+    "top_language": "JavaScript",
+    "languages": {
+      "JavaScript": 2,
+      "TypeScript": 2,
+      "Shell": 2,
+      "HCL": 2,
+      "CSS": 1,
+      "Java": 1,
+      "HTML": 1
+    },
+    "last_updated": "2026-05-11T06:07:09Z"
+  },
+  "projects": [
+    {
+      "title": "Whatsapp",
+      "repo_name": "whatsapp",
+      "tech": "Shell",
+      "language": "Shell",
+      "lang_color": "#89e051",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/whatsapp",
+      "stars": 0,
+      "forks": 0,
+      "updated": "1 month ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Calculator 2",
+      "repo_name": "calculator-2",
+      "tech": "TypeScript",
+      "language": "TypeScript",
+      "lang_color": "#3178c6",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/calculator-2",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2 months ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Final Project",
+      "repo_name": "final-project",
+      "tech": "HCL",
+      "language": "HCL",
+      "lang_color": "#844FBA",
+      "topics": [
+        "portfolio"
+      ],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/final-project",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2 months ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Final Project Devops",
+      "repo_name": "final-project-devops",
+      "tech": "HCL",
+      "language": "HCL",
+      "lang_color": "#844FBA",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/final-project-devops",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2 months ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Barber System",
+      "repo_name": "barber_system",
+      "tech": "JavaScript",
+      "language": "JavaScript",
+      "lang_color": "#f1e05a",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/barber_system",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2 weeks ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Watch Party",
+      "repo_name": "watch-party",
+      "tech": "HTML",
+      "language": "HTML",
+      "lang_color": "#e34c26",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/watch-party",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2 weeks ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Openclaw Install",
+      "repo_name": "openclaw-install",
+      "tech": "Shell",
+      "language": "Shell",
+      "lang_color": "#89e051",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/openclaw-install",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2 weeks ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Smartsigma",
+      "repo_name": "smartsigma",
+      "tech": "Java",
+      "language": "Java",
+      "lang_color": "#b07219",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/smartsigma",
+      "stars": 0,
+      "forks": 0,
+      "updated": "3 days ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Linkedin Mcp",
+      "repo_name": "linkedin-mcp",
+      "tech": "JavaScript",
+      "language": "JavaScript",
+      "lang_color": "#f1e05a",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/linkedin-mcp",
+      "stars": 0,
+      "forks": 0,
+      "updated": "4 days ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Installment Tracker",
+      "repo_name": "installment-tracker",
+      "tech": "| Layer | Technology |, |||, | Frontend | React 19, TypeScript, Tailwind CSS 4, Zustand, Recharts |, | Backend | Express 5, Supabase (PostgreSQL), JWT Auth |, | Database | Supabase (PostgreSQL) — cloudhosted, autobackup |, | Validation | Zod (serverside input validation) |, | Security | Rate limiting, bcrypt password hashing |, | Charts | Recharts |, | Export | jsPDF, xlsx |, | Icons | Lucide React |",
+      "language": "TypeScript",
+      "lang_color": "#3178c6",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/installment-tracker",
+      "stars": 0,
+      "forks": 0,
+      "updated": "4 days ago",
+      "description": "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export",
+      "points": [
+        "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export"
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Portfolio",
+      "repo_name": "Portfolio",
+      "tech": "CSS",
+      "language": "CSS",
+      "lang_color": "#563d7c",
+      "topics": [
+        "portfolio"
+      ],
+      "image": "images/projects/Portfolio.webp",
+      "link": "https://github.com/ahmedekramalsada/Portfolio",
+      "stars": 0,
+      "forks": 0,
+      "updated": "Today",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    }
+  ]
 }
