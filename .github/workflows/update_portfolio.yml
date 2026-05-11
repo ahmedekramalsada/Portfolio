@@ -1,37 +1,40 @@
-name: Automated Portfolio Update
+name: Auto-Update Portfolio Repos
 
 on:
+  schedule:
+    - cron: '0 3 * * *'   # daily at 3 AM UTC (5 AM Cairo time)
   push:
     branches: [ main ]
-  workflow_dispatch: # للتشغيل اليدوي للتجربة
+  workflow_dispatch:       # manual trigger from GitHub Actions tab
 
 jobs:
-  build:
+  update:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # ضروري للسماح للأكشن برفع التغييرات
-    
+      contents: write
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pip install requests
 
-      - name: Run Automation Script
+      - name: Fetch & update repos
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python update_projects.py
 
-      - name: Commit and Push
+      - name: Commit and push if changed
         run: |
-          git config --global user.name "github-actions[bot]"
+          git config --global user.name  "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add projects.json images/projects/
-          # تنفيذ الكوميت فقط إذا كانت هناك تغييرات لتجنب الأخطاء
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update portfolio data and images" && git push)
+          git diff --quiet && git diff --staged --quiet \
+            || git commit -m "chore: auto-update repos [$(date -u '+%Y-%m-%d %H:%M UTC')]" \
+            && git push

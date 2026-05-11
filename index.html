@@ -1,22 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ahmed Ekram Alsada | DevOps Engineer</title>
-  <link rel="stylesheet" href="style.css" />
 
+  <!-- ═══════════════════════════════════════
+       PRIMARY SEO
+  ══════════════════════════════════════════ -->
+  <title>Ahmed Ekram Alsada | DevOps Engineer</title>
+  <meta name="title"       content="Ahmed Ekram Alsada | DevOps Engineer" />
+  <meta name="description" content="Junior DevOps Engineer specializing in Kubernetes, Terraform, AWS, Docker, CI/CD pipelines, and GitOps. Based in Egypt." />
+  <meta name="keywords"    content="Ahmed Ekram, Ahmed Ekram Alsada, DevOps Engineer, Kubernetes, Terraform, AWS, Docker, CI/CD, GitOps, ArgoCD, Egypt, ahmedekramalsada" />
+  <meta name="author"      content="Ahmed Ekram Alsada" />
+  <meta name="robots"      content="index, follow" />
+  <link rel="canonical"    href="https://ahmedekram.site/" />
+
+  <!-- ═══════════════════════════════════════
+       OPEN GRAPH
+       Controls preview on LinkedIn, Telegram,
+       WhatsApp, Facebook when someone shares
+       your link
+  ══════════════════════════════════════════ -->
+  <meta property="og:type"        content="profile" />
+  <meta property="og:url"         content="https://ahmedekram.site/" />
+  <meta property="og:title"       content="Ahmed Ekram Alsada | DevOps Engineer" />
+  <meta property="og:description" content="Junior DevOps Engineer specializing in Kubernetes, Terraform, AWS, Docker, CI/CD pipelines, and GitOps. Based in Egypt." />
+  <meta property="og:image"       content="https://ahmedekram.site/ahmed%20ekram%20alsada%20profile%20photo.webp" />
+  <meta property="og:image:width"  content="800" />
+  <meta property="og:image:height" content="800" />
+  <meta property="og:image:alt"   content="Ahmed Ekram Alsada - DevOps Engineer" />
+  <meta property="og:locale"      content="en_US" />
+  <meta property="profile:first_name" content="Ahmed" />
+  <meta property="profile:last_name"  content="Alsada" />
+  <meta property="profile:username"   content="ahmedekramalsada" />
+
+  <!-- ═══════════════════════════════════════
+       TWITTER / X CARD
+  ══════════════════════════════════════════ -->
+  <meta name="twitter:card"        content="summary" />
+  <meta name="twitter:title"       content="Ahmed Ekram Alsada | DevOps Engineer" />
+  <meta name="twitter:description" content="Junior DevOps Engineer specializing in Kubernetes, Terraform, AWS, Docker, CI/CD, and GitOps." />
+  <meta name="twitter:image"       content="https://ahmedekram.site/ahmed%20ekram%20alsada%20profile%20photo.webp" />
+  <meta name="twitter:image:alt"   content="Ahmed Ekram Alsada - DevOps Engineer" />
+
+  <!-- ═══════════════════════════════════════
+       SCHEMA.ORG JSON-LD
+       THIS is what makes your photo appear
+       in Google search results
+  ══════════════════════════════════════════ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Ahmed Ekram Alsada",
+    "alternateName": "ahmedekramalsada",
+    "jobTitle": "DevOps Engineer",
+    "description": "Junior DevOps Engineer specializing in Kubernetes, Terraform, AWS, Docker, CI/CD pipelines, and GitOps. Based in Egypt.",
+    "url": "https://ahmedekram.site/",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://ahmedekram.site/ahmed%20ekram%20alsada%20profile%20photo.webp",
+      "width": 800,
+      "height": 800
+    },
+    "email": "ahmedekramalsada@gmail.com",
+    "nationality": "Egyptian",
+    "knowsAbout": [
+      "Kubernetes", "Docker", "Terraform", "Ansible",
+      "AWS", "CI/CD", "GitOps", "ArgoCD", "Linux",
+      "DevOps", "Helm", "Jenkins"
+    ],
+    "sameAs": [
+      "https://github.com/ahmedekramalsada",
+      "https://linkedin.com/in/ahmedekramalsada",
+      "https://ahmedekram.site"
+    ],
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "Modern Academy University"
+    },
+    "worksFor": {
+      "@type": "Organization",
+      "name": "National Telecommunication Institute (NTI)"
+    }
+  }
+  </script>
+
+  <!-- ═══════════════════════════════════════
+       WEBSITE SCHEMA
+       Helps Google understand your site
+  ══════════════════════════════════════════ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Ahmed Ekram Alsada | DevOps Engineer",
+    "url": "https://ahmedekram.site/",
+    "description": "Personal portfolio of Ahmed Ekram Alsada, DevOps Engineer based in Egypt.",
+    "author": {
+      "@type": "Person",
+      "name": "Ahmed Ekram Alsada"
+    }
+  }
+  </script>
+
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="main.js" defer></script>
 </head>
-<link rel="icon" type="image/png" href="favicon.png">
-  <script src="main.js"></script>
+
 <body>
   <div class="container">
 
     <!-- HEADER -->
     <header class="header">
-
       <div class="profile-photo">
-        <img id="Ahmed-ekram-profile-img" src="ahmed ekram alsada profile photo.webp" alt="Ahmed Ekram Alsada Profile photo">
+        <img
+          id="Ahmed-ekram-profile-img"
+          src="ahmed ekram alsada profile photo.webp"
+          alt="Ahmed Ekram Alsada - DevOps Engineer"
+          width="180"
+          height="180"
+          fetchpriority="high"
+        />
       </div>
 
       <div class="right-content">
@@ -24,13 +130,12 @@
           <h1 id="name"></h1>
           <h2 id="role"></h2>
         </div>
-
         <div class="contact-under-name">
-          <p><span>Email:</span> <a id="email"></a></p>
+          <p><span>Email:</span>    <a id="email"></a></p>
           <p><span>LinkedIn:</span> <a id="linkedin"></a></p>
-          <p><span>GitHub:</span> <a id="github"></a></p>
+          <p><span>GitHub:</span>   <a id="github"></a></p>
         </div>
-      
+      </div>
     </header>
 
     <!-- SUMMARY -->
@@ -69,14 +174,15 @@
     </section>
 
     <footer>
-      <p>© 2025 Ahmed Ekram — DevOps Engineer</p>
+      <p>© 2025 Ahmed Ekram Alsada — DevOps Engineer</p>
     </footer>
 
   </div>
 
-</body>
   <div id="loader" class="loader">
-  <div class="spinner"></div>
-  <p>Loading portfolio...</p>
-</div>
+    <div class="spinner"></div>
+    <p>Loading portfolio...</p>
+  </div>
+
+</body>
 </html>
