@@ -12,7 +12,7 @@
       "Java": 1,
       "HTML": 1
     },
-    "last_updated": "2026-05-13T06:24:03Z"
+    "last_updated": "2026-05-14T06:21:26Z"
   },
   "projects": [
     {
@@ -30,6 +30,42 @@
       "description": "",
       "points": [
         "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Linkedin Mcp",
+      "repo_name": "linkedin-mcp",
+      "tech": "JavaScript",
+      "language": "JavaScript",
+      "lang_color": "#f1e05a",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/linkedin-mcp",
+      "stars": 0,
+      "forks": 0,
+      "updated": "1 week ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Installment Tracker",
+      "repo_name": "installment-tracker",
+      "tech": "| Layer | Technology |, |||, | Frontend | React 19, TypeScript, Tailwind CSS 4, Zustand, Recharts |, | Backend | Express 5, Supabase (PostgreSQL), JWT Auth |, | Database | Supabase (PostgreSQL) — cloudhosted, autobackup |, | Validation | Zod (serverside input validation) |, | Security | Rate limiting, bcrypt password hashing |, | Charts | Recharts |, | Export | jsPDF, xlsx |, | Icons | Lucide React |",
+      "language": "TypeScript",
+      "lang_color": "#3178c6",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/installment-tracker",
+      "stars": 0,
+      "forks": 0,
+      "updated": "1 week ago",
+      "description": "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export",
+      "points": [
+        "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export"
       ],
       "is_fork": false
     },
@@ -100,7 +136,7 @@
       "link": "https://github.com/ahmedekramalsada/barber_system",
       "stars": 0,
       "forks": 0,
-      "updated": "2 weeks ago",
+      "updated": "3 weeks ago",
       "description": "",
       "points": [
         "Developed on GitHub."
@@ -154,46 +190,10 @@
       "link": "https://github.com/ahmedekramalsada/smartsigma",
       "stars": 0,
       "forks": 0,
-      "updated": "5 days ago",
-      "description": "",
-      "points": [
-        "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
-    {
-      "title": "Linkedin Mcp",
-      "repo_name": "linkedin-mcp",
-      "tech": "JavaScript",
-      "language": "JavaScript",
-      "lang_color": "#f1e05a",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/linkedin-mcp",
-      "stars": 0,
-      "forks": 0,
       "updated": "6 days ago",
       "description": "",
       "points": [
         "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
-    {
-      "title": "Installment Tracker",
-      "repo_name": "installment-tracker",
-      "tech": "| Layer | Technology |, |||, | Frontend | React 19, TypeScript, Tailwind CSS 4, Zustand, Recharts |, | Backend | Express 5, Supabase (PostgreSQL), JWT Auth |, | Database | Supabase (PostgreSQL) — cloudhosted, autobackup |, | Validation | Zod (serverside input validation) |, | Security | Rate limiting, bcrypt password hashing |, | Charts | Recharts |, | Export | jsPDF, xlsx |, | Icons | Lucide React |",
-      "language": "TypeScript",
-      "lang_color": "#3178c6",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/installment-tracker",
-      "stars": 0,
-      "forks": 0,
-      "updated": "6 days ago",
-      "description": "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export",
-      "points": [
-        "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export"
       ],
       "is_fork": false
     },
@@ -210,7 +210,7 @@
       "link": "https://github.com/ahmedekramalsada/Portfolio",
       "stars": 0,
       "forks": 0,
-      "updated": "Yesterday",
+      "updated": "Today",
       "description": "",
       "points": [
         "Developed on GitHub."
