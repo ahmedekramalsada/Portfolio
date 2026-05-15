@@ -12,7 +12,7 @@
       "Java": 1,
       "HTML": 1
     },
-    "last_updated": "2026-05-14T06:21:26Z"
+    "last_updated": "2026-05-15T06:30:30Z"
   },
   "projects": [
     {
@@ -27,6 +27,24 @@
       "stars": 0,
       "forks": 0,
       "updated": "1 month ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Smartsigma",
+      "repo_name": "smartsigma",
+      "tech": "Java",
+      "language": "Java",
+      "lang_color": "#b07219",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/smartsigma",
+      "stars": 0,
+      "forks": 0,
+      "updated": "1 week ago",
       "description": "",
       "points": [
         "Developed on GitHub."
@@ -180,24 +198,6 @@
       "is_fork": false
     },
     {
-      "title": "Smartsigma",
-      "repo_name": "smartsigma",
-      "tech": "Java",
-      "language": "Java",
-      "lang_color": "#b07219",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/smartsigma",
-      "stars": 0,
-      "forks": 0,
-      "updated": "6 days ago",
-      "description": "",
-      "points": [
-        "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
-    {
       "title": "Portfolio",
       "repo_name": "Portfolio",
       "tech": "CSS",
@@ -210,7 +210,7 @@
       "link": "https://github.com/ahmedekramalsada/Portfolio",
       "stars": 0,
       "forks": 0,
-      "updated": "Today",
+      "updated": "Yesterday",
       "description": "",
       "points": [
         "Developed on GitHub."
