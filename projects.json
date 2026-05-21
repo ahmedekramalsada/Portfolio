@@ -12,9 +12,27 @@
       "Java": 1,
       "HTML": 1
     },
-    "last_updated": "2026-05-20T06:44:51Z"
+    "last_updated": "2026-05-21T06:50:47Z"
   },
   "projects": [
+    {
+      "title": "Openclaw Install",
+      "repo_name": "openclaw-install",
+      "tech": "Shell",
+      "language": "Shell",
+      "lang_color": "#89e051",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/openclaw-install",
+      "stars": 0,
+      "forks": 0,
+      "updated": "1 month ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
     {
       "title": "Whatsapp",
       "repo_name": "whatsapp",
@@ -52,6 +70,24 @@
       "is_fork": false
     },
     {
+      "title": "Calculator 2",
+      "repo_name": "calculator-2",
+      "tech": "TypeScript",
+      "language": "TypeScript",
+      "lang_color": "#3178c6",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/calculator-2",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2 months ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
       "title": "Linkedin Mcp",
       "repo_name": "linkedin-mcp",
       "tech": "JavaScript",
@@ -62,7 +98,7 @@
       "link": "https://github.com/ahmedekramalsada/linkedin-mcp",
       "stars": 0,
       "forks": 0,
-      "updated": "1 week ago",
+      "updated": "2 weeks ago",
       "description": "",
       "points": [
         "Developed on GitHub."
@@ -80,28 +116,10 @@
       "link": "https://github.com/ahmedekramalsada/installment-tracker",
       "stars": 0,
       "forks": 0,
-      "updated": "1 week ago",
+      "updated": "2 weeks ago",
       "description": "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export",
       "points": [
         "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export"
-      ],
-      "is_fork": false
-    },
-    {
-      "title": "Calculator 2",
-      "repo_name": "calculator-2",
-      "tech": "TypeScript",
-      "language": "TypeScript",
-      "lang_color": "#3178c6",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/calculator-2",
-      "stars": 0,
-      "forks": 0,
-      "updated": "2 months ago",
-      "description": "",
-      "points": [
-        "Developed on GitHub."
       ],
       "is_fork": false
     },
@@ -154,7 +172,7 @@
       "link": "https://github.com/ahmedekramalsada/barber_system",
       "stars": 0,
       "forks": 0,
-      "updated": "3 weeks ago",
+      "updated": "4 weeks ago",
       "description": "",
       "points": [
         "Developed on GitHub."
@@ -180,24 +198,6 @@
       "is_fork": false
     },
     {
-      "title": "Openclaw Install",
-      "repo_name": "openclaw-install",
-      "tech": "Shell",
-      "language": "Shell",
-      "lang_color": "#89e051",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/openclaw-install",
-      "stars": 0,
-      "forks": 0,
-      "updated": "4 weeks ago",
-      "description": "",
-      "points": [
-        "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
-    {
       "title": "Portfolio",
       "repo_name": "Portfolio",
       "tech": "CSS",
@@ -210,7 +210,7 @@
       "link": "https://github.com/ahmedekramalsada/Portfolio",
       "stars": 0,
       "forks": 0,
-      "updated": "Today",
+      "updated": "Yesterday",
       "description": "",
       "points": [
         "Developed on GitHub."
