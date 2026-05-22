@@ -12,9 +12,27 @@
       "Java": 1,
       "HTML": 1
     },
-    "last_updated": "2026-05-21T06:50:47Z"
+    "last_updated": "2026-05-22T06:46:22Z"
   },
   "projects": [
+    {
+      "title": "Watch Party",
+      "repo_name": "watch-party",
+      "tech": "HTML",
+      "language": "HTML",
+      "lang_color": "#e34c26",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/watch-party",
+      "stars": 0,
+      "forks": 0,
+      "updated": "1 month ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
     {
       "title": "Openclaw Install",
       "repo_name": "openclaw-install",
@@ -52,24 +70,6 @@
       "is_fork": false
     },
     {
-      "title": "Smartsigma",
-      "repo_name": "smartsigma",
-      "tech": "Java",
-      "language": "Java",
-      "lang_color": "#b07219",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/smartsigma",
-      "stars": 0,
-      "forks": 0,
-      "updated": "1 week ago",
-      "description": "",
-      "points": [
-        "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
-    {
       "title": "Calculator 2",
       "repo_name": "calculator-2",
       "tech": "TypeScript",
@@ -81,6 +81,24 @@
       "stars": 0,
       "forks": 0,
       "updated": "2 months ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Smartsigma",
+      "repo_name": "smartsigma",
+      "tech": "Java",
+      "language": "Java",
+      "lang_color": "#b07219",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/smartsigma",
+      "stars": 0,
+      "forks": 0,
+      "updated": "2 weeks ago",
       "description": "",
       "points": [
         "Developed on GitHub."
@@ -180,24 +198,6 @@
       "is_fork": false
     },
     {
-      "title": "Watch Party",
-      "repo_name": "watch-party",
-      "tech": "HTML",
-      "language": "HTML",
-      "lang_color": "#e34c26",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/watch-party",
-      "stars": 0,
-      "forks": 0,
-      "updated": "4 weeks ago",
-      "description": "",
-      "points": [
-        "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
-    {
       "title": "Portfolio",
       "repo_name": "Portfolio",
       "tech": "CSS",
@@ -210,7 +210,7 @@
       "link": "https://github.com/ahmedekramalsada/Portfolio",
       "stars": 0,
       "forks": 0,
-      "updated": "Yesterday",
+      "updated": "Today",
       "description": "",
       "points": [
         "Developed on GitHub."
