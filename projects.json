@@ -12,9 +12,27 @@
       "Java": 1,
       "HTML": 1
     },
-    "last_updated": "2026-05-22T06:46:22Z"
+    "last_updated": "2026-05-23T06:10:02Z"
   },
   "projects": [
+    {
+      "title": "Barber System",
+      "repo_name": "barber_system",
+      "tech": "JavaScript",
+      "language": "JavaScript",
+      "lang_color": "#f1e05a",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/barber_system",
+      "stars": 0,
+      "forks": 0,
+      "updated": "1 month ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
     {
       "title": "Watch Party",
       "repo_name": "watch-party",
@@ -173,24 +191,6 @@
       "stars": 0,
       "forks": 0,
       "updated": "3 months ago",
-      "description": "",
-      "points": [
-        "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
-    {
-      "title": "Barber System",
-      "repo_name": "barber_system",
-      "tech": "JavaScript",
-      "language": "JavaScript",
-      "lang_color": "#f1e05a",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/barber_system",
-      "stars": 0,
-      "forks": 0,
-      "updated": "4 weeks ago",
       "description": "",
       "points": [
         "Developed on GitHub."
