@@ -12,9 +12,45 @@
       "Java": 1,
       "HTML": 1
     },
-    "last_updated": "2026-06-05T07:05:35Z"
+    "last_updated": "2026-06-06T06:26:17Z"
   },
   "projects": [
+    {
+      "title": "Linkedin Mcp",
+      "repo_name": "linkedin-mcp",
+      "tech": "JavaScript",
+      "language": "JavaScript",
+      "lang_color": "#f1e05a",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/linkedin-mcp",
+      "stars": 0,
+      "forks": 0,
+      "updated": "1 month ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Installment Tracker",
+      "repo_name": "installment-tracker",
+      "tech": "| Layer | Technology |, |||, | Frontend | React 19, TypeScript, Tailwind CSS 4, Zustand, Recharts |, | Backend | Express 5, Supabase (PostgreSQL), JWT Auth |, | Database | Supabase (PostgreSQL) — cloudhosted, autobackup |, | Validation | Zod (serverside input validation) |, | Security | Rate limiting, bcrypt password hashing |, | Charts | Recharts |, | Export | jsPDF, xlsx |, | Icons | Lucide React |",
+      "language": "TypeScript",
+      "lang_color": "#3178c6",
+      "topics": [],
+      "image": "",
+      "link": "https://github.com/ahmedekramalsada/installment-tracker",
+      "stars": 0,
+      "forks": 0,
+      "updated": "1 month ago",
+      "description": "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export",
+      "points": [
+        "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export"
+      ],
+      "is_fork": false
+    },
     {
       "title": "Barber System",
       "repo_name": "barber_system",
@@ -158,42 +194,6 @@
       "description": "",
       "points": [
         "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
-    {
-      "title": "Linkedin Mcp",
-      "repo_name": "linkedin-mcp",
-      "tech": "JavaScript",
-      "language": "JavaScript",
-      "lang_color": "#f1e05a",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/linkedin-mcp",
-      "stars": 0,
-      "forks": 0,
-      "updated": "4 weeks ago",
-      "description": "",
-      "points": [
-        "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
-    {
-      "title": "Installment Tracker",
-      "repo_name": "installment-tracker",
-      "tech": "| Layer | Technology |, |||, | Frontend | React 19, TypeScript, Tailwind CSS 4, Zustand, Recharts |, | Backend | Express 5, Supabase (PostgreSQL), JWT Auth |, | Database | Supabase (PostgreSQL) — cloudhosted, autobackup |, | Validation | Zod (serverside input validation) |, | Security | Rate limiting, bcrypt password hashing |, | Charts | Recharts |, | Export | jsPDF, xlsx |, | Icons | Lucide React |",
-      "language": "TypeScript",
-      "lang_color": "#3178c6",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/installment-tracker",
-      "stars": 0,
-      "forks": 0,
-      "updated": "4 weeks ago",
-      "description": "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export",
-      "points": [
-        "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export"
       ],
       "is_fork": false
     },
