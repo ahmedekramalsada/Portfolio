@@ -1,38 +1,19 @@
 {
   "stats": {
-    "total_repos": 11,
+    "total_repos": 9,
     "total_stars": 0,
     "top_language": "JavaScript",
     "languages": {
       "JavaScript": 2,
-      "TypeScript": 2,
       "Shell": 2,
       "HCL": 2,
       "CSS": 1,
-      "Java": 1,
-      "HTML": 1
+      "HTML": 1,
+      "TypeScript": 1
     },
-    "last_updated": "2026-06-30T06:53:17Z"
+    "last_updated": "2026-07-01T07:07:51Z"
   },
   "projects": [
-    {
-      "title": "Smartsigma",
-      "repo_name": "smartsigma",
-      "tech": "Java",
-      "language": "Java",
-      "lang_color": "#b07219",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/smartsigma",
-      "stars": 0,
-      "forks": 0,
-      "updated": "1 month ago",
-      "description": "",
-      "points": [
-        "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
     {
       "title": "Linkedin Mcp",
       "repo_name": "linkedin-mcp",
@@ -48,24 +29,6 @@
       "description": "",
       "points": [
         "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
-    {
-      "title": "Installment Tracker",
-      "repo_name": "installment-tracker",
-      "tech": "| Layer | Technology |, |||, | Frontend | React 19, TypeScript, Tailwind CSS 4, Zustand, Recharts |, | Backend | Express 5, Supabase (PostgreSQL), JWT Auth |, | Database | Supabase (PostgreSQL) — cloudhosted, autobackup |, | Validation | Zod (serverside input validation) |, | Security | Rate limiting, bcrypt password hashing |, | Charts | Recharts |, | Export | jsPDF, xlsx |, | Icons | Lucide React |",
-      "language": "TypeScript",
-      "lang_color": "#3178c6",
-      "topics": [],
-      "image": "",
-      "link": "https://github.com/ahmedekramalsada/installment-tracker",
-      "stars": 0,
-      "forks": 0,
-      "updated": "1 month ago",
-      "description": "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export",
-      "points": [
-        "Track installment payments among friends - Arabic RTL, WhatsApp reminders, charts, export"
       ],
       "is_fork": false
     },
@@ -210,7 +173,7 @@
       "link": "https://github.com/ahmedekramalsada/Portfolio",
       "stars": 0,
       "forks": 0,
-      "updated": "Today",
+      "updated": "Yesterday",
       "description": "",
       "points": [
         "Developed on GitHub."
