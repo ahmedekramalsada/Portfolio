@@ -11,29 +11,9 @@
       "HTML": 1,
       "TypeScript": 1
     },
-    "last_updated": "2026-07-10T06:40:16Z"
+    "last_updated": "2026-07-11T05:35:47Z"
   },
   "projects": [
-    {
-      "title": "Portfolio",
-      "repo_name": "Portfolio",
-      "tech": "CSS",
-      "language": "CSS",
-      "lang_color": "#563d7c",
-      "topics": [
-        "portfolio"
-      ],
-      "image": "images/projects/Portfolio.webp",
-      "link": "https://github.com/ahmedekramalsada/Portfolio",
-      "stars": 0,
-      "forks": 0,
-      "updated": "2 days ago",
-      "description": "",
-      "points": [
-        "Developed on GitHub."
-      ],
-      "is_fork": false
-    },
     {
       "title": "Linkedin Mcp",
       "repo_name": "linkedin-mcp",
@@ -174,6 +154,26 @@
       "stars": 0,
       "forks": 0,
       "updated": "4 months ago",
+      "description": "",
+      "points": [
+        "Developed on GitHub."
+      ],
+      "is_fork": false
+    },
+    {
+      "title": "Portfolio",
+      "repo_name": "Portfolio",
+      "tech": "CSS",
+      "language": "CSS",
+      "lang_color": "#563d7c",
+      "topics": [
+        "portfolio"
+      ],
+      "image": "images/projects/Portfolio.webp",
+      "link": "https://github.com/ahmedekramalsada/Portfolio",
+      "stars": 0,
+      "forks": 0,
+      "updated": "Today",
       "description": "",
       "points": [
         "Developed on GitHub."
