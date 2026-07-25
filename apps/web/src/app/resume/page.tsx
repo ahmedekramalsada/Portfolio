@@ -85,8 +85,8 @@ export default async function ResumePage() {
       <section>
         <h3 className="mb-4 text-xl font-semibold">Education</h3>
         <div className="rounded-lg border p-6">
-          <p className="font-medium">Computer Science</p>
-          <p className="text-sm text-muted-foreground">Cairo, Egypt</p>
+          <p className="font-medium">B.Eng. in Communications and Electronics Engineering</p>
+          <p className="text-sm text-muted-foreground">Modern Academy University · Cairo, Egypt · 2023</p>
         </div>
       </section>
     </div>
