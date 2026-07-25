@@ -12,6 +12,11 @@ class ApiClient {
     this.baseUrl = baseUrl;
   }
 
+  private getToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('accessToken');
+  }
+
   private async request<T>(
     method: string,
     path: string,
@@ -29,6 +34,11 @@ class ApiClient {
       'Content-Type': 'application/json',
       ...options?.headers,
     };
+
+    const token = this.getToken();
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
 
     const response = await fetch(url.toString(), {
       method,

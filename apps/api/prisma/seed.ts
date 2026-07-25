@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import { createHash } from 'crypto';
+import { randomBytes, scryptSync } from 'crypto';
 
 const prisma = new PrismaClient();
 
-// Simple SHA-256 hash for dev seed only (not for production)
 function hashPassword(password: string): string {
-  return createHash('sha256').update(password).digest('hex');
+  const salt = randomBytes(16).toString('hex');
+  const hash = scryptSync(password, salt, 64).toString('hex');
+  return `${salt}:${hash}`;
 }
 
 async function main() {
