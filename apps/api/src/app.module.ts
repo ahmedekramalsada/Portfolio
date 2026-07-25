@@ -14,6 +14,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { TagsModule } from './modules/tags/tags.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
 import { SkillsModule } from './modules/skills/skills.module';
+import { AIModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { SkillsModule } from './modules/skills/skills.module';
     TagsModule,
     ContactsModule,
     SkillsModule,
+    AIModule,
   ],
   providers: [
     {
