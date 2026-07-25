@@ -1,41 +1,73 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { ProtectedRoute } from '@/components/protected-route';
-import { useAuthStore } from '@/stores/auth-store';
+import { api } from '@/services/api';
+
+interface Stats {
+  posts: number;
+  projects: number;
+  categories: number;
+  skills: number;
+}
 
 function DashboardContent() {
-  const { user, logout } = useAuthStore();
+  const [stats, setStats] = useState<Stats>({ posts: 0, projects: 0, categories: 0, skills: 0 });
+
+  useEffect(() => {
+    Promise.all([
+      api.get('/posts?limit=1').catch(() => ({ data: [], meta: { total: 0 } })),
+      api.get('/projects?limit=1').catch(() => ({ data: [], meta: { total: 0 } })),
+      api.get('/categories').catch(() => []),
+      api.get('/skills').catch(() => []),
+    ]).then(([posts, projects, categories, skills]) => {
+      setStats({
+        posts: posts?.meta?.total || 0,
+        projects: projects?.meta?.total || 0,
+        categories: Array.isArray(categories) ? categories.length : 0,
+        skills: Array.isArray(skills) ? skills.length : 0,
+      });
+    });
+  }, []);
+
+  const widgets = [
+    { label: 'Blog Posts', value: stats.posts, href: '/dashboard/blog' },
+    { label: 'Projects', value: stats.projects, href: '/dashboard/projects' },
+    { label: 'Categories', value: stats.categories, href: '/dashboard/categories' },
+    { label: 'Skills', value: stats.skills, href: '/dashboard/settings' },
+  ];
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-16">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <button
-          onClick={logout}
-          className="rounded-md border px-4 py-2 text-sm transition-colors hover:bg-accent"
-        >
-          Sign Out
-        </button>
+    <div>
+      <h1 className="mb-8 text-2xl font-bold">Dashboard</h1>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {widgets.map((w) => (
+          <a key={w.label} href={w.href} className="rounded-lg border p-6 transition-colors hover:bg-accent">
+            <p className="text-3xl font-bold">{w.value}</p>
+            <p className="text-sm text-muted-foreground">{w.label}</p>
+          </a>
+        ))}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid gap-6 md:grid-cols-2">
         <div className="rounded-lg border p-6">
-          <h2 className="mb-2 text-lg font-semibold">Profile</h2>
-          <div className="space-y-1 text-sm text-muted-foreground">
-            <p>Name: {user?.name || '—'}</p>
-            <p>Email: {user?.email || '—'}</p>
-            <p>Role: {user?.role || '—'}</p>
+          <h2 className="mb-4 font-semibold">Quick Links</h2>
+          <div className="space-y-2 text-sm">
+            <a href="/dashboard/blog" className="block rounded-md px-3 py-2 hover:bg-accent">📝 Create new blog post</a>
+            <a href="/dashboard/projects" className="block rounded-md px-3 py-2 hover:bg-accent">📁 Add new project</a>
+            <a href="/dashboard/categories" className="block rounded-md px-3 py-2 hover:bg-accent">🏷 Manage categories</a>
+            <a href="/dashboard/media" className="block rounded-md px-3 py-2 hover:bg-accent">🖼 Upload media</a>
           </div>
         </div>
 
         <div className="rounded-lg border p-6">
-          <h2 className="mb-2 text-lg font-semibold">Content</h2>
-          <p className="text-sm text-muted-foreground">Coming soon</p>
-        </div>
-
-        <div className="rounded-lg border p-6">
-          <h2 className="mb-2 text-lg font-semibold">System</h2>
-          <p className="text-sm text-muted-foreground">Coming soon</p>
+          <h2 className="mb-4 font-semibold">System</h2>
+          <div className="space-y-1 text-sm text-muted-foreground">
+            <p>App: Ahmed OS v0.1.0</p>
+            <p>API: http://localhost:4000</p>
+            <p>Frontend: http://localhost:3000</p>
+            <p>Database: PostgreSQL 17</p>
+          </div>
         </div>
       </div>
     </div>
