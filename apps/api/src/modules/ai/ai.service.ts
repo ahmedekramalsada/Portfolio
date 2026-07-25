@@ -4,12 +4,16 @@ import { ChatAnthropic } from '@langchain/anthropic';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { HumanMessage, SystemMessage, AIMessage } from '@langchain/core/messages';
 import { PrismaService } from '../../prisma/prisma.service';
+import { RagService } from '../rag/rag.service';
 
 @Injectable()
 export class AIService {
   private readonly logger = new Logger(AIService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private ragService: RagService,
+  ) {}
 
   private getModel(provider?: string, model?: string): BaseChatModel {
     const prov = provider || process.env.DEFAULT_AI_PROVIDER || 'openai';
@@ -46,7 +50,23 @@ export class AIService {
 
   async chat(message: string, conversationId?: string, provider?: string, model?: string) {
     const llm = this.getModel(provider, model);
-    const systemPrompt = 'You are Ahmed OS AI assistant. Answer questions about Ahmed Ekram Al Sada, his projects, skills, and experience. Be helpful, concise, and factual.';
+
+    // Retrieve relevant context from knowledge base
+    let context = '';
+    try {
+      const ragResults = await this.ragService.search(message, 5);
+      if (ragResults.length > 0) {
+        context = ragResults
+          .map((r: any) => `[Source: ${r.title} (${r.sourceType}, relevance: ${(r.score * 100).toFixed(0)}%)]\n${r.content}`)
+          .join('\n\n');
+      }
+    } catch (e) {
+      this.logger.warn('RAG search failed, continuing without context');
+    }
+
+    const systemPrompt = context
+      ? `You are Ahmed OS AI assistant. Answer questions using the provided knowledge context. If the context doesn't contain the answer, say so. Be concise and factual.\n\nKnowledge context:\n${context}`
+      : 'You are Ahmed OS AI assistant. Answer questions about Ahmed Ekram Al Sada, his projects, skills, and experience. Be helpful, concise, and factual.';
 
     let conversation = conversationId
       ? await this.prisma.aIConversation.findUnique({ where: { id: conversationId } })

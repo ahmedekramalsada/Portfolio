@@ -15,6 +15,7 @@ import { TagsModule } from './modules/tags/tags.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
 import { SkillsModule } from './modules/skills/skills.module';
 import { AIModule } from './modules/ai/ai.module';
+import { RagModule } from './modules/rag/rag.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { AIModule } from './modules/ai/ai.module';
     ContactsModule,
     SkillsModule,
     AIModule,
+    RagModule,
   ],
   providers: [
     {
