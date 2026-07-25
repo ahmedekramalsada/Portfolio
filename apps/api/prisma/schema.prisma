@@ -1,0 +1,556 @@
+// Ahmed OS — Prisma Schema
+// Reconciled from docs/05-database-design.md and docs/37-database-schema.md
+// All models from both documents unified with no duplication
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  admin
+  editor
+  reader
+}
+
+enum PostStatus {
+  draft
+  scheduled
+  published
+  archived
+}
+
+enum ProjectStatus {
+  planning
+  in_progress
+  completed
+  archived
+}
+
+enum MediaProvider {
+  bunny
+  local
+  s3
+  r2
+}
+
+enum KnowledgeStatus {
+  pending
+  indexed
+  failed
+}
+
+enum NotificationType {
+  system
+  ai_error
+  deployment
+  contact
+  update
+}
+
+enum NotificationStatus {
+  unread
+  read
+  archived
+}
+
+// ─── Auth & Users ────────────────────────────────────────────────────────────
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  email        String    @unique
+  passwordHash String
+  name         String
+  avatar       String?
+  role         UserRole  @default(admin)
+  status       String    @default("active")
+  lastLogin    DateTime?
+
+  // Relations
+  sessions        Session[]
+  posts           BlogPost[]
+  media           Media[]
+  aiConversations AIConversation[]
+  auditLogs       AuditLog[]
+
+  // Audit
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Session {
+  id               String   @id @default(uuid()) @db.Uuid
+  userId           String   @db.Uuid
+  refreshTokenHash String
+  ipAddress        String?
+  userAgent        String?
+  expiresAt        DateTime
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// ─── Blog / Content ──────────────────────────────────────────────────────────
+
+model BlogPost {
+  id           String     @id @default(uuid()) @db.Uuid
+  title        String
+  slug         String     @unique
+  excerpt      String?    @db.Text
+  content      String     @db.Text
+  coverImage   String?
+  status       PostStatus @default(draft)
+  seoTitle     String?
+  seoDescription String?
+  canonicalUrl String?
+  readingTime  Int?
+  publishedAt  DateTime?
+  authorId     String     @db.Uuid
+
+  // Relations
+  author    User          @relation(fields: [authorId], references: [id])
+  category  Category?     @relation(fields: [categoryId], references: [id])
+  categoryId String?      @db.Uuid
+  tags      PostTag[]
+  revisions BlogRevision[]
+
+  // Audit
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([authorId])
+  @@index([categoryId])
+}
+
+model Category {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  slug        String   @unique
+  description String?  @db.Text
+  color       String?
+
+  // Relations
+  posts BlogPost[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tag {
+  id   String @id @default(uuid()) @db.Uuid
+  name String @unique
+  slug String @unique
+
+  // Relations
+  posts PostTag[]
+}
+
+model PostTag {
+  postId String @db.Uuid
+  tagId  String @db.Uuid
+
+  post BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@index([tagId])
+}
+
+model BlogRevision {
+  id       String   @id @default(uuid()) @db.Uuid
+  postId   String   @db.Uuid
+  content  String   @db.Text
+  editorId String?  @db.Uuid
+
+  post BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([postId])
+}
+
+// ─── Projects ────────────────────────────────────────────────────────────────
+
+model Project {
+  id            String        @id @default(uuid()) @db.Uuid
+  title         String
+  slug          String        @unique
+  description   String?       @db.Text
+  content       String?       @db.Text
+  coverImage    String?
+  githubUrl     String?
+  demoUrl       String?
+  featured      Boolean       @default(false)
+  status        ProjectStatus @default(planning)
+  difficulty    String?
+  role          String?
+  startDate     DateTime?
+  endDate       DateTime?
+
+  // Relations
+  technologies ProjectTag[]
+  media        Media[]
+
+  // Audit
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([slug])
+  @@index([featured])
+  @@index([status])
+}
+
+model ProjectTag {
+  projectId    String @db.Uuid
+  technologyId String @db.Uuid
+
+  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  technology Technology @relation(fields: [technologyId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, technologyId])
+  @@index([technologyId])
+}
+
+model Technology {
+  id       String  @id @default(uuid()) @db.Uuid
+  name     String  @unique
+  slug     String  @unique
+  icon     String?
+  website  String?
+  category String?
+
+  // Relations
+  projects ProjectTag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([category])
+}
+
+// ─── Media ───────────────────────────────────────────────────────────────────
+
+model Media {
+  id           String        @id @default(uuid()) @db.Uuid
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  width        Int?
+  height       Int?
+  provider     MediaProvider @default(local)
+  path         String
+  publicUrl    String?
+  projectId    String?       @db.Uuid
+  uploadedBy   String?       @db.Uuid
+
+  // Relations
+  uploader User?    @relation(fields: [uploadedBy], references: [id])
+  project  Project? @relation(fields: [projectId], references: [id])
+
+  // Audit
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([uploadedBy])
+  @@index([mimeType])
+}
+
+// ─── Pages & Portfolio ───────────────────────────────────────────────────────
+
+model Page {
+  id            String  @id @default(uuid()) @db.Uuid
+  title         String
+  slug          String  @unique
+  content       String  @db.Text
+  seoTitle      String?
+  seoDescription String?
+  published     Boolean @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([slug])
+}
+
+model CaseStudy {
+  id       String  @id @default(uuid()) @db.Uuid
+  title    String
+  slug     String  @unique
+  problem  String  @db.Text
+  solution String  @db.Text
+  lessons  String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Certificate {
+  id             String   @id @default(uuid()) @db.Uuid
+  title          String
+  issuer         String
+  issueDate      DateTime
+  expirationDate DateTime?
+  credentialUrl  String?
+  image          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Experience {
+  id          String   @id @default(uuid()) @db.Uuid
+  company     String
+  position    String
+  startDate   DateTime
+  endDate     DateTime?
+  description String?  @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id       String @id @default(uuid()) @db.Uuid
+  name     String @unique
+  category String?
+  level    Int?
+  icon     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id      String @id @default(uuid()) @db.Uuid
+  name    String
+  email   String
+  subject String?
+  message String @db.Text
+  ip      String?
+  read    Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+// ─── Knowledge & RAG ─────────────────────────────────────────────────────────
+
+model KnowledgeDocument {
+  id          String         @id @default(uuid()) @db.Uuid
+  title       String
+  sourceType  String         // blog, project, page, case_study, note, resume, documentation
+  sourceId    String?        // ID of the source document
+  content     String         @db.Text
+  status      KnowledgeStatus @default(pending)
+  lastIndexed DateTime?
+
+  // Relations
+  chunks KnowledgeChunk[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sourceType])
+  @@index([status])
+}
+
+model KnowledgeChunk {
+  id          String   @id @default(uuid()) @db.Uuid
+  documentId  String   @db.Uuid
+  chunkIndex  Int
+  content     String   @db.Text
+  tokenCount  Int?
+  metadata    Json?    // Source metadata (title, url, tags, etc.)
+
+  // Relations
+  document  KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  embedding Embedding?
+
+  createdAt DateTime @default(now())
+
+  @@index([documentId])
+  @@index([chunkIndex])
+  @@unique([documentId, chunkIndex])
+}
+
+model Embedding {
+  id         String @id @default(uuid()) @db.Uuid
+  chunkId    String @unique @db.Uuid
+  provider   String // openai, bge, jina, nomic, ollama
+  model      String
+  dimensions Int
+  vectorId   String? // ID in Qdrant
+
+  // Relations
+  chunk KnowledgeChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([provider])
+  @@index([vectorId])
+}
+
+// ─── AI ──────────────────────────────────────────────────────────────────────
+
+model AIConversation {
+  id           String   @id @default(uuid()) @db.Uuid
+  title        String?
+  provider     String?
+  model        String?
+  totalTokens  Int?
+  estimatedCost Float?
+  userId       String?  @db.Uuid
+
+  // Relations
+  user     User?       @relation(fields: [userId], references: [id])
+  messages AIMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model AIMessage {
+  id             String   @id @default(uuid()) @db.Uuid
+  conversationId String   @db.Uuid
+  role           String   // user, assistant, system
+  content        String   @db.Text
+  tokenUsage     Int?
+  latency        Int?     // ms
+  metadata       Json?
+
+  // Relations
+  conversation AIConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId])
+}
+
+model Prompt {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String
+  version     Int     @default(1)
+  category    String? // chat, seo, blog, rag, summarization
+  content     String  @db.Text
+  variables   String? // JSON array of variable names
+  status      String  @default("active")
+
+  // Relations
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, version])
+  @@index([category])
+  @@index([status])
+}
+
+// ─── Search ──────────────────────────────────────────────────────────────────
+
+model SearchQuery {
+  id           String   @id @default(uuid()) @db.Uuid
+  query        String
+  resultsCount Int?
+  duration     Int?     // ms
+  userId       String?  @db.Uuid
+
+  createdAt DateTime @default(now())
+
+  @@index([query])
+  @@index([createdAt])
+}
+
+// ─── Analytics ───────────────────────────────────────────────────────────────
+
+model AnalyticsEvent {
+  id        String   @id @default(uuid()) @db.Uuid
+  eventType String   // page_view, search, ai_request, contact, login
+  path      String?
+  country   String?
+  device    String?
+  browser   String?
+  metadata  Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
+}
+
+// ─── Notifications ───────────────────────────────────────────────────────────
+
+model Notification {
+  id        String             @id @default(uuid()) @db.Uuid
+  title     String
+  body      String?            @db.Text
+  type      NotificationType   @default(system)
+  status    NotificationStatus @default(unread)
+  recipient String?            // user ID or email
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([recipient])
+}
+
+// ─── Settings ────────────────────────────────────────────────────────────────
+
+model Setting {
+  id    String @id @default(uuid()) @db.Uuid
+  key   String @unique
+  value String @db.Text
+  group String?
+  type  String? @default("string")
+  public Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([group])
+}
+
+// ─── Audit ───────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String?  @db.Uuid
+  action     String   // login, logout, create, update, delete, publish
+  resource   String   // post, project, media, user, settings
+  resourceId String?
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([resource])
+  @@index([createdAt])
+}
