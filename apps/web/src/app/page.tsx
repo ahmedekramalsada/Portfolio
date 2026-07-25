@@ -22,8 +22,20 @@ export default async function HomePage() {
   return (
     <div className="container mx-auto max-w-6xl px-4 py-16">
       {/* Hero */}
-      <section className="mb-24">
-        <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
+      <section className="mb-24 flex flex-col md:flex-row items-center gap-8">
+        {/* Profile Photo */}
+        <div className="shrink-0">
+          <img
+            src="/profile.webp"
+            alt="Ahmed Ekram Al Sada"
+            width={180}
+            height={180}
+            className="rounded-full border-4 border-primary/20"
+            fetchpriority="high"
+          />
+        </div>
+        <div className="text-center md:text-left">
+          <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl">
           Ahmed Ekram Al Sada
         </h1>
         <p className="mb-4 text-xl text-muted-foreground">
@@ -46,6 +58,7 @@ export default async function HomePage() {
           >
             Download Resume
           </a>
+        </div>
         </div>
       </section>
 

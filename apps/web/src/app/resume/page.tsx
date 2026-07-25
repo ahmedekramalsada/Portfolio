@@ -89,6 +89,15 @@ export default async function ResumePage() {
           <p className="text-sm text-muted-foreground">Modern Academy University · Cairo, Egypt · 2023</p>
         </div>
       </section>
+
+      {/* Languages */}
+      <section>
+        <h3 className="mb-4 text-xl font-semibold">Languages</h3>
+        <div className="flex flex-wrap gap-2">
+          <span className="rounded-lg border px-4 py-2 text-sm">Arabic — Native</span>
+          <span className="rounded-lg border px-4 py-2 text-sm">English — Intermediate</span>
+        </div>
+      </section>
     </div>
   );
 }
