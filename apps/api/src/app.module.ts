@@ -17,6 +17,7 @@ import { SkillsModule } from './modules/skills/skills.module';
 import { AIModule } from './modules/ai/ai.module';
 import { RagModule } from './modules/rag/rag.module';
 import { MCPModule } from './modules/mcp/mcp.module';
+import { SearchModule } from './modules/search/search.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { MCPModule } from './modules/mcp/mcp.module';
     AIModule,
     RagModule,
     MCPModule,
+    SearchModule,
   ],
   providers: [
     {
