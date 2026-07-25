@@ -3,32 +3,90 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --card: #ffffff;
-  --card-foreground: #0a0a0a;
-  --primary: #0a0a0a;
-  --primary-foreground: #fafafa;
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
-  --accent: #f5f5f5;
-  --accent-foreground: #0a0a0a;
-  --border: #e5e5e5;
-  --ring: #0a0a0a;
-  --radius: 0.5rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.145 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.965 0.001 286.375);
+  --secondary-foreground: oklch(0.205 0.042 265.755);
+  --muted: oklch(0.965 0.001 286.375);
+  --muted-foreground: oklch(0.525 0.023 264.182);
+  --accent: oklch(0.965 0.001 286.375);
+  --accent-foreground: oklch(0.205 0.042 265.755);
+  --border: oklch(0.922 0.004 286.375);
+  --ring: oklch(0.585 0.233 277.117);
+  --radius: 0.625rem;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
-  --card: #171717;
-  --card-foreground: #fafafa;
-  --primary: #fafafa;
-  --primary-foreground: #0a0a0a;
-  --muted: #262626;
-  --muted-foreground: #a3a3a3;
-  --accent: #262626;
-  --accent-foreground: #fafafa;
-  --border: #262626;
-  --ring: #fafafa;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0.042 265.755);
+  --card-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.722 0.219 149.579);
+  --primary-foreground: oklch(0.205 0.042 265.755);
+  --secondary: oklch(0.269 0.048 263.745);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0.048 263.745);
+  --muted-foreground: oklch(0.698 0.047 260.371);
+  --accent: oklch(0.269 0.048 263.745);
+  --accent-foreground: oklch(0.985 0 0);
+  --border: oklch(0.316 0.07 263.185);
+  --ring: oklch(0.585 0.233 277.117);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-muted-foreground/20;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/40;
+}
+
+/* Selection */
+::selection {
+  @apply bg-primary/20 text-foreground;
+}
+
+/* Animation keyframes */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 4s ease infinite;
 }

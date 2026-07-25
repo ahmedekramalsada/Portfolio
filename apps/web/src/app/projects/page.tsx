@@ -13,60 +13,62 @@ export default async function ProjectsPage() {
   const { data: projects } = await getProjects();
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-16">
-      <h1 className="mb-2 text-4xl font-bold">Projects</h1>
-      <p className="mb-8 text-lg text-muted-foreground">Things I&apos;ve built</p>
+    <div className="container mx-auto max-w-6xl px-4 py-20">
+      <div className="mb-12">
+        <h1 className="text-4xl font-bold">Projects</h1>
+        <p className="mt-2 text-lg text-muted-foreground">Things I&apos;ve built</p>
+      </div>
 
       {projects.length === 0 ? (
-        <p className="text-muted-foreground">No projects yet. Check back soon.</p>
+        <div className="rounded-xl border border-dashed p-16 text-center">
+          <p className="text-muted-foreground">No projects yet. Check back soon.</p>
+        </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project: any) => (
             <a
               key={project.id}
               href={`/projects/${project.slug}`}
-              className="group rounded-lg border transition-all hover:bg-accent hover:shadow-sm overflow-hidden"
+              className="group relative overflow-hidden rounded-xl border bg-card transition-all hover:shadow-lg hover:shadow-primary/5"
             >
-              {project.coverImage && (
-                <div className="aspect-video w-full overflow-hidden">
-                  <img src={project.coverImage} alt={project.title} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+              {project.coverImage ? (
+                <div className="aspect-video w-full overflow-hidden bg-muted">
+                  <img
+                    src={project.coverImage}
+                    alt={project.title}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
+              ) : (
+                <div className="aspect-video w-full bg-gradient-to-br from-blue-500/10 to-purple-600/10" />
               )}
-              <div className="p-6">
-              <div className="mb-3 flex items-center gap-2">
-                <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                  project.status === 'completed' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :
-                  project.status === 'in_progress' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' :
-                  'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
-                }`}>
-                  {project.status?.replace('_', ' ')}
-                </span>
-                {project.featured && (
-                  <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                    Featured
+              <div className="p-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                    project.status === 'completed' ? 'bg-green-500/10 text-green-500' :
+                    project.status === 'in_progress' ? 'bg-blue-500/10 text-blue-500' :
+                    'bg-yellow-500/10 text-yellow-500'
+                  }`}>
+                    {project.status?.replace('_', ' ')}
                   </span>
+                  {project.featured && (
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">Featured</span>
+                  )}
+                </div>
+                <h2 className="font-semibold group-hover:text-blue-500 transition-colors">{project.title}</h2>
+                {project.description && (
+                  <p className="mt-1.5 text-sm text-muted-foreground line-clamp-3">{project.description}</p>
+                )}
+                {project.technologies?.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {project.technologies.map((t: any) => (
+                      <span key={t.id} className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                        {t.name}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </div>
-
-              <h2 className="mb-2 text-xl font-semibold group-hover:text-primary">
-                {project.title}
-              </h2>
-              {project.description && (
-                <p className="mb-4 text-sm text-muted-foreground line-clamp-3">
-                  {project.description}
-                </p>
-              )}
-
-              {project.technologies?.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {project.technologies.map((t: any) => (
-                    <span key={t.id} className="rounded-full bg-muted px-2 py-0.5 text-xs">
-                      {t.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
             </a>
           ))}
         </div>
