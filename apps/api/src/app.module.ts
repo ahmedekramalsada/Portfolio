@@ -18,6 +18,7 @@ import { AIModule } from './modules/ai/ai.module';
 import { RagModule } from './modules/rag/rag.module';
 import { MCPModule } from './modules/mcp/mcp.module';
 import { SearchModule } from './modules/search/search.module';
+import { SeoModule } from './modules/seo/seo.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { SearchModule } from './modules/search/search.module';
     RagModule,
     MCPModule,
     SearchModule,
+    SeoModule,
   ],
   providers: [
     {

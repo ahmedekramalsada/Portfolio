@@ -24,7 +24,14 @@ async function bootstrap() {
   );
 
   // API prefix
-  app.setGlobalPrefix('api/v1', { exclude: ['health', 'health/live', 'health/ready'] });
+  app.setGlobalPrefix('api/v1', {
+    exclude: [
+      'health', 'health/live', 'health/ready',
+      'sitemap.xml', 'robots.txt', 'feed.xml',
+      'json-ld/person', 'json-ld/website', 'json-ld/breadcrumb',
+      'json-ld/blog/:slug', 'json-ld/project/:slug',
+    ],
+  });
 
   // Swagger
   const config = new DocumentBuilder()
