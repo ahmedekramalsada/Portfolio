@@ -31,7 +31,7 @@ export default async function HomePage() {
             width={180}
             height={180}
             className="rounded-full border-4 border-primary/20"
-            fetchpriority="high"
+            fetchPriority="high"
           />
         </div>
         <div className="text-center md:text-left">

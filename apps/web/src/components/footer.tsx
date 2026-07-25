@@ -7,10 +7,10 @@ export function Footer() {
             © {new Date().getFullYear()} Ahmed Ekram Al Sada. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <a href="https://github.com/ahmedekram" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+            <a href="https://github.com/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
               GitHub
             </a>
-            <a href="https://linkedin.com/in/ahmedekram" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+            <a href="https://linkedin.com/in/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
               LinkedIn
             </a>
           </div>

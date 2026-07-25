@@ -7,6 +7,9 @@ interface Post {
   id: string;
   title: string;
   slug: string;
+  content?: string;
+  excerpt?: string;
+  coverImage?: string;
   status: string;
   category?: { name: string };
   publishedAt?: string;
@@ -17,6 +20,8 @@ export default function BlogAdminPage() {
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [content, setContent] = useState('');
+  const [excerpt, setExcerpt] = useState('');
+  const [coverImage, setCoverImage] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const loadPosts = () => {
@@ -28,16 +33,36 @@ export default function BlogAdminPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (editingId) {
-      await api.patch(`/posts/${editingId}`, { title, slug, content });
+      const data: any = { title, slug };
+      if (content) data.content = content;
+      if (excerpt) data.excerpt = excerpt;
+      if (coverImage) data.coverImage = coverImage;
+      await api.patch(`/posts/${editingId}`, data);
     } else {
-      await api.post('/posts', { title, slug, content });
+      await api.post('/posts', { title, slug, content, excerpt, coverImage });
     }
-    setTitle(''); setSlug(''); setContent(''); setEditingId(null);
+    resetForm();
     loadPosts();
   };
 
-  const editPost = (post: Post) => {
-    setTitle(post.title); setSlug(post.slug); setEditingId(post.id);
+  const resetForm = () => {
+    setTitle(''); setSlug(''); setContent(''); setExcerpt(''); setCoverImage('');
+    setEditingId(null);
+  };
+
+  const editPost = async (post: Post) => {
+    setEditingId(post.id);
+    setTitle(post.title);
+    setSlug(post.slug);
+    // Load full post content
+    try {
+      const full: any = await api.get(`/posts/${post.slug}`);
+      setContent(full.content || '');
+      setExcerpt(full.excerpt || '');
+      setCoverImage(full.coverImage || '');
+    } catch {
+      setContent(post.content || '');
+    }
   };
 
   const publishPost = async (id: string) => {
@@ -64,17 +89,18 @@ export default function BlogAdminPage() {
           <input placeholder="slug-post-title" value={slug} onChange={(e) => setSlug(e.target.value)}
             className="rounded-md border px-3 py-2 text-sm" required />
         </div>
+        <input placeholder="Cover image URL" value={coverImage} onChange={(e) => setCoverImage(e.target.value)}
+          className="w-full rounded-md border px-3 py-2 text-sm" />
+        <input placeholder="Excerpt (short description)" value={excerpt} onChange={(e) => setExcerpt(e.target.value)}
+          className="w-full rounded-md border px-3 py-2 text-sm" />
         <textarea placeholder="Content (markdown)" value={content} onChange={(e) => setContent(e.target.value)}
-          className="w-full rounded-md border px-3 py-2 text-sm" rows={4} />
+          className="w-full rounded-md border px-3 py-2 text-sm" rows={6} />
         <div className="flex gap-2">
           <button type="submit" className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">
             {editingId ? 'Update' : 'Create'}
           </button>
           {editingId && (
-            <button type="button" onClick={() => { setEditingId(null); setTitle(''); setSlug(''); setContent(''); }}
-              className="rounded-md border px-4 py-2 text-sm">
-              Cancel
-            </button>
+            <button type="button" onClick={resetForm} className="rounded-md border px-4 py-2 text-sm">Cancel</button>
           )}
         </div>
       </form>
@@ -82,9 +108,14 @@ export default function BlogAdminPage() {
       <div className="space-y-2">
         {posts.map((post) => (
           <div key={post.id} className="flex items-center justify-between rounded-lg border p-4">
-            <div>
-              <p className="font-medium">{post.title}</p>
-              <p className="text-xs text-muted-foreground">{post.slug} · {post.status}{post.category ? ` · ${post.category.name}` : ''}</p>
+            <div className="flex items-center gap-3">
+              {post.coverImage && (
+                <img src={post.coverImage} alt="" className="h-10 w-10 rounded object-cover" />
+              )}
+              <div>
+                <p className="font-medium">{post.title}</p>
+                <p className="text-xs text-muted-foreground">{post.slug} · {post.status}</p>
+              </div>
             </div>
             <div className="flex gap-2">
               {post.status !== 'published' && (

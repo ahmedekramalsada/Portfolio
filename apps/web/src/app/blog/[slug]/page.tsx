@@ -38,6 +38,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <span> · {post.readingTime || '5'} min read</span>
         </p>
         <h1 className="text-3xl font-bold md:text-4xl">{post.title}</h1>
+        {post.coverImage && (
+          <img src={post.coverImage} alt={post.title} className="mb-6 w-full rounded-lg object-cover max-h-96" />
+        )}
         {post.excerpt && (
           <p className="mt-4 text-lg text-muted-foreground">{post.excerpt}</p>
         )}
