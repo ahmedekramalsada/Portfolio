@@ -32,6 +32,9 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       </a>
 
       <div className="mb-8">
+        {project.coverImage && (
+          <img src={project.coverImage} alt={project.title} className="mb-6 w-full rounded-lg object-cover max-h-96" />
+        )}
         <div className="mb-3 flex items-center gap-2">
           <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
             project.status === 'completed' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :

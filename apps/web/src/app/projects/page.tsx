@@ -25,8 +25,14 @@ export default async function ProjectsPage() {
             <a
               key={project.id}
               href={`/projects/${project.slug}`}
-              className="group rounded-lg border p-6 transition-all hover:bg-accent hover:shadow-sm"
+              className="group rounded-lg border transition-all hover:bg-accent hover:shadow-sm overflow-hidden"
             >
+              {project.coverImage && (
+                <div className="aspect-video w-full overflow-hidden">
+                  <img src={project.coverImage} alt={project.title} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                </div>
+              )}
+              <div className="p-6">
               <div className="mb-3 flex items-center gap-2">
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
                   project.status === 'completed' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :
@@ -60,6 +66,7 @@ export default async function ProjectsPage() {
                   ))}
                 </div>
               )}
+            </div>
             </a>
           ))}
         </div>
