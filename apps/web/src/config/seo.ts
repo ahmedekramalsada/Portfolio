@@ -5,8 +5,8 @@ export const siteConfig = {
   url: 'https://ahmedekram.site',
   ogImage: 'https://ahmedekram.site/og.png',
   links: {
-    github: 'https://github.com/ahmedekram',
-    linkedin: 'https://linkedin.com/in/ahmedekram',
+    github: 'https://github.com/ahmedekramalsada',
+    linkedin: 'https://linkedin.com/in/ahmedekramalsada',
   },
   creator: 'Ahmed Ekram Al Sada',
 };
