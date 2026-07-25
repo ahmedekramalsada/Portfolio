@@ -1,4 +1,5 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
+import { ShareButtons } from '@/components/share-buttons';
 
 async function getPost(slug: string) {
   try {
@@ -66,10 +67,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         )}
       </div>
 
-      <div className="mt-12 pt-8 border-t">
+      <div className="mt-12 pt-8 border-t flex items-center justify-between">
         <a href="/blog" className="text-sm text-primary hover:underline">
           ← Back to blog
         </a>
+        <ShareButtons title={post.title} url={`https://ahmedekram.site/blog/${post.slug}`} />
       </div>
     </article>
   );

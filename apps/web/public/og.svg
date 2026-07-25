@@ -1,0 +1,19 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="630" fill="#0a0a0a"/>
+    <defs>
+      <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M40 0L0 40M0 0L40 40" stroke="white" stroke-width="0.5" opacity="0.05"/>
+      </pattern>
+      <linearGradient id="a" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#3b82f6"/>
+        <stop offset="100%" style="stop-color:#8b5cf6"/>
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="630" fill="url(#g)"/>
+    <rect x="50" y="40" width="1100" height="550" rx="16" fill="none" stroke="url(#a)" stroke-opacity="0.3" stroke-width="2"/>
+    <text x="600" y="270" text-anchor="middle" font-family="Helvetica" font-size="64" font-weight="bold" fill="white">Ahmed Ekram Al Sada</text>
+    <text x="600" y="340" text-anchor="middle" font-family="Helvetica" font-size="28" fill="#888">DevOps Engineer &amp; Software Architect</text>
+    <line x1="450" y1="380" x2="750" y2="380" stroke="url(#a)" stroke-opacity="0.5" stroke-width="2"/>
+    <text x="600" y="420" text-anchor="middle" font-family="Helvetica" font-size="16" fill="#555">Docker · Kubernetes · CI/CD · Cloud · AI</text>
+    <text x="600" y="510" text-anchor="middle" font-family="Helvetica" font-size="14" fill="#333">ahmedekram.site</text>
+  </svg>
