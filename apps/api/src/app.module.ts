@@ -12,6 +12,8 @@ import { MediaModule } from './modules/media/media.module';
 import { PagesModule } from './modules/pages/pages.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { TagsModule } from './modules/tags/tags.module';
+import { ContactsModule } from './modules/contacts/contacts.module';
+import { SkillsModule } from './modules/skills/skills.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { TagsModule } from './modules/tags/tags.module';
     PagesModule,
     CategoriesModule,
     TagsModule,
+    ContactsModule,
+    SkillsModule,
   ],
   providers: [
     {
