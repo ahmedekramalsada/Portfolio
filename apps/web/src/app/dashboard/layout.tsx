@@ -22,7 +22,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar */}
       <aside className="w-64 shrink-0 border-r border-border/40 bg-muted/20 p-6 hidden md:block">
         <div className="mb-8">
-          <Link href="/dashboard" className="text-lg font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+          <Link href="/dashboard" className="text-lg font-bold text-blue-500">
             Ahmed OS
           </Link>
           <div className="mt-4 space-y-1">
@@ -39,7 +39,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
                   isActive
-                    ? 'bg-gradient-to-r from-blue-500/10 to-purple-600/10 text-foreground border border-blue-500/20'
+                    ? 'bg-blue-500/10 text-foreground border border-blue-500/20'
                     : 'text-muted-foreground hover:text-foreground hover:bg-accent'
                 }`}
               >

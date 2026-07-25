@@ -21,7 +21,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
-          <span className="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+          <span className="text-lg font-bold tracking-tight text-blue-500">
             AE
           </span>
         </Link>
@@ -42,7 +42,7 @@ export function Navbar() {
               >
                 {link.label}
                 {isActive && (
-                  <span className="absolute inset-x-2 -bottom-0.5 h-0.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-600" />
+                  <span className="absolute inset-x-2 -bottom-0.5 h-0.5 rounded-full bg-blue-500" />
                 )}
               </Link>
             );
