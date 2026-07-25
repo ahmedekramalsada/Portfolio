@@ -8,14 +8,16 @@ export class MediaService {
   private readonly s3: S3Client;
   private readonly bucket: string;
   private readonly publicUrl: string;
+  private readonly endpoint: string;
 
   constructor(private prisma: PrismaService) {
+    this.endpoint = process.env.R2_ENDPOINT || 'https://fbf23646cc6184a8c0838e10b3ffd2ad.r2.cloudflarestorage.com';
     this.s3 = new S3Client({
       region: 'auto',
-      endpoint: process.env.R2_ENDPOINT,
+      endpoint: this.endpoint,
       credentials: {
-        accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
-        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+        accessKeyId: process.env.R2_ACCESS_KEY_ID || 'cf26eb02c7c238c58760b161ef8cc4c0',
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '0da463c85f47e08546a065f6b93f42e5acddd8dd9e44ad7fd3eac690c4e48d32',
       },
     });
     this.bucket = process.env.R2_BUCKET || 'ahmedekramalsada';
@@ -27,11 +29,12 @@ export class MediaService {
     if (file.size > 10 * 1024 * 1024) throw new BadRequestException('File too large (max 10MB)');
 
     const key = `media/${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+    const body = file.buffer || require('fs').readFileSync(file.path);
 
     await this.s3.send(new PutObjectCommand({
       Bucket: this.bucket,
       Key: key,
-      Body: Buffer.from(file.buffer),
+      Body: body,
       ContentType: file.mimetype,
     }));
 
