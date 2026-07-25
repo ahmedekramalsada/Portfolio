@@ -34,8 +34,8 @@ export default async function ResumePage() {
         <div className="mt-2 flex gap-4 text-sm text-muted-foreground">
           <span>Cairo, Egypt</span>
           <a href="mailto:ahmedekramalsada@gmail.com" className="hover:text-foreground">ahmedekramalsada@gmail.com</a>
-          <a href="https://linkedin.com/in/ahmedekram" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">LinkedIn</a>
-          <a href="https://github.com/ahmedekram" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">GitHub</a>
+          <a href="https://linkedin.com/in/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">LinkedIn</a>
+          <a href="https://github.com/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">GitHub</a>
         </div>
       </div>
 

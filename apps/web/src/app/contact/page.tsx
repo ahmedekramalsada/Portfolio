@@ -80,8 +80,8 @@ export default function ContactPage() {
         <h2 className="mb-4 font-semibold">Other ways to reach me</h2>
         <div className="space-y-2 text-sm">
           <p>Email: <a href="mailto:ahmedekramalsada@gmail.com" className="text-primary hover:underline">ahmedekramalsada@gmail.com</a></p>
-          <p>GitHub: <a href="https://github.com/ahmedekram" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">github.com/ahmedekram</a></p>
-          <p>LinkedIn: <a href="https://linkedin.com/in/ahmedekram" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">linkedin.com/in/ahmedekram</a></p>
+          <p>GitHub: <a href="https://github.com/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">github.com/ahmedekramalsada</a></p>
+          <p>LinkedIn: <a href="https://linkedin.com/in/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">linkedin.com/in/ahmedekramalsada</a></p>
         </div>
       </div>
     </div>
