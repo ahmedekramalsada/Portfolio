@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1095.0",
+    "@aws-sdk/lib-storage": "^3.1095.0",
     "@aws-sdk/s3-request-presigner": "^3.1095.0",
     "@langchain/anthropic": "^1.5.2",
     "@langchain/community": "^1.1.29",

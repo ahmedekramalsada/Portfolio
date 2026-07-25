@@ -7,6 +7,7 @@ export class MediaService {
   private readonly logger = new Logger(MediaService.name);
   private readonly s3: S3Client;
   private readonly bucket: string;
+  private readonly publicUrl: string;
 
   constructor(private prisma: PrismaService) {
     this.s3 = new S3Client({
@@ -18,6 +19,7 @@ export class MediaService {
       },
     });
     this.bucket = process.env.R2_BUCKET || 'ahmedekramalsada';
+    this.publicUrl = process.env.R2_PUBLIC_URL || `https://media.ahmedekram.site`;
   }
 
   async upload(file: Express.Multer.File) {
@@ -29,7 +31,7 @@ export class MediaService {
     await this.s3.send(new PutObjectCommand({
       Bucket: this.bucket,
       Key: key,
-      Body: file.buffer,
+      Body: Buffer.from(file.buffer),
       ContentType: file.mimetype,
     }));
 
@@ -41,7 +43,7 @@ export class MediaService {
         size: file.size,
         provider: 'r2',
         path: key,
-        publicUrl: `${process.env.R2_ENDPOINT || 'https://fbf23646cc6184a8c0838e10b3ffd2ad.r2.cloudflarestorage.com'}/${this.bucket}/${key}`,
+        publicUrl: `${this.publicUrl}/${key}`,
       },
     });
 
