@@ -16,6 +16,7 @@ import { ContactsModule } from './modules/contacts/contacts.module';
 import { SkillsModule } from './modules/skills/skills.module';
 import { AIModule } from './modules/ai/ai.module';
 import { RagModule } from './modules/rag/rag.module';
+import { MCPModule } from './modules/mcp/mcp.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { RagModule } from './modules/rag/rag.module';
     SkillsModule,
     AIModule,
     RagModule,
+    MCPModule,
   ],
   providers: [
     {
