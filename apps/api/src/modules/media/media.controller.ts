@@ -3,7 +3,6 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MediaService } from './media.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Media')
 @Controller('media')
@@ -15,17 +14,17 @@ export class MediaController {
   @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'Upload a file' })
-  upload(@UploadedFile() file: Express.Multer.File, @CurrentUser('id') userId: string) {
-    return this.mediaService.upload(file, userId);
+  upload(@UploadedFile() file: Express.Multer.File) {
+    return this.mediaService.upload(file);
   }
 
   @Get()
   @ApiOperation({ summary: 'List media' })
-  findAll(@Query() query: any) { return this.mediaService.findAll(query); }
+  findAll(@Query('limit') limit?: number) { return this.mediaService.findAll(limit || 50); }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete media' })
-  remove(@Param('id') id: string) { return this.mediaService.remove(id); }
+  delete(@Param('id') id: string) { return this.mediaService.delete(id); }
 }
