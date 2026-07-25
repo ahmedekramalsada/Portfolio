@@ -15,7 +15,9 @@ export default function ProjectsAdminPage() {
   const [status, setStatus] = useState('planning');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [gallery, setGallery] = useState<any[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const load = () => api.get('/projects?limit=50').then((r: any) => setProjects(r.data || []));
   useEffect(() => { load(); }, []);
@@ -47,6 +49,36 @@ export default function ProjectsAdminPage() {
     setUploading(false);
   };
 
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files?.length) return;
+    setUploading(true);
+    const token = localStorage.getItem('accessToken');
+    for (const file of Array.from(files)) {
+      try {
+        const fd = new FormData();
+        fd.append('file', file);
+        const res = await fetch('http://localhost:4000/api/v1/media/upload', {
+          method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd,
+        });
+        const data = await res.json();
+        if (data.id) {
+          // If editing, associate with project
+          if (editingId) {
+            await api.patch(`/media/${data.id}`, { projectId: editingId });
+          }
+          setGallery(prev => [...prev, data]);
+        }
+      } catch {}
+    }
+    setUploading(false);
+  };
+
+  const removeGalleryItem = async (id: string) => {
+    await api.delete(`/media/${id}`);
+    setGallery(prev => prev.filter(m => m.id !== id));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const data = { title, slug, description, content, coverImage, githubUrl, demoUrl, status };
@@ -65,6 +97,8 @@ export default function ProjectsAdminPage() {
     setDescription(project.description || ''); setContent(project.content || '');
     setCoverImage(project.coverImage || ''); setGithubUrl(project.githubUrl || '');
     setDemoUrl(project.demoUrl || ''); setStatus(project.status || 'planning');
+    // Load gallery
+    api.get('/media?projectId=' + project.id).then((data: any) => setGallery(data || [])).catch(() => setGallery([]));
   };
 
   const deleteProject = async (id: string) => {
@@ -114,7 +148,34 @@ export default function ProjectsAdminPage() {
               </div>
             )}
             <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-          </div>
+            </div>
+
+            {/* Gallery */}
+            <div>
+            <label className="block text-sm font-medium mb-1">Gallery (images & videos)</label>
+            <div onClick={() => galleryInputRef.current?.click()}
+              className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/30 p-6 hover:border-blue-500/50 transition-colors">
+              <p className="text-3xl mb-2">📸</p>
+              <p className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Click to upload multiple files'}</p>
+              <p className="text-xs text-muted-foreground mt-1">Images & videos — you can select multiple</p>
+              <input ref={galleryInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={handleGalleryUpload} />
+            </div>
+            {gallery.length > 0 && (
+              <div className="mt-3 grid grid-cols-4 gap-3">
+                {gallery.map((item: any) => (
+                  <div key={item.id} className="group relative rounded-lg overflow-hidden border">
+                    {item.mimeType?.startsWith('video/') ? (
+                      <video src={item.publicUrl} className="h-24 w-full object-cover" />
+                    ) : (
+                      <img src={item.publicUrl} alt="" className="h-24 w-full object-cover" />
+                    )}
+                    <button type="button" onClick={() => removeGalleryItem(item.id)}
+                      className="absolute top-1 right-1 rounded-full bg-red-500/90 px-1.5 py-0.5 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+                  </div>
+                ))}
+              </div>
+            )}
+            </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">

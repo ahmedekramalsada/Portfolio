@@ -54,8 +54,9 @@ export class MediaService {
     return media;
   }
 
-  async findAll(limit = 50) {
-    return this.prisma.media.findMany({ orderBy: { createdAt: 'desc' }, take: limit });
+  async findAll(projectId?: string, limit = 50) {
+    const where = projectId ? { projectId } : {};
+    return this.prisma.media.findMany({ where, orderBy: { createdAt: 'desc' }, take: limit });
   }
 
   async delete(id: string) {
@@ -70,5 +71,9 @@ export class MediaService {
 
     await this.prisma.media.delete({ where: { id } });
     return { message: 'Deleted' };
+  }
+
+  async update(id: string, data: any) {
+    return this.prisma.media.update({ where: { id }, data });
   }
 }
