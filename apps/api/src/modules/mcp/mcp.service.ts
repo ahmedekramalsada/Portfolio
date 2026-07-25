@@ -55,6 +55,17 @@ export class MCPService {
     });
 
     this.register({
+      name: 'update_post',
+      description: 'Update an existing blog post',
+      inputSchema: { id: 'string', title: 'string?', content: 'string?', excerpt: 'string?', status: 'string?' },
+      handler: async (params) => {
+        const { id, ...data } = params;
+        return this.prisma.blogPost.update({ where: { id }, data });
+      },
+      requiredRole: 'admin',
+    });
+
+    this.register({
       name: 'create_project',
       description: 'Create a new project',
       inputSchema: { title: 'string', slug: 'string', description: 'string?', status: 'string?' },
