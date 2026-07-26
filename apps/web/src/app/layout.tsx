@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   keywords: [
     'DevOps Engineer', 'Software Architect', 'Docker', 'Kubernetes', 'CI/CD',
     'Platform Engineering', 'SmartSigma', 'AI Engineering', 'Infrastructure',
+    'احمد اكرام السادة', 'أحمد أكرم السادة', 'مهندس DevOps', 'مصر', 'القاهرة',
   ],
   authors: [{ name: siteConfig.creator }],
   creator: siteConfig.creator,
@@ -57,6 +58,11 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: siteConfig.url,
+    languages: {
+      'en': siteConfig.url,
+      'ar': siteConfig.url,
+      'x-default': siteConfig.url,
+    },
     types: {
       'application/rss+xml': `${siteConfig.url}/feed.xml`,
     },

@@ -61,7 +61,8 @@ export class SeoService {
     }
 
     return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls.join('')}
 </urlset>`;
   }
@@ -71,6 +72,9 @@ ${urls.join('')}
     <loc>${this.escapeXml(loc)}</loc>
     <priority>${priority}</priority>
     <changefreq>${changefreq}</changefreq>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ''}
+    <xhtml:link rel="alternate" hreflang="en" href="${this.escapeXml(loc)}"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="${this.escapeXml(loc)}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${this.escapeXml(loc)}"/>
   </url>\n`;
   }
 
@@ -155,17 +159,23 @@ ${posts.map((post) => `  <item>
       '@context': 'https://schema.org',
       '@type': 'Person',
       name: 'Ahmed Ekram Al Sada',
+      alternateName: 'احمد اكرام السادة',
       url: 'https://ahmedekram.site',
-      image: 'https://ahmedekram.site/avatar.png',
+      image: 'https://media.ahmedekram.site/media/1785021278987-ahmed_ekram_alsada_profile_photo.webp',
       jobTitle: 'DevOps Engineer',
       worksFor: { '@type': 'Organization', name: 'SmartSigma' },
       sameAs: [
-        'https://github.com/ahmedekram',
-        'https://linkedin.com/in/ahmedekram',
+        'https://github.com/ahmedekramalsada',
+        'https://linkedin.com/in/ahmedekramalsada',
         'https://ahmedekram.site',
       ],
       knowsAbout: ['DevOps', 'Docker', 'Kubernetes', 'CI/CD', 'AI Engineering', 'Platform Engineering'],
       description: 'DevOps Engineer and Software Architect building production-grade systems.',
+      knowsLanguage: [
+        { '@type': 'Language', name: 'Arabic', alternateName: 'العربية' },
+        { '@type': 'Language', name: 'English' },
+      ],
+      address: { '@type': 'PostalAddress', addressLocality: 'Cairo', addressCountry: 'EG' },
     });
   }
 
