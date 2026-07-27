@@ -162,8 +162,8 @@ export class MCPService {
           company: params.company,
           position: params.position,
           description: params.description || '',
+          startDate: params.startDate ? new Date(params.startDate) : new Date(),
         };
-        if (params.startDate) expData.startDate = new Date(params.startDate);
         if (params.endDate) expData.endDate = new Date(params.endDate);
         return this.prisma.experience.create({ data: expData });
       },

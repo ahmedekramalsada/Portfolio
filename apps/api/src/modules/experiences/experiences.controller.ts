@@ -17,7 +17,15 @@ export class ExperiencesController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async create(@Body() dto: any) {
-    return this.prisma.experience.create({ data: dto });
+    return this.prisma.experience.create({
+      data: {
+        company: dto.company,
+        position: dto.position,
+        description: dto.description || '',
+        startDate: dto.startDate ? new Date(dto.startDate) : new Date(),
+        endDate: dto.endDate ? new Date(dto.endDate) : null,
+      },
+    });
   }
 
   @Patch(':id')
