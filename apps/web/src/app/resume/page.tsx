@@ -1,5 +1,6 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
 import type { Metadata } from 'next';
+import { DownloadButton } from './download-button';
 
 export const metadata: Metadata = {
   title: 'Resume — Ahmed Ekram Al Sada',
@@ -29,9 +30,7 @@ export default async function ResumePage() {
     <div className="container mx-auto max-w-4xl px-4 py-16">
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-4xl font-bold">Resume</h1>
-        <button className="rounded-md border px-4 py-2 text-sm transition-colors hover:bg-accent">
-          Download PDF
-        </button>
+        <DownloadButton />
       </div>
 
       {/* Header */}
