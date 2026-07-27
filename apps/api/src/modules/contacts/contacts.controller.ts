@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Delete, Param, Body, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { PrismaService } from '../../prisma/prisma.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -9,6 +10,7 @@ export class ContactsController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @ApiOperation({ summary: 'Submit a contact form' })
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: { name: string; email: string; subject?: string; message: string }) {
@@ -16,6 +18,7 @@ export class ContactsController {
   }
 
   @Get()
+  @SkipThrottle()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'List all contact messages' })
@@ -24,6 +27,7 @@ export class ContactsController {
   }
 
   @Delete(':id')
+  @SkipThrottle()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a contact message' })

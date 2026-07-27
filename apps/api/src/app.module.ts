@@ -29,7 +29,7 @@ import { ExperiencesModule } from './modules/experiences/experiences.module';
     }),
     ThrottlerModule.forRoot([{
       ttl: 60000,
-      limit: 100,
+      limit: 60,
     }]),
     PrismaModule,
     HealthModule,
