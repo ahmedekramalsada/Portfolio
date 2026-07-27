@@ -1,5 +1,13 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Projects — Ahmed Ekram Al Sada',
+  description: 'DevOps and software development projects by Ahmed Ekram Al Sada. Docker, Kubernetes, CI/CD, cloud infrastructure, and platform engineering.',
+  openGraph: { title: 'Projects — Ahmed Ekram Al Sada', description: 'DevOps projects by Ahmed Ekram Al Sada.' },
+};
+
 async function getProjects() {
   try {
     const res = await fetch(`${API_URL}/projects?limit=50`, { next: { revalidate: 60 } });

@@ -113,7 +113,8 @@ export default function BlogAdminPage() {
         {posts.map((post: any) => (
           <div key={post.id} className="flex items-center justify-between rounded-xl border bg-card p-4">
             <div className="flex items-center gap-3">
-              {post.coverImage && <img src={post.coverImage} alt="" className="h-12 w-20 rounded-lg object-cover" />}
+              {post.coverImage && <img src={post.coverImage} alt="" className="h-12 w-20 rounded-lg object-cover"
+        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
               <div>
                 <p className="font-medium">{post.title}</p>
                 <p className="text-xs text-muted-foreground">{post.slug} · {post.status}</p>

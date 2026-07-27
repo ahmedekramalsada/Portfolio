@@ -136,7 +136,8 @@ export default function ProjectsAdminPage() {
           >
             {coverImage ? (
               <div className="relative w-full">
-                <img src={coverImage} alt="Cover" className="mx-auto max-h-48 rounded-lg object-cover" />
+                <img src={coverImage} alt="Cover" className="mx-auto max-h-48 rounded-lg object-cover"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                 <button type="button" onClick={(e) => { e.stopPropagation(); setCoverImage(''); }}
                   className="absolute top-2 right-2 rounded-full bg-red-500/90 px-2 py-1 text-xs text-white">Remove</button>
               </div>

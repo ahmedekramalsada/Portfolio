@@ -1,5 +1,22 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
 import { ShareButtons } from '@/components/share-buttons';
+import type { Metadata } from 'next';
+
+type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  try {
+    const res = await fetch(`${API_URL}/posts/${slug}`, { next: { revalidate: 60 } });
+    if (!res.ok) return {};
+    const post = await res.json();
+    return {
+      title: `${post.title} — Ahmed Ekram Al Sada`,
+      description: post.excerpt || post.title,
+      openGraph: { title: post.title, description: post.excerpt || post.title, images: post.coverImage ? [{ url: post.coverImage }] : [] },
+    };
+  } catch { return {}; }
+}
 
 async function getPost(slug: string) {
   try {
@@ -38,7 +55,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <span> · {post.readingTime || '5'} min read</span>
         </p>
         <h1 className="text-3xl font-bold md:text-4xl">{post.title}</h1>
-        {post.coverImage && (
+        {post.coverImage && post.coverImage !== '' && (
           <img src={post.coverImage} alt={post.title} className="mb-6 w-full rounded-lg object-cover max-h-96" />
         )}
         {post.excerpt && (

@@ -1,5 +1,13 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Blog — Ahmed Ekram Al Sada',
+  description: 'Articles on DevOps, Docker, Kubernetes, CI/CD, AI engineering, and platform engineering by Ahmed Ekram Al Sada.',
+  openGraph: { title: 'Blog — Ahmed Ekram Al Sada', description: 'DevOps articles by Ahmed Ekram Al Sada.' },
+};
+
 async function getPosts(page = 1) {
   try {
     const res = await fetch(`${API_URL}/posts?page=${page}&limit=20&status=published`, {

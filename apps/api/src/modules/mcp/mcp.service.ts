@@ -27,7 +27,7 @@ export class MCPService {
     this.register({
       name: 'create_post',
       description: 'Create a new blog post',
-      inputSchema: { title: 'string', slug: 'string', content: 'string', excerpt: 'string?', categoryId: 'string?' },
+      inputSchema: { title: 'string', slug: 'string', content: 'string', excerpt: 'string?', coverImage: 'string?', categoryId: 'string?' },
       handler: async (params) => {
         return this.prisma.blogPost.create({ data: { ...params, authorId: 'mcp' } });
       },
@@ -57,7 +57,7 @@ export class MCPService {
     this.register({
       name: 'update_post',
       description: 'Update an existing blog post',
-      inputSchema: { id: 'string', title: 'string?', content: 'string?', excerpt: 'string?', status: 'string?' },
+      inputSchema: { id: 'string', title: 'string?', content: 'string?', excerpt: 'string?', coverImage: 'string?', status: 'string?' },
       handler: async (params) => {
         const { id, ...data } = params;
         return this.prisma.blogPost.update({ where: { id }, data });
@@ -68,11 +68,112 @@ export class MCPService {
     this.register({
       name: 'create_project',
       description: 'Create a new project',
-      inputSchema: { title: 'string', slug: 'string', description: 'string?', status: 'string?' },
+      inputSchema: { title: 'string', slug: 'string', description: 'string?', content: 'string?', coverImage: 'string?', githubUrl: 'string?', demoUrl: 'string?', status: 'string?' },
       handler: async (params) => {
         return this.prisma.project.create({ data: { ...params, status: params.status || 'planning' } });
       },
       requiredRole: 'admin',
+    });
+
+    this.register({
+      name: 'update_project',
+      description: 'Update an existing project',
+      inputSchema: { id: 'string', title: 'string?', description: 'string?', content: 'string?', coverImage: 'string?', githubUrl: 'string?', demoUrl: 'string?', status: 'string?' },
+      handler: async (params) => {
+        const { id, ...data } = params;
+        return this.prisma.project.update({ where: { id }, data });
+      },
+      requiredRole: 'admin',
+    });
+
+    this.register({
+      name: 'delete_project',
+      description: 'Soft delete a project',
+      inputSchema: { id: 'string' },
+      handler: async (params) => {
+        return this.prisma.project.update({ where: { id: params.id }, data: { deletedAt: new Date() } });
+      },
+      requiredRole: 'admin',
+    });
+
+    // === Media Tools ===
+    this.register({
+      name: 'list_media',
+      description: 'List media files',
+      inputSchema: { projectId: 'string?', limit: 'number?' },
+      handler: async (params) => {
+        const where = params.projectId ? { projectId: params.projectId } : {};
+        return this.prisma.media.findMany({ where, orderBy: { createdAt: 'desc' }, take: params.limit || 50 });
+      },
+    });
+
+    this.register({
+      name: 'delete_media',
+      description: 'Delete a media file',
+      inputSchema: { id: 'string' },
+      handler: async (params) => {
+        await this.prisma.media.delete({ where: { id: params.id } });
+        return { message: 'Deleted' };
+      },
+      requiredRole: 'admin',
+    });
+
+    // === Contact Tools ===
+    this.register({
+      name: 'create_contact',
+      description: 'Submit a contact form message',
+      inputSchema: { name: 'string', email: 'string', subject: 'string?', message: 'string' },
+      handler: async (params) => {
+        return this.prisma.contact.create({ data: params });
+      },
+    });
+
+    this.register({
+      name: 'list_contacts',
+      description: 'List contact form submissions',
+      inputSchema: { limit: 'number?' },
+      handler: async (params) => {
+        return this.prisma.contact.findMany({ orderBy: { createdAt: 'desc' }, take: params.limit || 50 });
+      },
+      requiredRole: 'admin',
+    });
+
+    this.register({
+      name: 'delete_contact',
+      description: 'Delete a contact message',
+      inputSchema: { id: 'string' },
+      handler: async (params) => {
+        await this.prisma.contact.delete({ where: { id: params.id } });
+        return { message: 'Deleted' };
+      },
+      requiredRole: 'admin',
+    });
+
+    // === Experience Tools ===
+    this.register({
+      name: 'create_experience',
+      description: 'Add a work experience entry',
+      inputSchema: { company: 'string', position: 'string', description: 'string?', startDate: 'string?', endDate: 'string?', current: 'boolean?' },
+      handler: async (params) => {
+        const expData: any = {
+          company: params.company,
+          position: params.position,
+          description: params.description || '',
+        };
+        if (params.startDate) expData.startDate = new Date(params.startDate);
+        if (params.endDate) expData.endDate = new Date(params.endDate);
+        return this.prisma.experience.create({ data: expData });
+      },
+      requiredRole: 'admin',
+    });
+
+    this.register({
+      name: 'list_experiences',
+      description: 'List work experience entries',
+      inputSchema: {},
+      handler: async () => {
+        return this.prisma.experience.findMany({ orderBy: { startDate: 'desc' } });
+      },
     });
 
     // === Search Tools ===
@@ -137,12 +238,21 @@ export class MCPService {
     // === System Tools ===
     this.register({
       name: 'health',
-      description: 'Check system health',
+      description: 'Check system health with full stats',
       inputSchema: {},
       handler: async () => {
-        const postCount = await this.prisma.blogPost.count();
-        const projectCount = await this.prisma.project.count();
-        return { status: 'ok', timestamp: new Date().toISOString(), stats: { posts: postCount, projects: projectCount } };
+        const [postCount, projectCount, mediaCount, contactCount, experienceCount] = await Promise.all([
+          this.prisma.blogPost.count({ where: { deletedAt: null } }),
+          this.prisma.project.count({ where: { deletedAt: null } }),
+          this.prisma.media.count(),
+          this.prisma.contact.count(),
+          this.prisma.experience.count(),
+        ]);
+        return {
+          status: 'ok',
+          timestamp: new Date().toISOString(),
+          stats: { posts: postCount, projects: projectCount, media: mediaCount, contacts: contactCount, experiences: experienceCount },
+        };
       },
     });
 
@@ -180,7 +290,6 @@ export class MCPService {
       throw new Error(`Tool "${toolName}" not found`);
     }
 
-    // Auth check
     if (tool.requiredRole) {
       if (!user || user.role !== tool.requiredRole) {
         throw new Error('Unauthorized: admin role required');

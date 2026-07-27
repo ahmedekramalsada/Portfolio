@@ -4,7 +4,8 @@ import '@/styles/globals.css';
 import { Providers } from '@/providers/providers';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
-import { siteConfig } from '@/config/seo';
+import { siteConfig, getJsonLdScript } from '@/config/seo';
+import Script from 'next/script';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -103,14 +104,10 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
         {/* JSON-LD Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-        />
+        <Script id="person-jsonld" type="application/ld+json" strategy="beforeInteractive"
+          dangerouslySetInnerHTML={getJsonLdScript(JSON.stringify(personJsonLd))} />
+        <Script id="website-jsonld" type="application/ld+json" strategy="beforeInteractive"
+          dangerouslySetInnerHTML={getJsonLdScript(JSON.stringify(websiteJsonLd))} />
         {/* Canonical URL */}
         <link rel="canonical" href={siteConfig.url} />
         {/* RSS Feed */}

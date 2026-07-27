@@ -1,4 +1,11 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Resume — Ahmed Ekram Al Sada',
+  description: 'DevOps Engineer. Docker, Kubernetes, CI/CD, Cloud Infrastructure.',
+  openGraph: { title: 'Resume — Ahmed Ekram Al Sada', description: 'DevOps Engineer resume.' },
+};
 
 async function getData() {
   try {

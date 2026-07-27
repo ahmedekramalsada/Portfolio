@@ -1,4 +1,21 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
+import type { Metadata } from 'next';
+
+type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  try {
+    const res = await fetch(`${API_URL}/projects/${slug}`, { next: { revalidate: 60 } });
+    if (!res.ok) return {};
+    const project = await res.json();
+    return {
+      title: `${project.title} — Projects — Ahmed Ekram Al Sada`,
+      description: project.description || project.title,
+      openGraph: { title: project.title, description: project.description || project.title, images: project.coverImage ? [{ url: project.coverImage }] : [] },
+    };
+  } catch { return {}; }
+}
 
 async function getProject(slug: string) {
   try {
@@ -32,7 +49,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       </a>
 
       <div className="mb-8">
-        {project.coverImage && (
+        {project.coverImage && project.coverImage !== '' && (
           <img src={project.coverImage} alt={project.title} className="mb-6 w-full rounded-lg object-cover max-h-96" />
         )}
         <div className="mb-3 flex items-center gap-2">
