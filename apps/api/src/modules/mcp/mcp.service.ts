@@ -29,7 +29,7 @@ export class MCPService {
       description: 'Create a new blog post',
       inputSchema: { title: 'string', slug: 'string', content: 'string', excerpt: 'string?', coverImage: 'string?', categoryId: 'string?' },
       handler: async (params) => {
-        return this.prisma.blogPost.create({ data: { ...params, authorId: 'mcp' } });
+        return this.prisma.blogPost.create({ data: { ...params, authorId: 'd53bbbe4-4552-4dea-8930-c6da11b573e3' } });
       },
       requiredRole: 'admin',
     });

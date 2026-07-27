@@ -32,8 +32,9 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.creator }],
   creator: siteConfig.creator,
   openGraph: {
-    type: 'website',
+    type: 'website' as const,
     locale: 'en_US',
+    alternateLocale: ['ar_AE'],
     url: siteConfig.url,
     siteName: siteConfig.name,
     title: siteConfig.title,
