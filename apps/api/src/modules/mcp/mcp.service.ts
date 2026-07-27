@@ -39,7 +39,8 @@ export class MCPService {
       description: 'Publish a blog post by ID',
       inputSchema: { id: 'string' },
       handler: async (params) => {
-        return this.prisma.blogPost.update({ where: { id: params.id }, data: { status: 'published', publishedAt: new Date() } });
+        const post = await this.resolvePost(params.id);
+        return this.prisma.blogPost.update({ where: { id: post.id }, data: { status: 'published', publishedAt: new Date() } });
       },
       requiredRole: 'admin',
     });
@@ -49,7 +50,8 @@ export class MCPService {
       description: 'Soft delete a blog post',
       inputSchema: { id: 'string' },
       handler: async (params) => {
-        return this.prisma.blogPost.update({ where: { id: params.id }, data: { deletedAt: new Date() } });
+        const post = await this.resolvePost(params.id);
+        return this.prisma.blogPost.update({ where: { id: post.id }, data: { deletedAt: new Date() } });
       },
       requiredRole: 'admin',
     });
@@ -60,7 +62,8 @@ export class MCPService {
       inputSchema: { id: 'string', title: 'string?', content: 'string?', excerpt: 'string?', coverImage: 'string?', status: 'string?' },
       handler: async (params) => {
         const { id, ...data } = params;
-        return this.prisma.blogPost.update({ where: { id }, data });
+        const post = await this.resolvePost(id);
+        return this.prisma.blogPost.update({ where: { id: post.id }, data });
       },
       requiredRole: 'admin',
     });
@@ -274,6 +277,18 @@ export class MCPService {
 
   private register(tool: MCPTool) {
     this.tools.set(tool.name, tool);
+  }
+
+  private async resolvePost(idOrSlug: string) {
+    const isUUID = /^[0-9a-f-]{36}$/i.test(idOrSlug);
+    if (isUUID) {
+      const post = await this.prisma.blogPost.findUnique({ where: { id: idOrSlug } });
+      if (!post) throw new Error('Post not found');
+      return post;
+    }
+    const post = await this.prisma.blogPost.findUnique({ where: { slug: idOrSlug } });
+    if (!post) throw new Error('Post not found');
+    return post;
   }
 
   getTools() {
