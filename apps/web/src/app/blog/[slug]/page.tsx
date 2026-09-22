@@ -1,5 +1,6 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
 import { ShareButtons } from '@/components/share-buttons';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -11,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (!res.ok) return {};
     const post = await res.json();
     return {
-      title: `${post.title} — Ahmed Ekram Al Sada`,
+      title: post.title,
       description: post.excerpt || post.title,
       openGraph: { title: post.title, description: post.excerpt || post.title, images: post.coverImage ? [{ url: post.coverImage }] : [] },
     };
@@ -33,45 +34,57 @@ async function getRelatedPosts(categorySlug?: string, currentSlug?: string) {
     if (!res.ok) return [];
     const data = await res.json();
     const posts = data.data || data || [];
-    return posts.filter((p: any) => p.slug !== currentSlug).slice(0, 2);
+    return posts.filter((p: { slug: string }) => p.slug !== currentSlug).slice(0, 2);
   } catch { return []; }
+}
+
+function slugify(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
 function extractHeadings(content: string) {
   const headings: { level: number; text: string; id: string }[] = [];
   for (const line of content.split('\n')) {
     const match = line.match(/^(#{1,3})\s+(.+)/);
-    if (match) {
-      const text = match[2].trim();
-      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      headings.push({ level: match[1].length, text, id });
-    }
+    if (match) headings.push({ level: match[1].length, text: match[2].trim(), id: slugify(match[2].trim()) });
   }
   return headings;
 }
 
+/**
+ * Renders the stored markdown-ish body. Styling lives in the `.article` class,
+ * so the elements below stay plain.
+ */
 function renderContent(content: string) {
   return content.split('\n').map((line: string, i: number) => {
     const heading = line.match(/^(#{1,3})\s+(.+)/);
     if (heading) {
       const text = heading[2].trim();
-      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      if (heading[1].length === 1) return <h1 key={i} id={id} className="text-3xl font-bold mt-8 mb-4">{text}</h1>;
-      if (heading[1].length === 2) return <h2 key={i} id={id} className="text-2xl font-bold mt-6 mb-3">{text}</h2>;
-      return <h3 key={i} id={id} className="text-xl font-semibold mt-5 mb-2">{text}</h3>;
+      const id = slugify(text);
+      if (heading[1].length === 1) return <h1 key={i} id={id}>{text}</h1>;
+      if (heading[1].length === 2) return <h2 key={i} id={id}>{text}</h2>;
+      return <h3 key={i} id={id}>{text}</h3>;
     }
-    if (line.startsWith('- ')) return <li key={i} className="ml-4 text-muted-foreground mb-1">{line.slice(2)}</li>;
+    if (line.startsWith('- ')) return <li key={i}>{line.slice(2)}</li>;
     if (line.startsWith('```')) return null;
     if (line.trim() === '') return <br key={i} />;
-    // Code inline detection
     if (line.includes('`')) {
       const parts = line.split(/(`[^`]+`)/);
-      return <p key={i} className="mb-4 leading-relaxed text-muted-foreground">{parts.map((p, j) =>
-        p.startsWith('`') && p.endsWith('`') ? <code key={j} className="rounded bg-muted px-1.5 py-0.5 text-sm font-mono">{p.slice(1, -1)}</code> : <span key={j}>{p}</span>
-      )}</p>;
+      return (
+        <p key={i}>
+          {parts.map((part, j) =>
+            part.startsWith('`') && part.endsWith('`') ? <code key={j}>{part.slice(1, -1)}</code> : <span key={j}>{part}</span>,
+          )}
+        </p>
+      );
     }
-    return <p key={i} className="mb-4 leading-relaxed text-muted-foreground">{line}</p>;
+    return <p key={i}>{line}</p>;
   });
+}
+
+function formatDate(value?: string) {
+  if (!value) return '';
+  return new Date(value).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -80,10 +93,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   if (!post) {
     return (
-      <div className="container mx-auto max-w-3xl px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold">Article not found</h1>
-        <p className="mt-4 text-muted-foreground">The article you&apos;re looking for doesn&apos;t exist.</p>
-        <a href="/blog" className="mt-6 inline-block text-sm text-blue-500 hover:underline">← Back to blog</a>
+      <div className="page text-center">
+        <p className="label">404</p>
+        <h1 className="h1 mt-4">Article not found</h1>
+        <p className="lede mx-auto">The article you&apos;re looking for doesn&apos;t exist.</p>
+        <Link href="/blog" className="btn-ghost mt-8">← Back to writing</Link>
       </div>
     );
   }
@@ -92,61 +106,62 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const related = await getRelatedPosts(post.category?.slug, slug);
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-16">
-      <div className="lg:grid lg:grid-cols-[1fr_250px] lg:gap-12">
-        {/* Article */}
+    <div className="page page-wide">
+      <div className="lg:grid lg:grid-cols-[1fr_240px] lg:gap-14">
         <article>
-          <div className="mb-8">
-            <p className="mb-2 text-sm text-muted-foreground">
-              {post.publishedAt && new Date(post.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-              {post.category && <span> · {post.category.name}</span>}
-              <span> · {post.readingTime || '5'} min read</span>
-            </p>
-            <h1 className="text-3xl font-bold md:text-4xl mb-4">{post.title}</h1>
+          <header className="mb-10">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10.5px] uppercase tracking-[.09em] text-dim">
+              {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
+              {post.category && <span>· {post.category.name}</span>}
+              <span>· {post.readingTime || '5'} min read</span>
+            </div>
+            <h1 className="h1 mt-5 max-w-[30ch]">{post.title}</h1>
             {post.coverImage && post.coverImage !== '' && (
-              <img src={post.coverImage} alt={post.title} className="w-full rounded-lg object-cover max-h-96 mb-6" />
+              <img src={post.coverImage} alt={post.title} className="mt-7 max-h-96 w-full rounded-2xl border border-line object-cover" />
             )}
-            {post.excerpt && <p className="text-lg text-muted-foreground leading-relaxed">{post.excerpt}</p>}
-          </div>
+            {post.excerpt && <p className="lede">{post.excerpt}</p>}
+          </header>
 
-          <div className="prose prose-gray dark:prose-invert max-w-none">
+          <div className="article rule pt-10">
             {post.content ? renderContent(post.content) : <p className="text-muted-foreground">No content yet.</p>}
           </div>
 
-          <div className="mt-12 pt-8 border-t flex items-center justify-between">
-            <a href="/blog" className="text-sm text-blue-500 hover:underline">← Back to blog</a>
+          <div className="mt-14 flex flex-wrap items-center justify-between gap-5 border-t border-line pt-8">
+            <Link href="/blog" className="text-[14px] text-muted-foreground transition hover:text-warm">← Back to writing</Link>
             <ShareButtons title={post.title} url={`https://ahmedekram.site/blog/${post.slug}`} />
           </div>
         </article>
 
-        {/* Sidebar */}
         <aside className="hidden lg:block">
-          <div className="sticky top-24">
-            {/* Table of Contents */}
+          <div className="sticky top-28">
             {headings.length > 0 && (
-              <div className="mb-8">
-                <p className="text-sm font-semibold mb-3">Table of Contents</p>
-                <nav className="space-y-1.5">
+              <nav className="mb-10">
+                <p className="label mb-4">On this page</p>
+                <div className="flex flex-col gap-2 border-l border-line">
                   {headings.map((h, i) => (
-                    <a key={i} href={`#${h.id}`}
-                      className={`block text-sm text-muted-foreground hover:text-foreground transition-colors ${h.level === 2 ? 'pl-4' : h.level === 3 ? 'pl-8' : ''}`}>
+                    <a
+                      key={i}
+                      href={`#${h.id}`}
+                      className={`text-[13.5px] leading-snug text-muted-foreground transition hover:text-warm ${
+                        h.level === 2 ? 'pl-6' : h.level === 3 ? 'pl-9' : 'pl-3'
+                      }`}
+                    >
                       {h.text}
                     </a>
                   ))}
-                </nav>
-              </div>
+                </div>
+              </nav>
             )}
 
-            {/* Related Articles */}
             {related.length > 0 && (
               <div>
-                <p className="text-sm font-semibold mb-3">Related Articles</p>
-                <div className="space-y-3">
-                  {related.map((r: any) => (
-                    <a key={r.id} href={`/blog/${r.slug}`} className="block rounded-lg border bg-card p-3 hover:border-blue-500/30 transition-colors">
-                      <p className="text-xs text-muted-foreground">{new Date(r.publishedAt).toLocaleDateString()}</p>
-                      <p className="text-sm font-medium mt-1 hover:text-blue-500 transition-colors">{r.title}</p>
-                    </a>
+                <p className="label mb-4">Related</p>
+                <div className="flex flex-col gap-3">
+                  {related.map((r: { id: string; slug: string; title: string; publishedAt?: string }) => (
+                    <Link key={r.id} href={`/blog/${r.slug}`} className="panel block p-4 transition hover:border-line-2">
+                      <p className="font-mono text-[10.5px] uppercase tracking-[.08em] text-dim">{formatDate(r.publishedAt)}</p>
+                      <p className="mt-2 text-[14px] font-medium leading-snug">{r.title}</p>
+                    </Link>
                   ))}
                 </div>
               </div>

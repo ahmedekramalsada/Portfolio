@@ -227,7 +227,7 @@ export default async function HomePage() {
 
           <div className="mt-11 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
-              <TiltCard key={project.id} className="panel block p-6">
+              <TiltCard key={project.id} href={`/projects/${project.slug}`} className="panel block p-6">
                 <div className="flex items-center justify-between gap-3">
                   <span className="font-mono text-[10.5px] uppercase tracking-[.09em] text-dim">
                     {project.role || 'Infrastructure'}
@@ -257,10 +257,8 @@ export default async function HomePage() {
                   </div>
                 )}
 
-                <div className="mt-6 flex items-center gap-4 font-mono text-[11px] uppercase tracking-[.08em] text-dim">
-                  {project.githubUrl && <span>GitHub</span>}
-                  {project.demoUrl && <span>Live</span>}
-                  <span className="ml-auto text-warm">Open →</span>
+                <div className="mt-6 flex items-center font-mono text-[11px] uppercase tracking-[.08em] text-warm">
+                  <span>Open case study →</span>
                 </div>
               </TiltCard>
             ))}

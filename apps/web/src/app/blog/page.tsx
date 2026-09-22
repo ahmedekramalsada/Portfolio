@@ -1,9 +1,11 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
 
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { PageHeader } from '@/components/site/page-header';
 
 export const metadata: Metadata = {
-  title: 'Blog — Ahmed Ekram Al Sada',
+  title: 'Blog',
   description: 'Articles on DevOps, Docker, Kubernetes, CI/CD, AI engineering, and platform engineering by Ahmed Ekram Al Sada.',
   openGraph: { title: 'Blog — Ahmed Ekram Al Sada', description: 'DevOps articles by Ahmed Ekram Al Sada.' },
 };
@@ -26,6 +28,11 @@ async function getCategories() {
   } catch { return []; }
 }
 
+function formatDate(value?: string) {
+  if (!value) return '';
+  return new Date(value).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
 export default async function BlogPage({ searchParams }: { searchParams: Promise<{ page?: string; category?: string; q?: string }> }) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
@@ -33,86 +40,101 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
   const { data: posts, meta } = await getPosts(category, page);
   const categories = await getCategories();
 
-  const topicCats = categories.filter((c: any) =>
+  const topicCats = categories.filter((c: { name: string }) =>
     ['DevOps', 'Docker', 'Kubernetes', 'Linux', 'AI', 'Tutorials', 'Career', 'Monitoring', 'Cloud', 'Backend', 'Frontend'].includes(c.name)
   );
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-16">
-      {/* Header */}
-      <div className="mb-10">
-        <h1 className="text-4xl font-bold mb-2">Blog</h1>
-        <p className="text-lg text-muted-foreground">DevOps, AI, cloud infrastructure, and platform engineering</p>
-      </div>
+    <div className="page page-wide">
+      <PageHeader
+        label="Writing"
+        title="Notes from production"
+        lede="DevOps, cloud infrastructure and platform engineering — written from what actually broke, and what fixed it."
+      />
 
       {/* Search */}
       <form method="GET" action="/blog" className="mb-6">
-        <div className="relative">
-          <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input name="q" type="search" placeholder="Search articles..." defaultValue={params.q || ''}
-            className="w-full rounded-lg border bg-background pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50" />
+        <div className="relative max-w-md">
+          <svg className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-dim" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+          </svg>
+          <input
+            name="q"
+            type="search"
+            placeholder="Search articles…"
+            defaultValue={params.q || ''}
+            className="field pl-10"
+          />
         </div>
       </form>
 
-      {/* Category Filter */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        <a href="/blog" className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all border ${category === 'all' ? 'bg-blue-600 text-white border-blue-600' : 'border-border hover:border-blue-500/30 hover:bg-accent'}`}>All</a>
-        {topicCats.map((cat: any) => (
-          <a key={cat.id} href={`/blog?category=${cat.slug || cat.name.toLowerCase()}`}
-            className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all border ${category === (cat.slug || cat.name.toLowerCase()) ? 'bg-blue-600 text-white border-blue-600' : 'border-border hover:border-blue-500/30 hover:bg-accent'}`}>
-            {cat.name}
-          </a>
-        ))}
+      {/* Category filter */}
+      <div className="mb-10 flex flex-wrap gap-2">
+        <Link href="/blog" className={`chip ${category === 'all' ? 'chip-on' : ''}`}>All</Link>
+        {topicCats.map((cat: { id: string; name: string; slug?: string }) => {
+          const slug = cat.slug || cat.name.toLowerCase();
+          return (
+            <Link key={cat.id} href={`/blog?category=${slug}`} className={`chip ${category === slug ? 'chip-on' : ''}`}>
+              {cat.name}
+            </Link>
+          );
+        })}
       </div>
 
-      {/* Posts Grid */}
+      {/* Posts */}
       {posts.length === 0 ? (
-        <div className="rounded-xl border border-dashed p-16 text-center">
-          <p className="text-3xl mb-2">📝</p>
-          <p className="text-muted-foreground">No articles found{category !== 'all' ? ' in this category' : ''}.</p>
-          {category !== 'all' && <a href="/blog" className="text-sm text-blue-500 hover:text-blue-400 mt-2 inline-block">View all articles →</a>}
+        <div className="panel px-8 py-20 text-center">
+          <p className="font-mono text-[11px] uppercase tracking-[.09em] text-dim">Empty</p>
+          <p className="mt-3 text-muted-foreground">No articles found{category !== 'all' ? ' in this category' : ''}.</p>
+          {category !== 'all' && <Link href="/blog" className="mt-4 inline-block text-[14px] text-warm hover:underline">View all articles →</Link>}
         </div>
       ) : (
         <div className="grid gap-5 md:grid-cols-2">
-          {posts.map((post: any, i: number) => (
-            <a key={post.id} href={`/blog/${post.slug}`}
-              className={`group rounded-xl border bg-card transition-all hover:border-blue-500/30 hover:shadow-sm ${i === 0 ? 'md:col-span-2' : ''}`}>
+          {posts.map((post: { id: string; slug: string; title: string; excerpt?: string; publishedAt?: string; coverImage?: string; readingTime?: number; category?: { name: string } }, i: number) => (
+            <Link
+              key={post.id}
+              href={`/blog/${post.slug}`}
+              className={`group panel block overflow-hidden transition-all hover:border-line-2 ${i === 0 ? 'md:col-span-2' : ''}`}
+            >
               {post.coverImage && (
-                <div className="overflow-hidden rounded-t-xl">
-                  <img src={post.coverImage} alt="" className="h-48 w-full object-cover transition-transform group-hover:scale-105" />
+                <div className="overflow-hidden">
+                  <img src={post.coverImage} alt="" className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                 </div>
               )}
-              <div className="p-5">
-                <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
-                  {post.publishedAt && <span>{new Date(post.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>}
+              <div className="p-6">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10.5px] uppercase tracking-[.08em] text-dim">
+                  {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
                   {post.category && <span>· {post.category.name}</span>}
                   <span>· {post.readingTime || '5'} min read</span>
                 </div>
-                <h2 className={`font-semibold group-hover:text-blue-500 transition-colors ${i === 0 ? 'text-xl' : ''}`}>{post.title}</h2>
-                {post.excerpt && <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">{post.excerpt}</p>}
+                <h2 className={`mt-3 font-medium leading-snug tracking-[-.02em] transition-colors group-hover:text-warm ${i === 0 ? 'text-[26px]' : 'text-[19px]'}`}>
+                  {post.title}
+                </h2>
+                {post.excerpt && <p className="mt-3 line-clamp-2 text-[14.5px] leading-relaxed text-muted-foreground">{post.excerpt}</p>}
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       )}
 
       {/* Pagination */}
       {meta.totalPages > 1 && (
-        <div className="mt-10 flex items-center justify-center gap-4">
+        <div className="mt-12 flex items-center justify-center gap-6">
           {page > 1 && (
-            <a href={`/blog?page=${page - 1}${category !== 'all' ? `&category=${category}` : ''}`}
-              className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              Previous
-            </a>
+            <Link
+              href={`/blog?page=${page - 1}${category !== 'all' ? `&category=${category}` : ''}`}
+              className="btn-ghost"
+            >
+              ← Previous
+            </Link>
           )}
-          <span className="text-sm text-muted-foreground">Page {page} of {meta.totalPages}</span>
+          <span className="font-mono text-[11.5px] uppercase tracking-[.08em] text-dim">
+            Page {page} of {meta.totalPages}
+          </span>
           {page < meta.totalPages && (
-            <a href={`/blog?page=${page + 1}${category !== 'all' ? `&category=${category}` : ''}`}
-              className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Next
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </a>
+            <Link href={`/blog?page=${page + 1}${category !== 'all' ? `&category=${category}` : ''}`} className="btn-ghost">
+              Next →
+            </Link>
           )}
         </div>
       )}

@@ -17,64 +17,62 @@ export default function LoginPage() {
     try {
       await login(email, password);
       router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Login failed');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Login failed');
     }
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4">
+    <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-6 py-24">
       <div className="w-full max-w-sm">
-        <h1 className="mb-8 text-center text-2xl font-bold">Sign In</h1>
+        <div className="mb-8 text-center">
+          <span className="mx-auto mb-6 grid h-10 w-10 place-items-center rounded-xl border border-line-2 bg-gradient-to-b from-muted to-card font-mono text-[12px] text-warm">
+            AE
+          </span>
+          <h1 className="h2">Sign in</h1>
+          <p className="mt-3 text-[14px] text-muted-foreground">Admin panel access only.</p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="panel flex flex-col gap-5 p-7">
           {error && (
-            <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
+            <div className="rounded-xl border border-[#6d3b34] bg-[#2a1614] px-4 py-3 text-[13.5px] text-[#e8977f]">
               {error}
             </div>
           )}
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
-              Email
-            </label>
+            <label htmlFor="email" className="label-field">Email</label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="field"
               placeholder="admin@ahmedekram.site"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
-              Password
-            </label>
+            <label htmlFor="password" className="label-field">Password</label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="field"
               placeholder="••••••••"
               required
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
-          >
-            {isLoading ? 'Signing in...' : 'Sign In'}
+          <button type="submit" disabled={isLoading} className="btn-primary justify-center disabled:opacity-50">
+            {isLoading ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          Admin panel access only
+        <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-[.09em] text-dim">
+          Content API also accepts a bearer token
         </p>
       </div>
     </div>

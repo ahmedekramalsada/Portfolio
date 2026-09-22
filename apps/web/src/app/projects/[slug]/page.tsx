@@ -1,7 +1,20 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 type Props = { params: Promise<{ slug: string }> };
+
+const STATUS: Record<string, { label: string; className: string }> = {
+  completed: { label: 'Shipped', className: 's-ok' },
+  in_progress: { label: 'In progress', className: 's-live' },
+  planning: { label: 'Planned', className: '' },
+};
+
+function techName(tech: unknown): string {
+  if (typeof tech === 'string') return tech;
+  if (tech && typeof tech === 'object' && 'name' in tech) return String((tech as { name: unknown }).name);
+  return '';
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -10,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     if (!res.ok) return {};
     const project = await res.json();
     return {
-      title: `${project.title} — Projects — Ahmed Ekram Al Sada`,
+      title: `${project.title} — Projects`,
       description: project.description || project.title,
       openGraph: { title: project.title, description: project.description || project.title, images: project.coverImage ? [{ url: project.coverImage }] : [] },
     };
@@ -33,91 +46,84 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
   if (!project) {
     return (
-      <div className="container mx-auto max-w-3xl px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold">Project not found</h1>
-        <a href="/projects" className="mt-4 inline-block text-sm text-primary hover:underline">
-          ← Back to projects
-        </a>
+      <div className="page text-center">
+        <p className="label">404</p>
+        <h1 className="h1 mt-4">Project not found</h1>
+        <Link href="/projects" className="btn-ghost mt-8">← Back to projects</Link>
       </div>
     );
   }
 
+  const status = STATUS[project.status || ''] || { label: project.status?.replace('_', ' ') || 'Ongoing', className: '' };
+  const techs = ((project.technologies || []) as unknown[]).map(techName).filter(Boolean);
+  const meta: [string, string][] = [];
+  if (project.role) meta.push(['Role', project.role]);
+  if (project.difficulty) meta.push(['Difficulty', project.difficulty]);
+  if (project.startDate) meta.push(['Started', new Date(project.startDate).toLocaleDateString('en-GB')]);
+  if (project.endDate) meta.push(['Completed', new Date(project.endDate).toLocaleDateString('en-GB')]);
+
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-16">
-      <a href="/projects" className="mb-8 inline-block text-sm text-muted-foreground hover:text-foreground">
+    <div className="page">
+      <Link href="/projects" className="mb-10 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[.09em] text-dim transition hover:text-warm">
         ← Back to projects
-      </a>
+      </Link>
 
-      <div className="mb-8">
-        {project.coverImage && project.coverImage !== '' && (
-          <img src={project.coverImage} alt={project.title} className="mb-6 w-full rounded-lg object-cover max-h-96" />
-        )}
-        <div className="mb-3 flex items-center gap-2">
-          <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-            project.status === 'completed' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :
-            project.status === 'in_progress' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' :
-            'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
-          }`}>
-            {project.status?.replace('_', ' ')}
-          </span>
-          {project.featured && <span className="text-xs text-muted-foreground">Featured</span>}
+      <header className="mb-10">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className={`status ${status.className}`}>{status.label}</span>
+          {project.featured && <span className="status s-warm">Featured</span>}
         </div>
+        <h1 className="h1 mt-6 max-w-[28ch]">{project.title}</h1>
 
-        <h1 className="text-3xl font-bold md:text-4xl">{project.title}</h1>
-
-        {project.technologies?.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {project.technologies.map((t: any) => (
-              <span key={t.id} className="rounded-full bg-muted px-3 py-1 text-sm">
-                {t.name} {t.icon && ` ${t.icon}`}
+        {techs.length > 0 && (
+          <div className="mt-6 flex flex-wrap gap-2">
+            {techs.map((tech) => (
+              <span key={tech} className="rounded-md border border-line bg-muted px-2.5 py-1 font-mono text-[11px] text-muted-foreground">
+                {tech}
               </span>
             ))}
           </div>
         )}
 
-        <div className="mt-4 flex gap-4">
-          {project.githubUrl && (
-            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
-              GitHub →
-            </a>
-          )}
-          {project.demoUrl && (
-            <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
-              Live Demo →
-            </a>
-          )}
-        </div>
-      </div>
+        {(project.githubUrl || project.demoUrl) && (
+          <div className="mt-8 flex flex-wrap gap-3">
+            {project.githubUrl && (
+              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost">GitHub →</a>
+            )}
+            {project.demoUrl && (
+              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">Live demo →</a>
+            )}
+          </div>
+        )}
+      </header>
 
-      {project.description && (
-        <div className="prose prose-gray dark:prose-invert max-w-none">
-          <p className="text-lg text-muted-foreground">{project.description}</p>
-        </div>
+      {project.coverImage && project.coverImage !== '' && (
+        <img src={project.coverImage} alt={project.title} className="mb-10 max-h-96 w-full rounded-2xl border border-line object-cover" />
       )}
 
+      {project.description && <p className="lede mb-10 max-w-[70ch] text-[17px]">{project.description}</p>}
+
       {project.content && (
-        <div className="mt-8 prose prose-gray dark:prose-invert max-w-none">
+        <div className="article rule pt-10">
           {project.content.split('\n').map((line: string, i: number) => {
-            if (line.startsWith('# ')) return <h1 key={i} className="text-3xl font-bold mt-8 mb-4">{line.slice(2)}</h1>;
-            if (line.startsWith('## ')) return <h2 key={i} className="text-2xl font-bold mt-6 mb-3">{line.slice(3)}</h2>;
+            if (line.startsWith('# ')) return <h1 key={i}>{line.slice(2)}</h1>;
+            if (line.startsWith('## ')) return <h2 key={i}>{line.slice(3)}</h2>;
             if (line.trim() === '') return <br key={i} />;
-            return <p key={i} className="mb-4 leading-relaxed">{line}</p>;
+            return <p key={i}>{line}</p>;
           })}
         </div>
       )}
 
-      <div className="mt-12 pt-8 border-t">
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          {project.role && <div><span className="text-muted-foreground">Role:</span> {project.role}</div>}
-          {project.difficulty && <div><span className="text-muted-foreground">Difficulty:</span> {project.difficulty}</div>}
-          {project.startDate && (
-            <div><span className="text-muted-foreground">Started:</span> {new Date(project.startDate).toLocaleDateString()}</div>
-          )}
-          {project.endDate && (
-            <div><span className="text-muted-foreground">Completed:</span> {new Date(project.endDate).toLocaleDateString()}</div>
-          )}
+      {meta.length > 0 && (
+        <div className="panel mt-14 divide-y divide-line">
+          {meta.map(([term, value]) => (
+            <div key={term} className="flex items-center justify-between gap-4 px-6 py-4">
+              <span className="font-mono text-[11px] uppercase tracking-[.09em] text-dim">{term}</span>
+              <span className="text-[14.5px] text-muted-foreground">{value}</span>
+            </div>
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }

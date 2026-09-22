@@ -1,12 +1,22 @@
 'use client';
 
 import { useRef } from 'react';
+import Link from 'next/link';
 
 /**
- * A card that leans slightly toward the pointer. The tilt is decoration only:
- * with reduced motion, or on touch, the card simply stays flat and clickable.
+ * A card that leans slightly toward the pointer and links somewhere. The tilt is
+ * decoration only: with reduced motion, or on touch, the card stays flat and
+ * remains a normal link.
  */
-export function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function TiltCard({
+  href,
+  children,
+  className = '',
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
   const ref = useRef<HTMLAnchorElement>(null);
 
   const handleMove = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -26,8 +36,8 @@ export function TiltCard({ children, className = '' }: { children: React.ReactNo
   };
 
   return (
-    <a ref={ref} onMouseMove={handleMove} onMouseLeave={reset} className={`tilt ${className}`}>
+    <Link ref={ref} href={href} onMouseMove={handleMove} onMouseLeave={reset} className={`tilt ${className}`}>
       {children}
-    </a>
+    </Link>
   );
 }

@@ -6,7 +6,7 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  return { title: `${slug.charAt(0).toUpperCase() + slug.slice(1)} — Blog — Ahmed Ekram Al Sada`, description: `Articles about ${slug}.` };
+  return { title: slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '), description: `Articles about ${slug}.` };
 }
 
 async function getPostsByCategory(slug: string) {
@@ -18,30 +18,42 @@ async function getPostsByCategory(slug: string) {
   } catch { return []; }
 }
 
+function formatDate(value?: string) {
+  if (!value) return '';
+  return new Date(value).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
   const posts = await getPostsByCategory(slug);
   const categoryName = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-16">
-      <h1 className="text-4xl font-bold mb-2">{categoryName}</h1>
-      <p className="text-muted-foreground mb-8">{posts.length} article{posts.length !== 1 ? 's' : ''}</p>
+    <div className="page">
+      <header className="mb-12">
+        <span className="label">Topic</span>
+        <h1 className="h1 mt-5">{categoryName}</h1>
+        <p className="lede">
+          {posts.length} article{posts.length !== 1 ? 's' : ''} filed under this topic.
+        </p>
+      </header>
 
       {posts.length === 0 ? (
-        <div className="rounded-lg border border-dashed p-12 text-center">
+        <div className="panel px-8 py-20 text-center">
           <p className="text-muted-foreground">No articles in this category yet.</p>
+          <Link href="/blog" className="mt-4 inline-block text-[14px] text-warm hover:underline">All writing →</Link>
         </div>
       ) : (
-        <div className="space-y-4">
-          {posts.map((post: any) => (
-            <Link key={post.id} href={`/blog/${post.slug}`}
-              className="block rounded-lg border bg-card p-6 transition-all hover:border-blue-500/30">
-              <p className="text-xs text-muted-foreground mb-1">
-                {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : ''}
-              </p>
-              <h2 className="font-semibold text-lg hover:text-blue-500 transition-colors">{post.title}</h2>
-              {post.excerpt && <p className="mt-2 text-sm text-muted-foreground">{post.excerpt}</p>}
+        <div>
+          {posts.map((post: { id: string; slug: string; title: string; excerpt?: string; publishedAt?: string }) => (
+            <Link key={post.id} href={`/blog/${post.slug}`} className="wrow group">
+              <div className="min-w-0">
+                <h2 className="wtitle text-[19px] font-medium leading-snug tracking-[-.02em] transition-colors">{post.title}</h2>
+                {post.excerpt && <p className="mt-2 line-clamp-1 text-[14.2px] text-muted-foreground">{post.excerpt}</p>}
+              </div>
+              <span className="shrink-0 font-mono text-[11.5px] uppercase tracking-[.08em] text-dim">
+                {formatDate(post.publishedAt)}
+              </span>
             </Link>
           ))}
         </div>

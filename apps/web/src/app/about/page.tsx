@@ -1,8 +1,9 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
 import type { Metadata } from 'next';
+import { PageHeader } from '@/components/site/page-header';
 
 export const metadata: Metadata = {
-  title: 'About — Ahmed Ekram Al Sada',
+  title: 'About',
   description: 'DevOps engineer, AI enthusiast, and platform builder. My journey, skills, certifications, and the tools I use every day.',
 };
 
@@ -20,78 +21,106 @@ async function getExperiences() {
   } catch { return []; }
 }
 
+const TIMELINE = [
+  {
+    period: 'May 2026 — Present',
+    role: 'DevOps Engineer @ SmartSigma',
+    body: 'Managing production infrastructure, CI/CD pipelines, Docker orchestration, SSL automation, and platform integrations across 7 VPS servers.',
+  },
+  {
+    period: 'Sep 2025 — Apr 2026',
+    role: 'DevOps Intern @ National Telecommunication Institute (NTI)',
+    body: '600+ hours of enterprise training: Linux, cloud, IaC, CI/CD, containers, monitoring.',
+  },
+];
+
+const TOOLS = [
+  { cat: 'Containers', items: ['Docker', 'Docker Compose', 'Kubernetes'] },
+  { cat: 'CI/CD', items: ['GitLab CI', 'GitHub Actions', 'Jenkins', 'SonarQube'] },
+  { cat: 'Infrastructure', items: ['Terraform', 'Ansible', 'Traefik', 'NGINX', 'Caddy'] },
+  { cat: 'Cloud', items: ['AWS', 'Cloudflare R2', 'BunnyCDN'] },
+  { cat: 'Monitoring', items: ['Prometheus', 'Grafana', 'Healthchecks.io', 'Uptime Kuma'] },
+  { cat: 'Backend', items: ['NestJS', 'Spring Boot', 'PostgreSQL', 'MySQL', 'Redis', 'Qdrant'] },
+  { cat: 'Frontend', items: ['Next.js', 'React', 'Tailwind'] },
+  { cat: 'AI', items: ['LangChain', 'OpenRouter', 'RAG', 'MCP', 'Qdrant'] },
+];
+
+const CERTS = [{ name: 'AWS Certified Cloud Practitioner', issuer: 'Amazon Web Services', year: '2025' }];
+
+const STACK = [
+  ['Platform', 'Ahmed OS (Next.js + NestJS + PostgreSQL)'],
+  ['Servers', '7 VPS, Ubuntu 24.04, Docker'],
+  ['Reverse proxy', 'Traefik (auto SSL)'],
+  ['Storage', 'Cloudflare R2, BunnyCDN'],
+  ['Monitoring', 'Prometheus, Grafana, Loki, Alertmanager'],
+];
+
 export default async function AboutPage() {
   const [skills, experiences] = await Promise.all([getSkills(), getExperiences()]);
 
-  const tools = [
-    { cat: 'Containers', items: ['Docker', 'Docker Compose', 'Kubernetes'] },
-    { cat: 'CI/CD', items: ['GitLab CI', 'GitHub Actions', 'Jenkins', 'SonarQube'] },
-    { cat: 'Infrastructure', items: ['Terraform', 'Ansible', 'Traefik', 'NGINX', 'Caddy'] },
-    { cat: 'Cloud', items: ['AWS', 'Cloudflare R2', 'BunnyCDN'] },
-    { cat: 'Monitoring', items: ['Prometheus', 'Grafana', 'Healthchecks.io', 'Uptime Kuma'] },
-    { cat: 'Backend', items: ['NestJS', 'Spring Boot', 'PostgreSQL', 'MySQL', 'Redis', 'Qdrant'] },
-    { cat: 'Frontend', items: ['Next.js', 'React', 'Tailwind'] },
-    { cat: 'AI', items: ['LangChain', 'OpenRouter', 'RAG', 'MCP', 'Qdrant'] },
-  ];
-
-  const certs = [
-    { name: 'AWS Certified Cloud Practitioner', issuer: 'Amazon Web Services', year: '2025' },
-  ];
-
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-16">
-      {/* Hero */}
-      <section className="mb-16">
-        <h1 className="text-4xl font-bold mb-4">About Me</h1>
-        <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-          DevOps engineer at SmartSigma, building and automating production infrastructure 
-          across 7 VPS servers. Passionate about AI-powered automation, platform engineering, 
-          and creating systems that just work.
-        </p>
-      </section>
+    <div className="page">
+      <PageHeader
+        label="About"
+        title="I keep production boring on purpose"
+        lede="DevOps engineer at SmartSigma, building and automating production infrastructure across 7 VPS servers. Passionate about AI-powered automation, platform engineering, and creating systems that just work."
+      />
 
       {/* Journey */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">My Journey</h2>
-        <div className="border-l-2 border-blue-500/30 space-y-8">
-          <div className="pl-6">
-            <p className="text-sm text-blue-500 font-medium">May 2026 — Present</p>
-            <p className="font-semibold">DevOps Engineer @ SmartSigma</p>
-            <p className="text-sm text-muted-foreground">Managing production infrastructure, CI/CD pipelines, Docker orchestration, SSL automation, and AI platform integrations across 7 VPS servers.</p>
-          </div>
-          <div className="pl-6">
-            <p className="text-sm text-blue-500 font-medium">Sep 2025 — Apr 2026</p>
-            <p className="font-semibold">DevOps Intern @ National Telecommunication Institute (NTI)</p>
-            <p className="text-sm text-muted-foreground">600+ hours of enterprise training: Linux, cloud, IaC, CI/CD, containers, monitoring.</p>
-          </div>
+      <section className="mb-20">
+        <h2 className="label mb-8">My journey</h2>
+        <div className="relative pl-8">
+          <span className="absolute left-[5px] top-3 bottom-3 w-px bg-line" aria-hidden />
+          {TIMELINE.map((entry) => (
+            <div key={entry.period} className="relative pb-10 last:pb-0">
+              <span className="absolute -left-8 top-[7px] h-3 w-3 rounded-full border-2 border-warm bg-background" aria-hidden />
+              <p className="font-mono text-[11.5px] uppercase tracking-[.09em] text-warm">{entry.period}</p>
+              <p className="mt-2 text-[17px] font-medium tracking-[-.015em]">{entry.role}</p>
+              <p className="mt-2 max-w-[70ch] text-[14.5px] leading-relaxed text-muted-foreground">{entry.body}</p>
+            </div>
+          ))}
+          {experiences.length > 0 && (
+            <div className="mt-2 border-t border-line pt-8">
+              <p className="label mb-5">From the database</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {experiences.map((exp: { id: string; position?: string; company?: string; description?: string }) => (
+                  <div key={exp.id} className="panel p-5">
+                    <p className="font-medium">{exp.position}</p>
+                    <p className="mt-1 text-[13.5px] text-muted-foreground">{exp.company}</p>
+                    {exp.description && <p className="mt-3 text-[13.5px] leading-relaxed text-muted-foreground">{exp.description}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Skills Grid */}
+      {/* Skills */}
       {skills.length > 0 && (
-        <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-6">Skills</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {skills.map((s: any) => (
-              <div key={s.id} className="rounded-lg border bg-card p-3 text-center">
-                <p className="text-sm font-medium">{s.name}</p>
-                {s.category && <p className="text-xs text-muted-foreground mt-0.5">{s.category}</p>}
+        <section className="mb-20">
+          <h2 className="label mb-8">Skills</h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {skills.map((skill: { id: string; name: string; category?: string }) => (
+              <div key={skill.id} className="panel p-4">
+                <p className="text-[15px] font-medium">{skill.name}</p>
+                {skill.category && <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[.08em] text-dim">{skill.category}</p>}
               </div>
             ))}
           </div>
         </section>
       )}
 
-      {/* Tools I Use */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">Tools I Use Every Day</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {tools.map((group) => (
+      {/* Tools */}
+      <section className="mb-20">
+        <h2 className="label mb-8">Tools I use every day</h2>
+        <div className="grid gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+          {TOOLS.map((group) => (
             <div key={group.cat}>
-              <p className="text-sm font-semibold text-blue-500 mb-2">{group.cat}</p>
-              <ul className="space-y-1">
+              <p className="mb-3.5 text-[13.5px] font-medium text-warm">{group.cat}</p>
+              <ul className="flex flex-col gap-2">
                 {group.items.map((item) => (
-                  <li key={item} className="text-sm text-muted-foreground">{item}</li>
+                  <li key={item} className="text-[14px] text-muted-foreground">{item}</li>
                 ))}
               </ul>
             </div>
@@ -100,41 +129,45 @@ export default async function AboutPage() {
       </section>
 
       {/* Certifications */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">Certifications</h2>
-        {certs.length === 0 ? (
+      <section className="mb-20">
+        <h2 className="label mb-8">Certifications</h2>
+        {CERTS.length === 0 ? (
           <p className="text-muted-foreground">No certifications yet.</p>
-        ) : certs.map((c) => (
-          <div key={c.name} className="rounded-lg border bg-card p-4">
-            <p className="font-medium">{c.name}</p>
-            <p className="text-sm text-muted-foreground">{c.issuer} · {c.year}</p>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {CERTS.map((cert) => (
+              <div key={cert.name} className="panel flex flex-wrap items-center justify-between gap-3 p-5">
+                <p className="font-medium">{cert.name}</p>
+                <span className="status s-warm">{cert.issuer} · {cert.year}</span>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </section>
 
-      {/* Current Stack */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-bold mb-6">Current Stack</h2>
-        <div className="rounded-lg border bg-card p-6">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div><span className="text-sm font-medium">Platform:</span> <span className="text-sm text-muted-foreground">Ahmed OS (Next.js + NestJS + PostgreSQL)</span></div>
-            <div><span className="text-sm font-medium">Servers:</span> <span className="text-sm text-muted-foreground">7 VPS, Ubuntu 24.04, Docker</span></div>
-            <div><span className="text-sm font-medium">Reverse Proxy:</span> <span className="text-sm text-muted-foreground">Traefik (auto SSL)</span></div>
-            <div><span className="text-sm font-medium">Storage:</span> <span className="text-sm text-muted-foreground">Cloudflare R2, BunnyCDN</span></div>
-            <div><span className="text-sm font-medium">AI:</span> <span className="text-sm text-muted-foreground">OpenRouter, LangChain, RAG</span></div>
-            <div><span className="text-sm font-medium">Agent:</span> <span className="text-sm text-muted-foreground">Hermes + MCP</span></div>
-          </div>
+      {/* Current stack */}
+      <section className="mb-20">
+        <h2 className="label mb-8">Current stack</h2>
+        <div className="panel divide-y divide-line">
+          {STACK.map(([term, value]) => (
+            <div key={term} className="flex flex-col gap-1 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+              <span className="font-mono text-[11px] uppercase tracking-[.09em] text-dim">{term}</span>
+              <span className="text-[14.5px] text-muted-foreground sm:text-right">{value}</span>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* Contact */}
-      <section className="rounded-lg border bg-card p-8 text-center">
-        <h2 className="text-2xl font-bold mb-2">Let&apos;s Connect</h2>
-        <p className="text-muted-foreground mb-4">I&apos;m always open to interesting conversations and opportunities.</p>
-        <div className="flex justify-center gap-4">
-          <a href="/contact" className="rounded-md bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors">Contact Me</a>
-          <a href="https://linkedin.com/in/ahmedekramalsada" target="_blank" className="rounded-md border px-5 py-2.5 text-sm font-medium hover:bg-accent transition-colors">LinkedIn</a>
-          <a href="https://github.com/ahmedekramalsada" target="_blank" className="rounded-md border px-5 py-2.5 text-sm font-medium hover:bg-accent transition-colors">GitHub</a>
+      <section className="panel p-8 text-center sm:p-10">
+        <h2 className="h2">Let&apos;s talk about your platform</h2>
+        <p className="mx-auto mt-4 max-w-[52ch] text-[15px] leading-relaxed text-muted-foreground">
+          I&apos;m always open to interesting conversations and opportunities.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <a href="/contact" className="btn-primary">Contact me <span aria-hidden>→</span></a>
+          <a href="https://linkedin.com/in/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="btn-ghost">LinkedIn</a>
+          <a href="https://github.com/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="btn-ghost">GitHub</a>
         </div>
       </section>
     </div>
