@@ -3,6 +3,7 @@ const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHeader } from '@/components/site/page-header';
+import { Cover } from '@/components/site/cover';
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -113,31 +114,33 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
           ) : null}
         </div>
       ) : (
-        <div className="grid gap-5 md:grid-cols-2">
-          {posts.map((post: { id: string; slug: string; title: string; excerpt?: string; publishedAt?: string; coverImage?: string; readingTime?: number; category?: { name: string } }, i: number) => (
-            <Link
-              key={post.id}
-              href={`/blog/${post.slug}`}
-              className={`group panel block overflow-hidden transition-all hover:border-line-2 ${i === 0 ? 'md:col-span-2' : ''}`}
-            >
-              {post.coverImage && (
-                <div className="overflow-hidden">
-                  <img src={post.coverImage} alt="" className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+        <div className="grid gap-6 md:grid-cols-2">
+          {posts.map((post: { id: string; slug: string; title: string; excerpt?: string; publishedAt?: string; coverImage?: string; readingTime?: number; category?: { name: string } }, i: number) => {
+            const featured = i === 0 && posts.length > 1;
+            return (
+              <Link key={post.id} href={`/blog/${post.slug}`} className={`pcard ${featured ? 'pcard-wide md:col-span-2' : ''}`}>
+                <div className="pcard-media">
+                  <Cover
+                    src={post.coverImage}
+                    alt={post.title}
+                    fallback={(post.category?.name || post.title || '?')[0].toUpperCase()}
+                  />
                 </div>
-              )}
-              <div className="p-6">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10.5px] uppercase tracking-[.08em] text-dim">
-                  {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
-                  {post.category && <span>· {post.category.name}</span>}
-                  <span>· {post.readingTime || '5'} min read</span>
+                <div className={`pcard-body ${featured ? 'md:justify-center md:p-9' : ''}`}>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {post.category && <span className="chip chip-on">{post.category.name}</span>}
+                    {post.publishedAt && <span className="chip">{formatDate(post.publishedAt)}</span>}
+                  </div>
+                  <h2 className={`pcard-title ${featured ? 'md:text-[28px]' : ''}`}>{post.title}</h2>
+                  {post.excerpt && <p className={`pcard-excerpt ${featured ? 'md:line-clamp-3' : 'line-clamp-2'}`}>{post.excerpt}</p>}
+                  <div className="pcard-foot">
+                    <span className="font-mono text-[10.5px] uppercase tracking-[.09em] text-dim">{post.readingTime || 5} min read</span>
+                    <span className="font-mono text-[11px] uppercase tracking-[.08em] text-warm">Read →</span>
+                  </div>
                 </div>
-                <h2 className={`mt-3 font-medium leading-snug tracking-[-.02em] transition-colors group-hover:text-warm ${i === 0 ? 'text-[26px]' : 'text-[19px]'}`}>
-                  {post.title}
-                </h2>
-                {post.excerpt && <p className="mt-3 line-clamp-2 text-[14.5px] leading-relaxed text-muted-foreground">{post.excerpt}</p>}
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       )}
 
