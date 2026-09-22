@@ -113,6 +113,12 @@ export default function RootLayout({
         <link rel="canonical" href={siteConfig.url} />
         {/* RSS Feed */}
         <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} Blog`} href="/feed.xml" />
+        {/* Marks the document as JavaScript-capable before the first paint, so the
+            entrance animations start hidden only when they are certain to run.
+            Without JavaScript every headline and section stays plainly visible. */}
+        <script
+          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js-ready');" }}
+        />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}>
         <Providers>
