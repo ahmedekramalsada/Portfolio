@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 export type TerminalData = {
   name: string;
@@ -45,12 +45,6 @@ export function Terminal({ data }: { data: TerminalData }) {
 
   const escape = (value: string) =>
     value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-  useEffect(() => {
-    write(`<span class="d">${escape(data.name)} shell · type</span> <span class="a">help</span> <span class="d">and press enter</span>`);
-    write('');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const commands: Record<string, () => void> = {
     help: () => {
@@ -125,7 +119,19 @@ export function Terminal({ data }: { data: TerminalData }) {
         <span className="font-mono text-[11px] tracking-[.08em] text-muted-foreground">ahmed@ahmed-os · ~</span>
       </div>
 
-      <div ref={outRef} className="term-body" aria-live="polite" />
+      {/* The opening line is rendered by the server, so this is never an empty
+          box before JavaScript runs. Typed commands append below it. */}
+      <div ref={outRef} className="term-body" aria-live="polite">
+        <div className="l">
+          <span className="d">{data.name} shell · type</span> <span className="a">help</span>{' '}
+          <span className="d">and press enter</span>
+        </div>
+        <div className="l">
+          <span className="d">try</span> <span className="a">whoami</span>{' '}
+          <span className="d">·</span> <span className="a">stack</span>{' '}
+          <span className="d">·</span> <span className="a">projects</span>
+        </div>
+      </div>
 
       <div className="term-input" onClick={() => inputRef.current?.focus()}>
         <span>➜</span>
