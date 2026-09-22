@@ -233,25 +233,7 @@ Keyword Search
 
 Full Text Search
 
-Semantic Search
-
 Filters
-
----
-
-# AI Integration
-
-Generate Summary
-
-Generate Tags
-
-Generate SEO
-
-Improve Grammar
-
-Translate (Future)
-
-Suggest Related Articles
 
 ---
 

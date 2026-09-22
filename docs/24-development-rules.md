@@ -135,15 +135,6 @@ Every feature requires
 
 ---
 
-# AI Rules
-
-- AI never bypasses permissions.
-- AI must use application services.
-- AI cannot access secrets.
-- AI actions must be logged.
-
----
-
 # Documentation Rules
 
 Every feature must include

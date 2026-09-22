@@ -32,17 +32,6 @@ services:
       timeout: 3s
       retries: 5
 
-  qdrant:
-    image: qdrant/qdrant:latest
-    container_name: ahmedos-qdrant
-    restart: unless-stopped
-    ports:
-      - "6333:6333"
-      - "6334:6334"
-    volumes:
-      - qdrant_storage:/qdrant/storage
-
 volumes:
   pgdata:
   redisdata:
-  qdrant_storage:

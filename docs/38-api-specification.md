@@ -106,42 +106,6 @@ GET /search/trending
 
 ---
 
-# AI
-
-POST /ai/chat
-
-POST /ai/stream
-
-POST /ai/summarize
-
-POST /ai/rewrite
-
-POST /ai/seo
-
----
-
-# RAG
-
-POST /rag/index
-
-POST /rag/reindex
-
-GET /rag/status
-
-GET /rag/documents
-
----
-
-# MCP
-
-GET /mcp/tools
-
-GET /mcp/resources
-
-POST /mcp/call
-
----
-
 # Analytics
 
 GET /analytics/dashboard
@@ -151,8 +115,6 @@ GET /analytics/visitors
 GET /analytics/content
 
 GET /analytics/search
-
-GET /analytics/ai
 
 ---
 

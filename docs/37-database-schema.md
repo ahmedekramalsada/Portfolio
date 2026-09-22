@@ -237,110 +237,6 @@ uploadedBy
 
 ---
 
-# KnowledgeDocument
-
-id
-
-title
-
-sourceType
-
-sourceId
-
-content
-
-status
-
-lastIndexed
-
----
-
-# KnowledgeChunk
-
-id
-
-documentId
-
-chunkIndex
-
-content
-
-tokenCount
-
-embeddingId
-
-metadata
-
----
-
-# Embedding
-
-id
-
-provider
-
-model
-
-dimensions
-
-vectorId
-
-createdAt
-
----
-
-# AIConversation
-
-id
-
-title
-
-provider
-
-model
-
-totalTokens
-
-estimatedCost
-
-userId
-
----
-
-# AIMessage
-
-id
-
-conversationId
-
-role
-
-content
-
-tokenUsage
-
-latency
-
----
-
-# Prompt
-
-id
-
-name
-
-version
-
-category
-
-content
-
-variables
-
-status
-
----
-
 # SearchQuery
 
 id
@@ -451,12 +347,6 @@ Technology
 
 name
 
-KnowledgeChunk
-
-documentId
-
-chunkIndex
-
 SearchQuery
 
 query
@@ -474,8 +364,6 @@ Unique
 email
 
 slug
-
-prompt name + version
 
 technology name
 

@@ -48,8 +48,6 @@ PostgreSQL
 
 Redis
 
-Qdrant
-
 ---
 
 # Environment
@@ -73,8 +71,6 @@ Backend
 PostgreSQL
 
 Redis
-
-Qdrant
 
 Traefik
 
@@ -175,10 +171,6 @@ Connectivity Check
 Redis
 
 Ping Check
-
-Qdrant
-
-Health Check
 
 ---
 

@@ -6,7 +6,7 @@ Status: Approved
 
 # Overview
 
-Ahmed OS is a modular AI-first personal developer platform.
+Ahmed OS is a modular personal developer platform.
 
 The architecture must be scalable, maintainable, secure, and production-ready.
 
@@ -24,7 +24,6 @@ Every module must be independently maintainable.
 - Clean Architecture
 - Domain Driven Design
 - API First
-- AI First
 - Docker First
 - Documentation First
 - Event Ready
@@ -57,7 +56,6 @@ NestJS API
 
 PostgreSQL
 Redis
-Qdrant
 Bunny Storage
 
 ---
@@ -115,9 +113,6 @@ Responsibilities
 - Authentication
 - Authorization
 - CRUD
-- AI
-- RAG
-- MCP
 - Search
 - Analytics
 - Media
@@ -147,14 +142,6 @@ Search
 SEO
 
 Analytics
-
-Knowledge
-
-AI
-
-RAG
-
-MCP
 
 Notifications
 
@@ -188,141 +175,7 @@ Frontend never talks directly to:
 
 - PostgreSQL
 - Redis
-- Qdrant
 - Storage
-
----
-
-# AI Flow
-
-User
-
-↓
-
-Backend
-
-↓
-
-LangChain
-
-↓
-
-Provider
-
-↓
-
-Response
-
-If RAG is enabled
-
-User
-
-↓
-
-Embedding Search
-
-↓
-
-Qdrant
-
-↓
-
-Relevant Context
-
-↓
-
-LLM
-
-↓
-
-Response
-
----
-
-# RAG Pipeline
-
-Content
-
-↓
-
-Chunking
-
-↓
-
-Embedding
-
-↓
-
-Qdrant
-
-↓
-
-Retrieval
-
-↓
-
-Re-ranking
-
-↓
-
-Prompt
-
-↓
-
-LLM
-
-↓
-
-Answer
-
----
-
-# Knowledge Sources
-
-Blog
-
-Projects
-
-Resume
-
-Documentation
-
-Case Studies
-
-Labs
-
-Notes
-
-Pages
-
----
-
-# MCP Architecture
-
-AI
-
-↓
-
-MCP Controller
-
-↓
-
-MCP Tool
-
-↓
-
-Application Service
-
-↓
-
-Database
-
-Every MCP Tool must:
-
-- Authenticate
-- Authorize
-- Validate
-- Log
 
 ---
 
@@ -411,7 +264,6 @@ Redis stores
 
 - Sessions
 - Search Cache
-- AI Cache
 - Settings Cache
 
 ---
@@ -422,10 +274,8 @@ BullMQ
 
 Jobs
 
-- Embeddings
 - Image Processing
 - Notifications
-- AI Tasks
 - Scheduled Publishing
 
 ---
@@ -455,10 +305,6 @@ Database
 # Logging
 
 Every request must be logged.
-
-Every AI request must be logged.
-
-Every MCP call must be logged.
 
 Every error must be logged.
 

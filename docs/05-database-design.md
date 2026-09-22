@@ -273,58 +273,6 @@ Fields
 
 ---
 
-## ai_conversations
-
-Fields
-
-- id
-- user_id
-- title
-- model
-- created_at
-
----
-
-## ai_messages
-
-Fields
-
-- id
-- conversation_id
-- role
-- content
-- tokens
-- created_at
-
----
-
-## knowledge_chunks
-
-Fields
-
-- id
-- source_type
-- source_id
-- chunk_index
-- content
-- embedding_status
-- created_at
-
----
-
-## embeddings
-
-Fields
-
-- id
-- chunk_id
-- vector_id
-- provider
-- model
-- created_at
-
----
-
 ## search_logs
 
 Fields
@@ -399,24 +347,6 @@ Project
 
 Tags
 
-Knowledge
-
-↓
-
-Chunks
-
-Chunks
-
-↓
-
-Embeddings
-
-Conversation
-
-↓
-
-Messages
-
 ---
 
 # Soft Delete
@@ -481,10 +411,6 @@ webhooks
 api_keys
 
 audit_logs
-
-mcp_logs
-
-rag_jobs
 
 deployments
 

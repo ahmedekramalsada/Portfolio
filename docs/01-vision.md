@@ -16,7 +16,7 @@ Ahmed OS is not a portfolio website.
 
 It is a Personal Developer Platform designed to represent Ahmed Ekram Al Sada as a professional DevOps Engineer and Software Architect.
 
-The platform combines a modern portfolio, CMS, AI Assistant, RAG knowledge base, MCP server, technical blog, project showcase, case studies, analytics, and automation into one unified product.
+The platform combines a modern portfolio, CMS, technical blog, project showcase, case studies, analytics, and automation into one unified product.
 
 The website itself should demonstrate engineering quality rather than simply describe it.
 
@@ -63,7 +63,6 @@ This project IS:
 - Personal Operating System
 - Knowledge Platform
 - Engineering Showcase
-- AI Platform
 - Documentation Center
 - Developer Brand
 - Learning Platform
@@ -90,7 +89,6 @@ Future Audience
 
 • Companies
 • Clients
-• AI Agents
 • Search Engines
 
 ---
@@ -110,10 +108,6 @@ The platform should:
 ✓ Publish architecture documents.
 
 ✓ Store personal knowledge.
-
-✓ Provide AI-powered search.
-
-✓ Support MCP integrations.
 
 ✓ Become searchable by Google.
 
@@ -137,12 +131,6 @@ The platform should NOT become:
 ---
 
 # Core Principles
-
-## AI First
-
-Artificial Intelligence is a core feature, not an add-on.
-
----
 
 ## SEO First
 
@@ -204,16 +192,12 @@ No undocumented feature should exist.
 
 Future versions may include:
 
-- AI Coding Assistant
-- Personal MCP Marketplace
 - Public APIs
-- AI Research Lab
 - Interactive Labs
 - Learning Paths
 - Premium Content
 - Community Features
 - Live Workshops
-- AI Agent Marketplace
 
 ---
 
@@ -225,7 +209,6 @@ The project is considered successful when:
 - Google indexes every public page.
 - Articles receive organic traffic.
 - Recruiters use the website during interviews.
-- AI assistants can answer questions using the platform.
 - The website becomes Ahmed's primary online identity.
 
 ---

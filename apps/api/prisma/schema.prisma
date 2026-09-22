@@ -40,12 +40,6 @@ enum MediaProvider {
   r2
 }
 
-enum KnowledgeStatus {
-  pending
-  indexed
-  failed
-}
-
 enum NotificationType {
   system
   ai_error
@@ -76,7 +70,6 @@ model User {
   sessions        Session[]
   posts           BlogPost[]
   media           Media[]
-  aiConversations AIConversation[]
   auditLogs       AuditLog[]
 
   // Audit
@@ -351,119 +344,6 @@ model Contact {
   read    Boolean @default(false)
 
   createdAt DateTime @default(now())
-}
-
-// ─── Knowledge & RAG ─────────────────────────────────────────────────────────
-
-model KnowledgeDocument {
-  id          String         @id @default(uuid()) @db.Uuid
-  title       String
-  sourceType  String         // blog, project, page, case_study, note, resume, documentation
-  sourceId    String?        // ID of the source document
-  content     String         @db.Text
-  status      KnowledgeStatus @default(pending)
-  lastIndexed DateTime?
-
-  // Relations
-  chunks KnowledgeChunk[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([sourceType])
-  @@index([status])
-}
-
-model KnowledgeChunk {
-  id          String   @id @default(uuid()) @db.Uuid
-  documentId  String   @db.Uuid
-  chunkIndex  Int
-  content     String   @db.Text
-  tokenCount  Int?
-  metadata    Json?    // Source metadata (title, url, tags, etc.)
-
-  // Relations
-  document  KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  embedding Embedding?
-
-  createdAt DateTime @default(now())
-
-  @@index([documentId])
-  @@index([chunkIndex])
-  @@unique([documentId, chunkIndex])
-}
-
-model Embedding {
-  id         String @id @default(uuid()) @db.Uuid
-  chunkId    String @unique @db.Uuid
-  provider   String // openai, bge, jina, nomic, ollama
-  model      String
-  dimensions Int
-  vectorId   String? // ID in Qdrant
-
-  // Relations
-  chunk KnowledgeChunk @relation(fields: [chunkId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@index([provider])
-  @@index([vectorId])
-}
-
-// ─── AI ──────────────────────────────────────────────────────────────────────
-
-model AIConversation {
-  id           String   @id @default(uuid()) @db.Uuid
-  title        String?
-  provider     String?
-  model        String?
-  totalTokens  Int?
-  estimatedCost Float?
-  userId       String?  @db.Uuid
-
-  // Relations
-  user     User?       @relation(fields: [userId], references: [id])
-  messages AIMessage[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-}
-
-model AIMessage {
-  id             String   @id @default(uuid()) @db.Uuid
-  conversationId String   @db.Uuid
-  role           String   // user, assistant, system
-  content        String   @db.Text
-  tokenUsage     Int?
-  latency        Int?     // ms
-  metadata       Json?
-
-  // Relations
-  conversation AIConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@index([conversationId])
-}
-
-model Prompt {
-  id          String  @id @default(uuid()) @db.Uuid
-  name        String
-  version     Int     @default(1)
-  category    String? // chat, seo, blog, rag, summarization
-  content     String  @db.Text
-  variables   String? // JSON array of variable names
-  status      String  @default("active")
-
-  // Relations
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([name, version])
-  @@index([category])
-  @@index([status])
 }
 
 // ─── Search ──────────────────────────────────────────────────────────────────

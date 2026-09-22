@@ -338,8 +338,6 @@ Timeline
 
 Kanban
 
-AI Chat
-
 Code Viewer
 
 Architecture Viewer

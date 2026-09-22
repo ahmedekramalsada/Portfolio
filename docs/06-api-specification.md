@@ -148,14 +148,6 @@ Pages
 
 Search
 
-Knowledge
-
-AI
-
-RAG
-
-MCP
-
 Analytics
 
 Settings
@@ -374,98 +366,6 @@ GET
 
 /search/projects
 
-GET
-
-/search/knowledge
-
----
-
-# AI
-
-POST
-
-/ai/chat
-
-POST
-
-/ai/completion
-
-POST
-
-/ai/embeddings
-
-GET
-
-/ai/models
-
-GET
-
-/ai/history
-
-DELETE
-
-/ai/history/:id
-
----
-
-# Knowledge
-
-GET
-
-/knowledge
-
-POST
-
-/knowledge/reindex
-
-POST
-
-/knowledge/rebuild
-
-GET
-
-/knowledge/status
-
----
-
-# RAG
-
-POST
-
-/rag/query
-
-POST
-
-/rag/reindex
-
-GET
-
-/rag/statistics
-
-GET
-
-/rag/status
-
----
-
-# MCP
-
-GET
-
-/mcp/tools
-
-POST
-
-/mcp/execute
-
-GET
-
-/mcp/status
-
-POST
-
-/mcp/reload
-
 ---
 
 # Analytics
@@ -578,7 +478,6 @@ Supports
 
 - Partial Match
 - Full Text
-- Semantic Search
 
 ---
 
@@ -667,10 +566,6 @@ Public APIs
 Authenticated APIs
 
 300 requests/minute
-
-AI APIs
-
-Configurable
 
 ---
 

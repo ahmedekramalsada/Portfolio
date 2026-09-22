@@ -8,7 +8,7 @@ Status: Approved
 
 Observability provides complete visibility into Ahmed OS.
 
-Every service, request, AI interaction, and infrastructure component must be measurable, searchable, and traceable.
+Every service, request, and infrastructure component must be measurable, searchable, and traceable.
 
 ---
 
@@ -105,28 +105,12 @@ Queue
 - Failed Jobs
 - Queue Length
 
-AI
-
-- Requests
-- Tokens
-- Cost
-- Provider
-- Latency
-- Failures
-
 Search
 
 - Queries
 - Response Time
 - No Results
 - Cache Hit Ratio
-
-RAG
-
-- Retrieval Time
-- Embedding Jobs
-- Indexed Documents
-- Retrieval Accuracy
 
 ---
 
@@ -192,8 +176,6 @@ Database
 
 Redis
 
-Qdrant
-
 Storage
 
 Queue
@@ -221,7 +203,6 @@ Information
 
 - Deployment Completed
 - Backup Finished
-- Re-index Completed
 
 ---
 
@@ -232,10 +213,6 @@ System Overview
 Application
 
 Database
-
-AI
-
-RAG
 
 Search
 
@@ -282,10 +259,6 @@ API
 Search
 
 <150ms
-
-AI
-
-<3 seconds
 
 Health Check
 

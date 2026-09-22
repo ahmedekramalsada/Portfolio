@@ -28,8 +28,6 @@ PostgreSQL
 
 Redis (Optional)
 
-Qdrant
-
 Uploaded Media
 
 Configuration
@@ -143,11 +141,10 @@ Periodic restore tests are required.
 1. Stop affected services
 2. Restore database
 3. Restore storage
-4. Restore vectors
-5. Validate integrity
-6. Start services
-7. Run health checks
-8. Verify application
+4. Validate integrity
+5. Start services
+6. Run health checks
+7. Verify application
 
 ---
 

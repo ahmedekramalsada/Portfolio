@@ -26,7 +26,6 @@ Permissions
 - Read blog posts
 - View projects
 - Search content
-- Chat with AI Assistant
 - Download resume
 - Contact Ahmed
 
@@ -46,7 +45,6 @@ Permissions
 - Manage posts
 - Manage projects
 - Manage media
-- Manage AI
 - Manage SEO
 - Manage settings
 - Manage users
@@ -63,16 +61,12 @@ The platform consists of the following modules.
 2. Blog
 3. Projects
 4. CMS
-5. AI Assistant
-6. Knowledge Base
-7. RAG Engine
-8. MCP Server
-9. Search
-10. Analytics
-11. Authentication
-12. Media Library
-13. SEO
-14. Settings
+5. Search
+6. Analytics
+7. Authentication
+8. Media Library
+9. SEO
+10. Settings
 
 ---
 
@@ -225,95 +219,6 @@ Features
 
 ---
 
-# AI Assistant
-
-Public AI
-
-Can answer questions using
-
-- Resume
-- Blog
-- Projects
-- Documentation
-- Skills
-
-Private AI
-
-Can
-
-- Write drafts
-- Update content
-- Generate SEO
-- Create projects
-- Manage knowledge
-- Control MCP
-
----
-
-# Knowledge Base
-
-Stores
-
-- Articles
-- Projects
-- Resume
-- Notes
-- Case Studies
-- Labs
-- Documentation
-- FAQs
-
----
-
-# RAG Requirements
-
-The AI must retrieve knowledge from
-
-- Articles
-- Projects
-- Documentation
-- Resume
-- Notes
-- Labs
-- Case Studies
-
-Requirements
-
-- Semantic Search
-- Hybrid Search
-- Re-ranking
-- Embeddings
-- Automatic Indexing
-- Fast Retrieval
-
----
-
-# MCP Requirements
-
-The MCP Server exposes tools for AI.
-
-Initial Tools
-
-- create_post
-- edit_post
-- publish_post
-- delete_post
-- create_project
-- upload_media
-- search_content
-- update_resume
-- deploy_site
-- rebuild_search_index
-
-Every MCP tool must have
-
-- Authentication
-- Authorization
-- Validation
-- Logging
-
----
-
 # Search Requirements
 
 Search should support
@@ -327,8 +232,6 @@ Search should support
 Search Types
 
 - Keyword
-- Semantic
-- Hybrid
 
 ---
 
@@ -394,7 +297,6 @@ Admin notifications
 
 - New Contact
 - Failed Deployment
-- AI Errors
 - System Alerts
 
 Future
@@ -424,7 +326,6 @@ Dashboard Widgets
 - Posts
 - Projects
 - Visitors
-- AI Usage
 - Search Analytics
 - Storage
 - Deployments
@@ -463,8 +364,6 @@ Must support
 - Comments
 - Public API
 - Webhooks
-- AI Image Generation
-- AI Voice
 - Courses
 - Community
 - Multi-language
@@ -477,7 +376,6 @@ Must support
 The product is complete when
 
 - Every module is functional.
-- AI answers correctly.
 - SEO is fully configured.
 - Google indexes the platform.
 - Admin manages all content without code.

@@ -14,9 +14,6 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { TagsModule } from './modules/tags/tags.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
 import { SkillsModule } from './modules/skills/skills.module';
-import { AIModule } from './modules/ai/ai.module';
-import { RagModule } from './modules/rag/rag.module';
-import { MCPModule } from './modules/mcp/mcp.module';
 import { SearchModule } from './modules/search/search.module';
 import { SeoModule } from './modules/seo/seo.module';
 import { ExperiencesModule } from './modules/experiences/experiences.module';
@@ -43,9 +40,6 @@ import { ExperiencesModule } from './modules/experiences/experiences.module';
     TagsModule,
     ContactsModule,
     SkillsModule,
-    AIModule,
-    RagModule,
-    MCPModule,
     SearchModule,
     SeoModule,
     ExperiencesModule,

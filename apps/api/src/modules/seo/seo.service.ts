@@ -13,7 +13,7 @@ export class SeoService {
     const urls: string[] = [];
 
     // Static pages
-    const staticPages = ['', '/about', '/resume', '/blog', '/projects', '/contact', '/ai', '/search'];
+    const staticPages = ['', '/about', '/resume', '/blog', '/projects', '/contact', '/search'];
     for (const page of staticPages) {
       urls.push(this.sitemapEntry(`${baseUrl}${page}`, this.getPriority(page), this.getChangeFreq(page)));
     }

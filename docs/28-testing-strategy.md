@@ -77,7 +77,6 @@ Test
 - Redis
 - API
 - Authentication
-- AI Module
 - Search
 
 ---
@@ -93,7 +92,6 @@ Scenarios
 - Login
 - Publish Blog
 - Create Project
-- AI Chat
 - Search
 - Media Upload
 
@@ -104,7 +102,6 @@ Scenarios
 Mock
 
 - External APIs
-- AI Providers
 - Storage Providers
 - Email Services
 
@@ -158,7 +155,6 @@ Measure
 
 - API Latency
 - Search Latency
-- AI Response Time
 - Database Queries
 
 ---

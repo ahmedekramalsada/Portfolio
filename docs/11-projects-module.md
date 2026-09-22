@@ -21,7 +21,6 @@ Each project must tell the complete engineering story from idea to deployment.
 - Explain challenges
 - Highlight technologies
 - Improve SEO
-- Feed the AI Knowledge Base
 
 ---
 
@@ -165,20 +164,8 @@ Every project includes
 Supports
 
 - Keyword Search
-- Semantic Search
 - Category Filters
 - Technology Filters
-
----
-
-# AI Integration
-
-AI can
-
-- Explain the project
-- Compare projects
-- Recommend related projects
-- Answer questions using project documentation
 
 ---
 

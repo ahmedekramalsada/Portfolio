@@ -28,8 +28,6 @@ Article
 
 Resume
 
-AI Assistant
-
 Search
 
 Contact
@@ -49,10 +47,6 @@ Blog Manager
 Project Manager
 
 Media Library
-
-Knowledge Base
-
-Prompt Manager
 
 Analytics
 
@@ -87,8 +81,6 @@ Passkeys
 # Dashboard Widgets
 
 Visitors
-
-AI Usage
 
 Recent Posts
 
@@ -153,28 +145,6 @@ Publish
 ↓
 
 Index
-
----
-
-# AI Chat Flow
-
-Question
-
-↓
-
-Retrieve Context
-
-↓
-
-Generate Answer
-
-↓
-
-Stream Response
-
-↓
-
-Save Conversation
 
 ---
 
@@ -258,8 +228,6 @@ Settings Dialog
 
 Share Dialog
 
-AI Prompt Dialog
-
 ---
 
 # Loading States
@@ -270,8 +238,6 @@ Progress Bars
 
 Spinners
 
-Streaming Indicators
-
 ---
 
 # Empty States
@@ -281,8 +247,6 @@ No Posts
 No Projects
 
 No Search Results
-
-No AI History
 
 No Media
 
@@ -345,8 +309,6 @@ Public Analytics
 Deployments
 
 API Keys
-
-Voice Assistant
 
 ---
 

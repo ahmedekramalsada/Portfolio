@@ -142,36 +142,6 @@ Virus Scanning (Future)
 
 ---
 
-# AI Security
-
-Prompt Injection Protection
-
-Rate Limiting
-
-Output Filtering
-
-Restricted MCP Tools
-
-Secret Filtering
-
-Permission Validation
-
----
-
-# MCP Security
-
-Authentication Required
-
-Authorization Required
-
-Tool Validation
-
-Audit Logging
-
-Dangerous Actions Require Confirmation
-
----
-
 # Logging
 
 Log
@@ -181,8 +151,6 @@ Authentication
 Authorization
 
 Admin Actions
-
-AI Requests
 
 Errors
 

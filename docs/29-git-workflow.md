@@ -51,10 +51,6 @@ Release preparation.
 
 feature/blog-system
 
-feature/ai-chat
-
-feature/rag-search
-
 bugfix/login-loop
 
 hotfix/security-patch
@@ -74,8 +70,6 @@ Examples
 feat(blog): add markdown editor
 
 fix(auth): refresh token bug
-
-refactor(ai): improve prompt builder
 
 docs(api): update endpoints
 

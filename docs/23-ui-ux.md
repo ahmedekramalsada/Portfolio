@@ -40,7 +40,6 @@ Primary Navigation
 - Projects
 - Blog
 - Resume
-- AI
 - Contact
 
 Secondary Navigation
@@ -84,8 +83,6 @@ Blog
 
 Article
 
-AI Assistant
-
 Resume
 
 Contact
@@ -123,22 +120,6 @@ Keyboard Navigation
 Recent Searches
 
 Popular Searches
-
----
-
-# AI Experience
-
-Streaming Responses
-
-Typing Indicator
-
-Suggested Questions
-
-Conversation History
-
-Copy Response
-
-Regenerate Response
 
 ---
 

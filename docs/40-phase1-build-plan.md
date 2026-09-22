@@ -10,7 +10,7 @@ Target: Local Development Environment
 This plan builds the complete foundation for Ahmed OS on local macOS.
 
 We use a hybrid approach:
-- **Infrastructure** (PostgreSQL, Redis, Qdrant) → Docker Compose
+- **Infrastructure** (PostgreSQL, Redis) → Docker Compose
 - **Application** (Next.js, NestJS) → pnpm dev (hot reload for development)
 - **Repo** → Local git in ~/ahmed-os/ (GitHub when you're ready)
 
@@ -146,7 +146,7 @@ Checklist before starting:
 
 ## Step 4: Docker Compose — Infrastructure
 
-**What:** Define PostgreSQL, Redis, and Qdrant as Docker services for local development.
+**What:** Define PostgreSQL and Redis as Docker services for local development.
 
 **Actions:**
 1. Create `docker/docker-compose.yml` with services:
@@ -159,9 +159,6 @@ Checklist before starting:
      - Port: 6379
      - Volume: redisdata
      - Healthcheck: ping
-   - **qdrant**: qdrant/qdrant
-     - Port: 6333 (HTTP), 6334 (gRPC)
-     - Volume: qdrant_storage
 2. Create `docker/.env.example` — template for local env vars
 3. Create `docker/init.sql` — create extensions (pg_trgm, uuid-ossp)
 4. Create root `docker-compose.yml` that references `docker/docker-compose.yml`
@@ -172,7 +169,7 @@ Checklist before starting:
 - `docker/init.sql`
 - Root `docker-compose.yml` (symlink or reference)
 
-**Verify:** `docker compose up -d` starts all 3 containers, healthchecks pass.
+**Verify:** `docker compose up -d` starts both containers, healthchecks pass.
 
 ---
 
@@ -183,7 +180,7 @@ Checklist before starting:
 **Actions:**
 1. Create `prisma/schema.prisma` with:
    - PostgreSQL provider
-   - All models from doc 37: User, Session, BlogPost, Category, Tag, BlogRevision, Project, ProjectTechnology, Technology, Media, KnowledgeDocument, KnowledgeChunk, Embedding, AIConversation, AIMessage, Prompt, SearchQuery, AnalyticsEvent, Notification, Setting, AuditLog
+   - All models from doc 37: User, Session, BlogPost, Category, Tag, BlogRevision, Project, ProjectTechnology, Technology, Media, SearchQuery, AnalyticsEvent, Notification, Setting, AuditLog
    - Additional models from doc 05 not in doc 37: Contact, CaseStudy, Certificate, Experience, Skill, Page, Note
    - Enums: UserRole, PostStatus, ProjectStatus, etc.
    - Relations, indexes, unique constraints
@@ -228,7 +225,7 @@ Checklist before starting:
    - Validation helpers
 5. **packages/sdk**: API SDK (shared client)
    - Type-safe API client
-   - Reusable for MCP server, admin, external use
+   - Reusable for admin, external use
 
 **Creates:**
 - `packages/types/package.json` + source
@@ -252,7 +249,7 @@ Checklist before starting:
 - Turborepo + pnpm workspaces
 - NestJS backend (apps/api)
 - Next.js 15 frontend (apps/web)
-- Docker Compose (PostgreSQL, Redis, Qdrant)
+- Docker Compose (PostgreSQL, Redis)
 - Prisma schema with all models
 - Shared packages (types, config, utils, sdk, ui)
 - shadcn/ui components"`
@@ -295,9 +292,9 @@ Checklist before starting:
 │   ├── utils/       Shared utilities
 │   └── sdk/         API SDK
 ├── docker/
-│   └── docker-compose.yml  PostgreSQL + Redis + Qdrant
+│   └── docker-compose.yml  PostgreSQL + Redis
 ├── prisma/
-│   ├── schema.prisma       All 25+ models
+│   ├── schema.prisma       All models
 │   └── seed.ts             Admin user + sample data
 ├── turbo.json
 ├── pnpm-workspace.yaml
@@ -314,8 +311,6 @@ Checklist before starting:
 | NestJS | 4000 | Backend API |
 | PostgreSQL | 5432 | Database |
 | Redis | 6379 | Cache / Queue |
-| Qdrant | 6333 | Vector DB (HTTP) |
-| Qdrant gRPC | 6334 | Vector DB (gRPC) |
 
 ---
 

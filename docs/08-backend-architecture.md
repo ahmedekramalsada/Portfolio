@@ -8,9 +8,9 @@ Status: Approved
 
 The backend is the core of Ahmed OS.
 
-It owns all business logic, security, AI integrations, data processing, storage, and system orchestration.
+It owns all business logic, security, data processing, storage, and system orchestration.
 
-The backend exposes a REST API consumed by the frontend and AI services.
+The backend exposes a REST API consumed by the frontend.
 
 ---
 
@@ -39,14 +39,6 @@ Redis
 Queue
 
 BullMQ
-
-AI
-
-LangChain.js
-
-Vector Database
-
-Qdrant
 
 ---
 
@@ -133,14 +125,6 @@ Projects
 Media
 
 Search
-
-Knowledge
-
-AI
-
-RAG
-
-MCP
 
 Analytics
 
@@ -330,65 +314,7 @@ Future event bus support must be possible without major refactoring.
 
 ---
 
-# AI Module
-
-Responsibilities
-
-Model Selection
-
-Prompt Templates
-
-Conversation Memory
-
-Tool Calling
-
-Streaming
-
-Embeddings
-
-RAG Integration
-
----
-
-# RAG Module
-
-Responsibilities
-
-Chunking
-
-Embedding
-
-Retrieval
-
-Re-ranking
-
-Context Assembly
-
-Knowledge Synchronization
-
----
-
-# MCP Module
-
-Responsibilities
-
-Expose MCP Tools
-
-Authentication
-
-Authorization
-
-Logging
-
-Tool Registry
-
-Execution Engine
-
----
-
 # Queue Jobs
-
-Embedding Generation
 
 Scheduled Publishing
 
@@ -410,8 +336,6 @@ Daily Cleanup
 
 Analytics Aggregation
 
-Knowledge Sync
-
 Health Checks
 
 Cache Cleanup
@@ -421,8 +345,6 @@ Cache Cleanup
 # Caching
 
 Redis
-
-AI Cache
 
 Search Cache
 

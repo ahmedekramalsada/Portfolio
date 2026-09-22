@@ -8,7 +8,7 @@ Status: Approved
 
 The Search Engine is responsible for discovering every public piece of content inside Ahmed OS.
 
-Search must be fast, relevant, typo tolerant, AI-ready, and scalable.
+Search must be fast, relevant, typo tolerant, and scalable.
 
 ---
 
@@ -16,9 +16,7 @@ Search must be fast, relevant, typo tolerant, AI-ready, and scalable.
 
 - Fast
 - Accurate
-- Semantic
 - SEO Friendly
-- AI Ready
 
 ---
 
@@ -27,14 +25,6 @@ Search must be fast, relevant, typo tolerant, AI-ready, and scalable.
 Keyword Search
 
 Full Text Search
-
-Semantic Search
-
-Hybrid Search
-
-Future
-
-Natural Language Search
 
 ---
 
@@ -51,8 +41,6 @@ Documentation
 Case Studies
 
 Resume
-
-Knowledge Base
 
 Future
 
@@ -80,14 +68,6 @@ Full Text Search
 
 ↓
 
-Semantic Search
-
-↓
-
-Hybrid Ranking
-
-↓
-
 Results
 
 ---
@@ -102,17 +82,11 @@ Phase 2
 
 Meilisearch
 
-Phase 3
-
-Hybrid Search
-
 ---
 
 # Ranking Factors
 
 Text Relevance
-
-Semantic Similarity
 
 Popularity
 
@@ -228,17 +202,6 @@ Autocomplete
 
 ---
 
-# AI Integration
-
-AI can
-
-- Search Knowledge
-- Recommend Content
-- Summarize Results
-- Explain Results
-
----
-
 # Security
 
 Private content must never appear in public search.
@@ -253,8 +216,6 @@ Voice Search
 
 Image Search
 
-Vector Hybrid Search
-
 Personalized Ranking
 
 Search Synonyms
@@ -263,4 +224,4 @@ Search Synonyms
 
 # Final Statement
 
-Search is a core platform capability and must remain accurate, fast, secure, and AI-ready.
+Search is a core platform capability and must remain accurate, fast, and secure.

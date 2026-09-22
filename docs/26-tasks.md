@@ -97,40 +97,9 @@ Every task must have a status.
 
 ---
 
-# AI
-
-- [ ] Chat
-- [ ] Streaming
-- [ ] Prompt Templates
-- [ ] Provider Switching
-- [ ] Conversation History
-
----
-
-# RAG
-
-- [ ] Chunking
-- [ ] Embeddings
-- [ ] Qdrant
-- [ ] Retrieval
-- [ ] Re-indexing
-
----
-
-# MCP
-
-- [ ] Server
-- [ ] Resources
-- [ ] Tools
-- [ ] Authentication
-- [ ] Logging
-
----
-
 # Search
 
 - [ ] Full Text Search
-- [ ] Semantic Search
 - [ ] Autocomplete
 - [ ] Search Analytics
 
@@ -150,7 +119,6 @@ Every task must have a status.
 
 - [ ] Dashboard
 - [ ] Visitor Analytics
-- [ ] AI Analytics
 - [ ] Search Analytics
 
 ---
@@ -199,8 +167,6 @@ Every task must have a status.
 - [ ] Newsletter
 - [ ] Comments
 - [ ] Multi-language
-- [ ] Voice AI
-- [ ] Image AI
 - [ ] Mobile App
 - [ ] Desktop App
 

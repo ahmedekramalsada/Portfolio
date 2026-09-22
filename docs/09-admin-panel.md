@@ -19,7 +19,6 @@ Only authenticated administrators may access it.
 - Fast
 - Secure
 - Responsive
-- AI Powered
 - Easy to Use
 - Production Ready
 
@@ -36,14 +35,6 @@ Projects
 Pages
 
 Media
-
-Knowledge Base
-
-AI
-
-RAG
-
-MCP
 
 Search
 
@@ -67,7 +58,6 @@ Widgets
 
 - Visitors Today
 - Active Users
-- AI Requests
 - Recent Posts
 - Recent Projects
 - Storage Usage
@@ -89,10 +79,6 @@ Projects
 Blog
 
 Media
-
-Knowledge
-
-AI
 
 Search
 
@@ -190,84 +176,6 @@ Filter
 
 ---
 
-# Knowledge Management
-
-Notes
-
-Documents
-
-Case Studies
-
-Resume
-
-Labs
-
-Import
-
-Export
-
-Reindex
-
----
-
-# AI Management
-
-Default Provider
-
-Default Model
-
-Temperature
-
-Max Tokens
-
-Streaming
-
-Memory
-
-Prompt Templates
-
-System Prompts
-
-API Keys
-
-Usage
-
----
-
-# RAG Management
-
-Knowledge Sources
-
-Chunk Size
-
-Chunk Overlap
-
-Embedding Model
-
-Reindex
-
-Sync Status
-
-Vector Statistics
-
----
-
-# MCP Management
-
-Registered Tools
-
-Tool Status
-
-Permissions
-
-Logs
-
-Reload
-
-Health
-
----
-
 # Search Management
 
 Rebuild Index
@@ -322,15 +230,11 @@ Popular Pages
 
 Popular Articles
 
-AI Usage
-
 ---
 
 # Notifications
 
 System Alerts
-
-AI Errors
 
 Deployment Results
 
@@ -365,8 +269,6 @@ Health
 Database
 
 Redis
-
-Qdrant
 
 Storage
 

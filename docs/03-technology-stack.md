@@ -14,7 +14,6 @@ No technology may be replaced without updating this document and receiving appro
 
 # Engineering Principles
 
-- AI First
 - API First
 - SEO First
 - Performance First
@@ -160,59 +159,8 @@ Uses
 - Cache
 - Sessions
 - Rate Limiting
-- AI Cache
 - Job Queue
 - Temporary Data
-
----
-
-# AI
-
-Framework
-
-- LangChain.js
-
-Providers
-
-- OpenAI
-- Anthropic
-- Gemini
-- DeepSeek
-- Ollama
-- OpenRouter
-
-Capabilities
-
-- Chat
-- Tool Calling
-- Structured Output
-- Streaming
-- Memory
-
----
-
-# Embeddings
-
-Supported
-
-- BAAI BGE
-- Nomic
-- Jina
-- OpenAI
-- Ollama
-
----
-
-# Vector Database
-
-Qdrant
-
-Purpose
-
-- Semantic Search
-- Knowledge Base
-- RAG
-- Embeddings
 
 ---
 
@@ -488,7 +436,6 @@ PWA Ready
 - ArgoCD
 - NATS
 - Temporal
-- AI Gateway
 
 ---
 
@@ -509,7 +456,6 @@ PWA Ready
 
 - Backend owns all business logic.
 - Frontend never contains business logic.
-- AI communicates only through backend services.
 - Every module must be independent.
 - Every API must be versioned.
 - Every feature must be documented.

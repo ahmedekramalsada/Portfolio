@@ -35,8 +35,6 @@ Database
 
 Network
 
-AI Provider
-
 Storage
 
 External Service
@@ -157,19 +155,6 @@ Never log
 - Passwords
 - Secrets
 - Tokens
-
----
-
-# AI Errors
-
-Handle
-
-- Timeout
-- Provider Failure
-- Invalid Response
-- Rate Limits
-
-Support automatic retry where appropriate.
 
 ---
 

@@ -32,8 +32,6 @@ Content
 
 Projects
 
-AI
-
 Search
 
 Performance
@@ -127,20 +125,6 @@ Track
 
 ---
 
-# AI Analytics
-
-Track
-
-- Total Requests
-- Models Used
-- Providers
-- Token Usage
-- Estimated Cost
-- Average Response Time
-- Errors
-
----
-
 # Performance Metrics
 
 API Response Time
@@ -148,8 +132,6 @@ API Response Time
 Database Latency
 
 Redis Latency
-
-Qdrant Latency
 
 Queue Size
 
@@ -172,8 +154,6 @@ Project View
 Article View
 
 Contact Form
-
-AI Request
 
 Media Upload
 
@@ -204,8 +184,6 @@ Visitors
 Traffic Sources
 
 Popular Content
-
-AI Usage
 
 Search Trends
 

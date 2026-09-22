@@ -129,8 +129,6 @@ contact
 
 search
 
-ai
-
 dashboard
 
 login
@@ -201,8 +199,6 @@ accordions
 Blog
 
 Projects
-
-AI Chat
 
 Search
 
