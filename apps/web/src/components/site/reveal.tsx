@@ -91,7 +91,11 @@ export function Counter({ value, label }: { value: number; label: string }) {
   }, [value]);
 
   return (
-    <div ref={ref} className="reveal px-6 py-7 sm:px-6">
+    // Deliberately not a .reveal: the panel that contains these numbers fades in
+    // as a whole, and hiding the numbers a second time left a visible empty box
+    // whenever a cell could not reach the 50% threshold. The figure is rendered
+    // by the server and the count-up is a bonus, never a prerequisite.
+    <div ref={ref} className="px-6 py-7 sm:px-6">
       <b className="block text-4xl font-semibold tracking-[-.05em] sm:text-5xl">{shown}</b>
       <span className="mt-3 block text-[13px] text-muted-foreground">{label}</span>
     </div>
