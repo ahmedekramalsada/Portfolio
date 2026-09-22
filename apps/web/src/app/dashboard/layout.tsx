@@ -21,14 +21,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">
       {/* Sidebar */}
-      <aside className="w-64 shrink-0 border-r border-border/40 bg-muted/20 p-6 hidden md:block">
+      <aside className="hidden w-64 shrink-0 border-r border-line bg-card p-6 md:block">
         <div className="mb-8">
-          <Link href="/dashboard" className="text-lg font-bold text-blue-500">
+          <Link href="/dashboard" className="text-[15px] font-semibold tracking-[-.02em] text-foreground transition-colors hover:text-warm">
             Ahmed OS
           </Link>
           <div className="mt-4 space-y-1">
             <p className="text-sm font-medium">{user?.name || 'Admin'}</p>
-            <p className="text-xs text-muted-foreground capitalize">{user?.role || 'admin'}</p>
+            <p className="text-xs text-dim capitalize">{user?.role || 'admin'}</p>
           </div>
         </div>
         <nav className="space-y-1">
@@ -38,10 +38,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
+                className={`flex items-center gap-3 rounded-[11px] border px-3 py-2.5 text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-blue-500/10 text-foreground border border-blue-500/20'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                    ? 'border-warm/25 bg-warm/10 text-warm'
+                    : 'border-transparent text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
                 <span className="text-lg">{item.icon}</span>
@@ -50,10 +50,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             );
           })}
         </nav>
-        <div className="mt-8 pt-6 border-t border-border/40">
+        <div className="mt-8 border-t border-line pt-6">
           <button
             onClick={logout}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-all"
+            className="flex w-full items-center gap-3 rounded-[11px] border border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <span>🚪</span> Sign Out
           </button>
@@ -61,7 +61,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Content */}
-      <main className="flex-1 overflow-auto p-8">{children}</main>
+      <main className="flex-1 overflow-auto p-6 lg:p-8">{children}</main>
     </div>
   );
 }

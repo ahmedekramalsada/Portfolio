@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { api } from '@/services/api';
+import { api, API_BASE_URL } from '@/services/api';
 
 export default function MediaAdminPage() {
   const [files, setFiles] = useState<any[]>([]);
@@ -17,7 +17,7 @@ export default function MediaAdminPage() {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      await fetch('http://localhost:4000/api/v1/media/upload', {
+      await fetch(`${API_BASE_URL}/media/upload`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
         body: formData,
@@ -29,9 +29,9 @@ export default function MediaAdminPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Media Library</h1>
+      <h1 className="h2 mb-6">Media Library</h1>
 
-      <div className="mb-8 rounded-lg border border-dashed p-8 text-center">
+      <div className="mb-8 rounded-[14px] border border-dashed border-line bg-card p-8 text-center transition-colors hover:border-warm/40">
         <label className="cursor-pointer">
           <p className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Click to upload (max 10MB)'}</p>
           <input type="file" className="hidden" onChange={handleUpload} disabled={uploading} />
@@ -41,9 +41,9 @@ export default function MediaAdminPage() {
       {files.length === 0 ? (
         <p className="text-sm text-muted-foreground">No files uploaded yet.</p>
       ) : (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {files.map((f: any) => (
-            <div key={f.id} className="rounded-lg border p-3">
+            <div key={f.id} className="panel p-3">
               <p className="truncate text-sm font-medium">{f.originalName}</p>
               <p className="text-xs text-muted-foreground">{(f.size / 1024).toFixed(1)} KB</p>
             </div>

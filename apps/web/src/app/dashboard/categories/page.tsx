@@ -29,28 +29,28 @@ export default function CategoriesAdminPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Categories & Tags</h1>
+      <h1 className="h2 mb-6">Categories & Tags</h1>
 
-      <form onSubmit={handleSubmit} className="mb-8 rounded-lg border p-4 space-y-3 max-w-md">
+      <form onSubmit={handleSubmit} className="panel mb-8 max-w-md space-y-3 p-4">
         <h2 className="font-semibold">{editing ? 'Edit' : 'New'} Category</h2>
-        <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className="rounded-md border px-3 py-2 text-sm w-full" required />
-        <input placeholder="slug" value={slug} onChange={(e) => setSlug(e.target.value)} className="rounded-md border px-3 py-2 text-sm w-full" required />
+        <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className="field" required />
+        <input placeholder="slug" value={slug} onChange={(e) => setSlug(e.target.value)} className="field" required />
         <div className="flex gap-2">
-          <button type="submit" className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">{editing ? 'Update' : 'Create'}</button>
-          {editing && <button type="button" onClick={() => { setEditing(null); setName(''); setSlug(''); }} className="rounded-md border px-4 py-2 text-sm">Cancel</button>}
+          <button type="submit" className="btn-primary">{editing ? 'Update' : 'Create'}</button>
+          {editing && <button type="button" onClick={() => { setEditing(null); setName(''); setSlug(''); }} className="btn-ghost">Cancel</button>}
         </div>
       </form>
 
-      <div className="grid gap-2 md:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-3">
         {categories.map((c: any) => (
-          <div key={c.id} className="flex items-center justify-between rounded-lg border p-3">
-            <div>
-              <p className="text-sm font-medium">{c.name}</p>
-              <p className="text-xs text-muted-foreground">{c.slug}</p>
+          <div key={c.id} className="panel flex items-center justify-between gap-3 p-4">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium">{c.name}</p>
+              <p className="truncate text-xs text-muted-foreground">{c.slug}</p>
             </div>
-            <div className="flex gap-1">
-              <button onClick={() => { setEditing(c.id); setName(c.name); setSlug(c.slug); }} className="rounded-md border px-2 py-1 text-xs">Edit</button>
-              <button onClick={() => deleteCat(c.id)} className="rounded-md border border-red-200 px-2 py-1 text-xs text-red-600">Del</button>
+            <div className="flex shrink-0 gap-2">
+              <button onClick={() => { setEditing(c.id); setName(c.name); setSlug(c.slug); }} className="rounded-[10px] border border-line-2 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-muted-foreground hover:text-foreground">Edit</button>
+              <button onClick={() => deleteCat(c.id)} className="rounded-[10px] border border-line-2 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-muted-foreground hover:text-foreground">Del</button>
             </div>
           </div>
         ))}

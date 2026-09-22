@@ -20,22 +20,26 @@ export default function ContactsAdminPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Contact Messages</h1>
+      <h1 className="h2 mb-6">Contact Messages</h1>
 
       {contacts.length === 0 ? (
-        <div className="rounded-xl border border-dashed p-12 text-center">
-          <p className="text-3xl mb-2">📬</p>
+        <div className="rounded-[14px] border border-dashed border-line bg-card p-12 text-center">
+          <p className="mb-2 text-3xl">📬</p>
           <p className="text-muted-foreground">No messages yet</p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-3">
           {/* List */}
-          <div className="md:col-span-1 space-y-2">
+          <div className="space-y-2 md:col-span-1">
             {contacts.map((c: any) => (
               <button key={c.id} onClick={() => setSelected(c)}
-                className={`w-full text-left rounded-lg border p-3 transition-colors ${selected?.id === c.id ? 'border-blue-500 bg-blue-500/5' : 'hover:bg-accent'}`}>
-                <p className="text-sm font-medium truncate">{c.name}</p>
-                <p className="text-xs text-muted-foreground truncate">{c.email}</p>
+                className={`w-full rounded-[12px] border p-3 text-left transition-colors ${
+                  selected?.id === c.id
+                    ? 'border-warm/40 bg-warm/10'
+                    : 'border-line bg-card hover:border-line-2 hover:bg-muted'
+                }`}>
+                <p className="truncate text-sm font-medium">{c.name}</p>
+                <p className="truncate text-xs text-muted-foreground">{c.email}</p>
                 <p className="text-xs text-muted-foreground">{new Date(c.createdAt).toLocaleDateString()}</p>
               </button>
             ))}
@@ -44,23 +48,23 @@ export default function ContactsAdminPage() {
           {/* Detail */}
           <div className="md:col-span-2">
             {selected ? (
-              <div className="rounded-lg border p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <p className="font-semibold text-lg">{selected.name}</p>
-                    <a href={`mailto:${selected.email}`} className="text-sm text-blue-500 hover:underline">{selected.email}</a>
+              <div className="panel p-6">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-lg font-semibold">{selected.name}</p>
+                    <a href={`mailto:${selected.email}`} className="text-sm text-warm hover:underline">{selected.email}</a>
                   </div>
                   <button onClick={() => deleteContact(selected.id)}
-                    className="rounded-lg border border-red-200 px-3 py-1.5 text-xs text-red-600 hover:bg-red-50">Delete</button>
+                    className="shrink-0 rounded-[10px] border border-line-2 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-muted-foreground hover:text-foreground">Delete</button>
                 </div>
                 {selected.subject && (
-                  <p className="text-sm font-medium mb-2">Subject: {selected.subject}</p>
+                  <p className="mb-2 text-sm font-medium">Subject: {selected.subject}</p>
                 )}
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{selected.message}</p>
-                <p className="mt-4 text-xs text-muted-foreground">Received {new Date(selected.createdAt).toLocaleString()}</p>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{selected.message}</p>
+                <p className="mt-4 text-xs text-dim">Received {new Date(selected.createdAt).toLocaleString()}</p>
               </div>
             ) : (
-              <div className="rounded-lg border border-dashed p-12 text-center">
+              <div className="rounded-[14px] border border-dashed border-line bg-card p-12 text-center">
                 <p className="text-muted-foreground">Select a message to view</p>
               </div>
             )}

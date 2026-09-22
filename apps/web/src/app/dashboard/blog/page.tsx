@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { api } from '@/services/api';
+import { api, API_BASE_URL } from '@/services/api';
 
 export default function BlogAdminPage() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -27,7 +27,7 @@ export default function BlogAdminPage() {
       const fd = new FormData();
       fd.append('file', file);
       const token = localStorage.getItem('accessToken');
-      const res = await fetch('http://localhost:4000/api/v1/media/upload', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd });
+      const res = await fetch(`${API_BASE_URL}/media/upload`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd });
       const data = await res.json();
       if (data.publicUrl) setCoverImage(data.publicUrl);
     } catch {}
@@ -65,31 +65,31 @@ export default function BlogAdminPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Blog Posts</h1>
+      <h1 className="h2 mb-6">Blog Posts</h1>
 
-      <form onSubmit={submit} className="mb-8 rounded-xl border bg-card p-6 space-y-4">
-        <h2 className="font-semibold text-lg">{editingId ? 'Edit Post' : 'New Post'}</h2>
+      <form onSubmit={submit} className="panel mb-8 space-y-4 p-6">
+        <h2 className="text-lg font-semibold">{editingId ? 'Edit Post' : 'New Post'}</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm" required />
+            className="field" required />
           <input placeholder="slug-post-title" value={slug} onChange={(e) => setSlug(e.target.value)}
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm" required />
+            className="field" required />
         </div>
 
         {/* Image upload */}
         <div>
-          <label className="block text-sm font-medium mb-1">Cover Image</label>
+          <label className="label-field">Cover Image</label>
           <div onClick={() => fileRef.current?.click()}
-            className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/30 p-8 hover:border-blue-500/50 transition-colors">
+            className="flex cursor-pointer flex-col items-center justify-center rounded-[12px] border-2 border-dashed border-line-2 bg-muted/40 p-8 transition-colors hover:border-warm/40">
             {coverImage ? (
               <div className="relative w-full">
-                <img src={coverImage} alt="" className="mx-auto max-h-48 rounded-lg object-cover" />
+                <img src={coverImage} alt="" className="mx-auto max-h-48 rounded-[10px] object-cover" />
                 <button type="button" onClick={(e) => { e.stopPropagation(); setCoverImage(''); }}
-                  className="absolute top-2 right-2 rounded-full bg-red-500/90 px-2 py-1 text-xs text-white">Remove</button>
+                  className="absolute top-2 right-2 rounded-full border border-line-2 bg-background/90 px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground">Remove</button>
               </div>
             ) : (
               <div className="text-center">
-                <p className="text-3xl mb-2">{uploading ? '⏳' : '📸'}</p>
+                <p className="mb-2 text-3xl">{uploading ? '⏳' : '📸'}</p>
                 <p className="text-sm text-muted-foreground">{uploading ? 'Uploading...' : 'Click to upload cover image'}</p>
               </div>
             )}
@@ -98,34 +98,34 @@ export default function BlogAdminPage() {
         </div>
 
         <input placeholder="Excerpt (short description)" value={excerpt} onChange={(e) => setExcerpt(e.target.value)}
-          className="w-full rounded-lg border bg-background px-3 py-2 text-sm" />
+          className="field" />
         <textarea placeholder="Content (markdown)" value={content} onChange={(e) => setContent(e.target.value)}
-          className="w-full rounded-lg border bg-background px-3 py-2 text-sm" rows={8} />
+          className="field" rows={8} />
         <div className="flex gap-2">
-          <button type="submit" className="rounded-lg bg-foreground px-6 py-2 text-sm font-medium text-background hover:opacity-90">
+          <button type="submit" className="btn-primary">
             {editingId ? 'Update' : 'Create'}
           </button>
-          {editingId && <button type="button" onClick={reset} className="rounded-lg border px-4 py-2 text-sm">Cancel</button>}
+          {editingId && <button type="button" onClick={reset} className="btn-ghost">Cancel</button>}
         </div>
       </form>
 
       <div className="space-y-2">
         {posts.map((post: any) => (
-          <div key={post.id} className="flex items-center justify-between rounded-xl border bg-card p-4">
-            <div className="flex items-center gap-3">
-              {post.coverImage && <img src={post.coverImage} alt="" className="h-12 w-20 rounded-lg object-cover"
+          <div key={post.id} className="panel flex flex-wrap items-center justify-between gap-3 p-4">
+            <div className="flex min-w-0 items-center gap-3">
+              {post.coverImage && <img src={post.coverImage} alt="" className="h-12 w-20 rounded-[10px] object-cover"
         onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
-              <div>
-                <p className="font-medium">{post.title}</p>
+              <div className="min-w-0">
+                <p className="truncate font-medium">{post.title}</p>
                 <p className="text-xs text-muted-foreground">{post.slug} · {post.status}</p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex shrink-0 gap-2">
               {post.status !== 'published' && (
-                <button onClick={() => publish(post.id)} className="rounded-lg bg-green-600 px-3 py-1.5 text-xs text-white hover:bg-green-700">Publish</button>
+                <button onClick={() => publish(post.id)} className="rounded-[10px] border border-ok/35 bg-ok/10 px-3 py-1.5 text-xs font-medium text-ok transition-colors hover:bg-ok/20">Publish</button>
               )}
-              <button onClick={() => edit(post)} className="rounded-lg border px-3 py-1.5 text-xs hover:bg-accent">Edit</button>
-              <button onClick={() => remove(post.id)} className="rounded-lg border border-red-200 px-3 py-1.5 text-xs text-red-600 hover:bg-red-50">Delete</button>
+              <button onClick={() => edit(post)} className="rounded-[10px] border border-line-2 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-muted-foreground hover:text-foreground">Edit</button>
+              <button onClick={() => remove(post.id)} className="rounded-[10px] border border-line-2 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-muted-foreground hover:text-foreground">Delete</button>
             </div>
           </div>
         ))}
