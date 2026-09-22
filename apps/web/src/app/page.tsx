@@ -107,7 +107,7 @@ export default async function HomePage() {
   const categories = Array.isArray(catsData) ? catsData : [];
 
   const terminalData: TerminalData = {
-    name: 'Ahmed Ekram Al Sada',
+    name: 'Ahmed Ekram Alsada',
     role: 'DevOps Engineer',
     company: 'SmartSigma',
     location: 'Cairo, Egypt',
@@ -129,6 +129,20 @@ export default async function HomePage() {
       <section className="relative z-10 mx-auto max-w-[1200px] px-6 pb-16 pt-28 lg:px-8 lg:pt-36">
         <div className="grid gap-14 lg:grid-cols-[1.28fr_.72fr] lg:items-end">
           <div>
+            {/* the portrait, back at the top of the page the way the old site had it */}
+            <div className="fade-up relative mb-7 h-[112px] w-[112px]">
+              <span className="absolute -inset-1 rounded-full bg-gradient-to-br from-warm/35 to-live/25 blur-[10px]" aria-hidden />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/profile.webp"
+                alt="Ahmed Ekram Alsada"
+                width={112}
+                height={112}
+                className="relative h-[112px] w-[112px] rounded-full border border-line-2 object-cover"
+                style={{ objectPosition: '50% 20%' }}
+              />
+            </div>
+
             <div className="fade-up inline-flex items-center gap-2.5 rounded-full border border-line bg-card px-3.5 py-2 font-mono text-[11.5px] uppercase tracking-[.09em] text-muted-foreground">
               <span className="pulse-dot block h-1.5 w-1.5 rounded-full bg-ok" />
               DevOps engineer at SmartSigma · Cairo

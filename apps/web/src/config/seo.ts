@@ -1,6 +1,6 @@
 export const siteConfig = {
-  name: 'Ahmed Ekram Al Sada',
-  title: 'Ahmed Ekram Al Sada — DevOps Engineer & Software Architect',
+  name: 'Ahmed Ekram Alsada',
+  title: 'Ahmed Ekram Alsada — DevOps Engineer & Software Architect',
   description: 'DevOps Engineer and Software Architect at SmartSigma. Building production-grade systems with Docker, Kubernetes, CI/CD, cloud infrastructure, and AI-powered platform engineering.',
   arabicName: 'احمد اكرام السادة',
   arabicDescription: 'مهندس DevOps ومهندس برمجيات في SmartSigma. خبرة في Docker و Kubernetes و CI/CD والبنية التحتية السحابية.',
@@ -10,7 +10,7 @@ export const siteConfig = {
     github: 'https://github.com/ahmedekramalsada',
     linkedin: 'https://linkedin.com/in/ahmedekramalsada',
   },
-  creator: 'Ahmed Ekram Al Sada',
+  creator: 'Ahmed Ekram Alsada',
 };
 
 export const defaultMetadata = {

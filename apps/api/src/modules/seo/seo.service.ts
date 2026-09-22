@@ -133,7 +133,7 @@ Disallow: /
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"
   xmlns:dc="http://purl.org/dc/elements/1.1/">
 <channel>
-  <title>Ahmed Ekram Al Sada</title>
+  <title>Ahmed Ekram Alsada</title>
   <link>${baseUrl}</link>
   <description>DevOps Engineer &amp; Software Architect. Articles on Docker, Kubernetes, CI/CD, AI, and platform engineering.</description>
   <language>en-us</language>
@@ -144,7 +144,7 @@ ${posts.map((post) => `  <item>
     <link>${baseUrl}/blog/${post.slug}</link>
     <guid isPermaLink="true">${baseUrl}/blog/${post.slug}</guid>
     <pubDate>${(post.publishedAt || post.createdAt).toUTCString()}</pubDate>
-    <dc:creator>Ahmed Ekram Al Sada</dc:creator>
+    <dc:creator>Ahmed Ekram Alsada</dc:creator>
     ${post.category ? `<category>${post.category.name}</category>` : ''}
     ${post.excerpt ? `<description><![CDATA[${post.excerpt}]]></description>` : ''}
     ${post.content ? `<content:encoded><![CDATA[${post.content.slice(0, 5000)}]]></content:encoded>` : ''}
@@ -158,7 +158,7 @@ ${posts.map((post) => `  <item>
     return JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Person',
-      name: 'Ahmed Ekram Al Sada',
+      name: 'Ahmed Ekram Alsada',
       alternateName: 'احمد اكرام السادة',
       url: 'https://ahmedekram.site',
       image: 'https://media.ahmedekram.site/media/1785021278987-ahmed_ekram_alsada_profile_photo.webp',
@@ -183,7 +183,7 @@ ${posts.map((post) => `  <item>
     return JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'Ahmed Ekram Al Sada',
+      name: 'Ahmed Ekram Alsada',
       url: 'https://ahmedekram.site',
       description: 'Personal developer platform featuring projects, blog, and AI assistant.',
       potentialAction: {
@@ -209,7 +209,7 @@ ${posts.map((post) => `  <item>
       url: `https://ahmedekram.site/blog/${post.slug}`,
       datePublished: post.publishedAt?.toISOString(),
       dateModified: post.updatedAt?.toISOString(),
-      author: { '@type': 'Person', name: 'Ahmed Ekram Al Sada' },
+      author: { '@type': 'Person', name: 'Ahmed Ekram Alsada' },
       keywords: post.tags?.map((t: any) => t.tag.name).join(', ') || undefined,
     });
   }

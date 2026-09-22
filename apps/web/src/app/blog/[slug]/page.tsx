@@ -62,7 +62,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   const headings = extractHeadings(post.content || '');
   const related = await getRelatedPosts(post.category?.slug, slug);
-  const authorName: string = post.author?.name || 'Ahmed Ekram Al Sada';
+  const authorName: string = post.author?.name || 'Ahmed Ekram Alsada';
   const initials = authorName.split(' ').filter(Boolean).slice(0, 2).map((w: string) => w[0]).join('').toUpperCase();
   const minutes = post.readingTime || Math.max(1, Math.round((post.content || '').split(/\s+/).length / 200));
 

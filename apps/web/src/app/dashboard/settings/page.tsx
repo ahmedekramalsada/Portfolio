@@ -18,7 +18,7 @@ export default function SettingsAdminPage() {
         <div className="panel p-6">
           <h2 className="mb-4 font-semibold">Site</h2>
           <div className="space-y-2 text-sm text-muted-foreground">
-            <p>Site name: Ahmed Ekram Al Sada</p>
+            <p>Site name: Ahmed Ekram Alsada</p>
             <p>Domain: ahmedekram.site</p>
             <p>Version: 0.1.0</p>
           </div>

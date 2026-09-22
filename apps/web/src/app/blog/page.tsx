@@ -7,8 +7,8 @@ import { Cover } from '@/components/site/cover';
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'Articles on DevOps, Docker, Kubernetes, CI/CD, AI engineering, and platform engineering by Ahmed Ekram Al Sada.',
-  openGraph: { title: 'Blog — Ahmed Ekram Al Sada', description: 'DevOps articles by Ahmed Ekram Al Sada.' },
+  description: 'Articles on DevOps, Docker, Kubernetes, CI/CD, AI engineering, and platform engineering by Ahmed Ekram Alsada.',
+  openGraph: { title: 'Blog — Ahmed Ekram Alsada', description: 'DevOps articles by Ahmed Ekram Alsada.' },
 };
 
 async function getPosts(category?: string, page = 1, query?: string) {

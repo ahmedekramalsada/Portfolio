@@ -55,10 +55,16 @@ export function Navbar() {
 
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3 text-[14.5px] font-semibold">
-          <span className="grid h-[30px] w-[30px] place-items-center rounded-[9px] border border-line-2 bg-gradient-to-b from-muted to-card font-mono text-[11px] text-warm">
-            AE
-          </span>
-          Ahmed Ekram Al Sada
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/profile.webp"
+            alt="Ahmed Ekram Alsada"
+            width={32}
+            height={32}
+            className="h-8 w-8 shrink-0 rounded-full border border-line-2 object-cover"
+            style={{ objectPosition: '50% 20%' }}
+          />
+          Ahmed Ekram Alsada
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">

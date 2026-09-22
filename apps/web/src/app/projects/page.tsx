@@ -6,8 +6,8 @@ import { TiltCard } from '@/components/site/tilt-card';
 
 export const metadata: Metadata = {
   title: 'Projects',
-  description: 'DevOps and software development projects by Ahmed Ekram Al Sada. Docker, Kubernetes, CI/CD, cloud infrastructure, and platform engineering.',
-  openGraph: { title: 'Projects — Ahmed Ekram Al Sada', description: 'DevOps projects by Ahmed Ekram Al Sada.' },
+  description: 'DevOps and software development projects by Ahmed Ekram Alsada. Docker, Kubernetes, CI/CD, cloud infrastructure, and platform engineering.',
+  openGraph: { title: 'Projects — Ahmed Ekram Alsada', description: 'DevOps projects by Ahmed Ekram Alsada.' },
 };
 
 type Project = {

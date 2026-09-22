@@ -5,7 +5,7 @@ import { DownloadButton } from './download-button';
 export const metadata: Metadata = {
   title: 'Résumé',
   description: 'DevOps Engineer. Docker, Kubernetes, CI/CD, Cloud Infrastructure.',
-  openGraph: { title: 'Resume — Ahmed Ekram Al Sada', description: 'DevOps Engineer resume.' },
+  openGraph: { title: 'Resume — Ahmed Ekram Alsada', description: 'DevOps Engineer resume.' },
 };
 
 async function getData() {
@@ -45,7 +45,7 @@ export default async function ResumePage() {
       <header className="mb-12 flex flex-wrap items-start justify-between gap-6">
         <div>
           <span className="label">Résumé</span>
-          <h1 className="h1 mt-5">Ahmed Ekram Al Sada</h1>
+          <h1 className="h1 mt-5">Ahmed Ekram Alsada</h1>
           <p className="mt-4 text-[15px] text-muted-foreground">DevOps Engineer & Software Architect</p>
           <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11.5px] uppercase tracking-[.08em] text-dim">
             <span>Cairo, Egypt</span>
