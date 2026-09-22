@@ -1,4 +1,5 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
+import { ArticleContent, extractHeadings } from '@/components/site/article-content';
 import { ShareButtons } from '@/components/share-buttons';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -36,50 +37,6 @@ async function getRelatedPosts(categorySlug?: string, currentSlug?: string) {
     const posts = data.data || data || [];
     return posts.filter((p: { slug: string }) => p.slug !== currentSlug).slice(0, 2);
   } catch { return []; }
-}
-
-function slugify(text: string) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-}
-
-function extractHeadings(content: string) {
-  const headings: { level: number; text: string; id: string }[] = [];
-  for (const line of content.split('\n')) {
-    const match = line.match(/^(#{1,3})\s+(.+)/);
-    if (match) headings.push({ level: match[1].length, text: match[2].trim(), id: slugify(match[2].trim()) });
-  }
-  return headings;
-}
-
-/**
- * Renders the stored markdown-ish body. Styling lives in the `.article` class,
- * so the elements below stay plain.
- */
-function renderContent(content: string) {
-  return content.split('\n').map((line: string, i: number) => {
-    const heading = line.match(/^(#{1,3})\s+(.+)/);
-    if (heading) {
-      const text = heading[2].trim();
-      const id = slugify(text);
-      if (heading[1].length === 1) return <h1 key={i} id={id}>{text}</h1>;
-      if (heading[1].length === 2) return <h2 key={i} id={id}>{text}</h2>;
-      return <h3 key={i} id={id}>{text}</h3>;
-    }
-    if (line.startsWith('- ')) return <li key={i}>{line.slice(2)}</li>;
-    if (line.startsWith('```')) return null;
-    if (line.trim() === '') return <br key={i} />;
-    if (line.includes('`')) {
-      const parts = line.split(/(`[^`]+`)/);
-      return (
-        <p key={i}>
-          {parts.map((part, j) =>
-            part.startsWith('`') && part.endsWith('`') ? <code key={j}>{part.slice(1, -1)}</code> : <span key={j}>{part}</span>,
-          )}
-        </p>
-      );
-    }
-    return <p key={i}>{line}</p>;
-  });
 }
 
 function formatDate(value?: string) {
@@ -123,7 +80,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           </header>
 
           <div className="article rule pt-10">
-            {post.content ? renderContent(post.content) : <p className="text-muted-foreground">No content yet.</p>}
+            {post.content ? <ArticleContent content={post.content} /> : <p className="text-muted-foreground">No content yet.</p>}
           </div>
 
           <div className="mt-14 flex flex-wrap items-center justify-between gap-5 border-t border-line pt-8">

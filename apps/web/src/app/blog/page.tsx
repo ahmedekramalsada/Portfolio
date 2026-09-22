@@ -10,8 +10,18 @@ export const metadata: Metadata = {
   openGraph: { title: 'Blog — Ahmed Ekram Al Sada', description: 'DevOps articles by Ahmed Ekram Al Sada.' },
 };
 
-async function getPosts(category?: string, page = 1) {
+async function getPosts(category?: string, page = 1, query?: string) {
   try {
+    // A search term runs through the site-wide search endpoint and keeps only
+    // articles. Searching looks across all writing, not just the open category.
+    if (query) {
+      const found = await fetch(`${API_URL}/search?q=${encodeURIComponent(query)}`, { next: { revalidate: 60 } });
+      if (!found.ok) return { data: [], meta: { page: 1, total: 0, totalPages: 0 } };
+      const results = await found.json();
+      const hits = ((results.data || []) as { type: string }[]).filter((hit) => hit.type === 'post');
+      return { data: hits, meta: { page: 1, total: hits.length, totalPages: 1 } };
+    }
+
     let url = `${API_URL}/posts?page=${page}&limit=20&status=published`;
     if (category && category !== 'all') url += `&category=${category}`;
     const res = await fetch(url, { next: { revalidate: 60 } });
@@ -37,7 +47,8 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
   const params = await searchParams;
   const page = Number(params.page) || 1;
   const category = params.category || 'all';
-  const { data: posts, meta } = await getPosts(category, page);
+  const query = (params.q || '').trim();
+  const { data: posts, meta } = await getPosts(category, page, query);
   const categories = await getCategories();
 
   const topicCats = categories.filter((c: { name: string }) =>
@@ -68,25 +79,38 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
         </div>
       </form>
 
-      {/* Category filter */}
-      <div className="mb-10 flex flex-wrap gap-2">
-        <Link href="/blog" className={`chip ${category === 'all' ? 'chip-on' : ''}`}>All</Link>
-        {topicCats.map((cat: { id: string; name: string; slug?: string }) => {
-          const slug = cat.slug || cat.name.toLowerCase();
-          return (
-            <Link key={cat.id} href={`/blog?category=${slug}`} className={`chip ${category === slug ? 'chip-on' : ''}`}>
-              {cat.name}
-            </Link>
-          );
-        })}
-      </div>
+      {/* Category filter — replaced by the result count while searching */}
+      {query ? (
+        <p className="mb-10 font-mono text-[11px] uppercase tracking-[.09em] text-dim">
+          {posts.length} result{posts.length !== 1 ? 's' : ''} for “{query}” ·{' '}
+          <Link href="/blog" className="text-warm hover:underline">clear</Link>
+        </p>
+      ) : (
+        <div className="mb-10 flex flex-wrap gap-2">
+          <Link href="/blog" className={`chip ${category === 'all' ? 'chip-on' : ''}`}>All</Link>
+          {topicCats.map((cat: { id: string; name: string; slug?: string }) => {
+            const slug = cat.slug || cat.name.toLowerCase();
+            return (
+              <Link key={cat.id} href={`/blog?category=${slug}`} className={`chip ${category === slug ? 'chip-on' : ''}`}>
+                {cat.name}
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
       {/* Posts */}
       {posts.length === 0 ? (
         <div className="panel px-8 py-20 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[.09em] text-dim">Empty</p>
-          <p className="mt-3 text-muted-foreground">No articles found{category !== 'all' ? ' in this category' : ''}.</p>
-          {category !== 'all' && <Link href="/blog" className="mt-4 inline-block text-[14px] text-warm hover:underline">View all articles →</Link>}
+          <p className="mt-3 text-muted-foreground">
+            No articles found{query ? ` for “${query}”` : category !== 'all' ? ' in this category' : ''}.
+          </p>
+          {query ? (
+            <Link href="/blog" className="mt-4 inline-block text-[14px] text-warm hover:underline">All writing →</Link>
+          ) : category !== 'all' ? (
+            <Link href="/blog" className="mt-4 inline-block text-[14px] text-warm hover:underline">View all articles →</Link>
+          ) : null}
         </div>
       ) : (
         <div className="grid gap-5 md:grid-cols-2">
@@ -118,7 +142,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
       )}
 
       {/* Pagination */}
-      {meta.totalPages > 1 && (
+      {meta.totalPages > 1 && !query && (
         <div className="mt-12 flex items-center justify-center gap-6">
           {page > 1 && (
             <Link

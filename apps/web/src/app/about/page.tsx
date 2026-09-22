@@ -25,7 +25,7 @@ const TIMELINE = [
   {
     period: 'May 2026 — Present',
     role: 'DevOps Engineer @ SmartSigma',
-    body: 'Managing production infrastructure, CI/CD pipelines, Docker orchestration, SSL automation, and platform integrations across 7 VPS servers.',
+    body: 'Managing production infrastructure, CI/CD pipelines, Docker orchestration, SSL automation, and platform integrations across a fleet of production VPS servers.',
   },
   {
     period: 'Sep 2025 — Apr 2026',
@@ -39,18 +39,19 @@ const TOOLS = [
   { cat: 'CI/CD', items: ['GitLab CI', 'GitHub Actions', 'Jenkins', 'SonarQube'] },
   { cat: 'Infrastructure', items: ['Terraform', 'Ansible', 'Traefik', 'NGINX', 'Caddy'] },
   { cat: 'Cloud', items: ['AWS', 'Cloudflare R2', 'BunnyCDN'] },
-  { cat: 'Monitoring', items: ['Prometheus', 'Grafana', 'Healthchecks.io', 'Uptime Kuma'] },
-  { cat: 'Backend', items: ['NestJS', 'Spring Boot', 'PostgreSQL', 'MySQL', 'Redis', 'Qdrant'] },
+  { cat: 'Monitoring', items: ['Prometheus', 'Grafana', 'Loki', 'Alertmanager'] },
+  { cat: 'Backend', items: ['NestJS', 'Spring Boot', 'PostgreSQL', 'MySQL', 'Redis'] },
   { cat: 'Frontend', items: ['Next.js', 'React', 'Tailwind'] },
-  { cat: 'AI', items: ['LangChain', 'OpenRouter', 'RAG', 'MCP', 'Qdrant'] },
+  { cat: 'AI', items: ['OpenRouter', 'LLM APIs', 'Local models'] },
 ];
 
 const CERTS = [{ name: 'AWS Certified Cloud Practitioner', issuer: 'Amazon Web Services', year: '2025' }];
 
 const STACK = [
   ['Platform', 'Ahmed OS (Next.js + NestJS + PostgreSQL)'],
-  ['Servers', '7 VPS, Ubuntu 24.04, Docker'],
-  ['Reverse proxy', 'Traefik (auto SSL)'],
+  ['Servers', 'Production VPS fleet · Ubuntu · Docker'],
+  ['Delivery', 'GitLab CI with blue/green releases and health gates'],
+  ['Reverse proxy', 'Traefik (automatic SSL)'],
   ['Storage', 'Cloudflare R2, BunnyCDN'],
   ['Monitoring', 'Prometheus, Grafana, Loki, Alertmanager'],
 ];
@@ -63,7 +64,7 @@ export default async function AboutPage() {
       <PageHeader
         label="About"
         title="I keep production boring on purpose"
-        lede="DevOps engineer at SmartSigma, building and automating production infrastructure across 7 VPS servers. Passionate about AI-powered automation, platform engineering, and creating systems that just work."
+        lede="DevOps engineer at SmartSigma, building and automating production infrastructure for a fleet of VPS servers. Passionate about automation, platform engineering, and creating systems that just work."
       />
 
       {/* Journey */}

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+
 const OTHER_LINKS = [
   { label: 'Email', value: 'ahmedekramalsada@gmail.com', href: 'mailto:ahmedekramalsada@gmail.com' },
   { label: 'GitHub', value: 'github.com/ahmedekramalsada', href: 'https://github.com/ahmedekramalsada' },
@@ -16,7 +18,7 @@ export default function ContactPage() {
     e.preventDefault();
     setStatus('sending');
     try {
-      const res = await fetch('http://localhost:4000/api/v1/contacts', {
+      const res = await fetch(`${API_BASE_URL}/contacts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

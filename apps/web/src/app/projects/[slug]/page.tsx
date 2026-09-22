@@ -1,6 +1,7 @@
 const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ArticleContent } from '@/components/site/article-content';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -105,12 +106,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
       {project.content && (
         <div className="article rule pt-10">
-          {project.content.split('\n').map((line: string, i: number) => {
-            if (line.startsWith('# ')) return <h1 key={i}>{line.slice(2)}</h1>;
-            if (line.startsWith('## ')) return <h2 key={i}>{line.slice(3)}</h2>;
-            if (line.trim() === '') return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          <ArticleContent content={project.content} />
         </div>
       )}
 
