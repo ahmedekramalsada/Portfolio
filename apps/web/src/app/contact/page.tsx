@@ -95,7 +95,7 @@ export default function ContactPage() {
               href={link.href}
               target={link.href.startsWith('http') ? '_blank' : undefined}
               rel="noopener noreferrer"
-              className="text-[14.5px] text-muted-foreground transition hover:text-warm"
+              className="inline-flex min-h-[36px] items-center text-[14.5px] text-muted-foreground transition hover:text-warm"
             >
               {link.value}
             </a>

@@ -70,7 +70,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     <div className="page page-wide">
       <Link
         href="/blog"
-        className="mb-7 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[.1em] text-dim transition hover:text-warm"
+        className="mb-7 inline-flex min-h-[36px] items-center gap-2 font-mono text-[11.5px] uppercase tracking-[.1em] text-dim transition hover:text-warm"
       >
         ← Writing
       </Link>
@@ -124,7 +124,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           </div>
 
           <div className="mt-14 flex flex-wrap items-center justify-between gap-5 border-t border-line pt-8">
-            <Link href="/blog" className="text-[14px] text-muted-foreground transition hover:text-warm">← Back to writing</Link>
+            <Link href="/blog" className="inline-flex min-h-[36px] items-center text-[14.5px] text-muted-foreground transition hover:text-warm">← Back to writing</Link>
             <ShareButtons title={post.title} url={`https://ahmedekram.site/blog/${post.slug}`} />
           </div>
         </article>

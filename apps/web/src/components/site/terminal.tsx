@@ -137,6 +137,7 @@ export function Terminal({ data }: { data: TerminalData }) {
         <span>➜</span>
         <input
           ref={inputRef}
+          className="min-h-[28px]"
           aria-label="Terminal command"
           autoComplete="off"
           spellCheck={false}
@@ -159,7 +160,7 @@ export function Terminal({ data }: { data: TerminalData }) {
               run(cmd);
               inputRef.current?.focus();
             }}
-            className="rounded-full border border-line-2 bg-background/70 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[.07em] text-muted-foreground transition hover:border-warm hover:text-foreground"
+            className="inline-flex min-h-[40px] items-center rounded-full border border-line-2 bg-background/70 px-3.5 py-2 font-mono text-[11.5px] uppercase tracking-[.07em] text-muted-foreground transition hover:border-warm hover:text-foreground"
           >
             {text}
           </button>

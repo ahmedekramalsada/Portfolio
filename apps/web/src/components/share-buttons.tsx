@@ -27,7 +27,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
           rel="noopener noreferrer"
           title={`Share on ${link.name}`}
           aria-label={`Share on ${link.name}`}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-line-2 font-mono text-[11px] text-muted-foreground transition hover:border-warm hover:text-warm"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line-2 font-mono text-[12px] text-muted-foreground transition hover:border-warm hover:text-warm"
         >
           {link.label}
         </a>

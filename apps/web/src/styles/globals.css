@@ -153,7 +153,7 @@ body {
 .hairline { border-bottom: 1px solid var(--color-line); }
 
 .label {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
   color: #a3aab3;
 }
 
@@ -200,7 +200,7 @@ body {
 
 .chip {
   display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--color-line-2); border-radius: 999px;
-  padding: .35rem .7rem; font-family: var(--font-mono); font-size: 11px; letter-spacing: .07em;
+  padding: .45rem .8rem; font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .07em;
   text-transform: uppercase; color: var(--color-muted-foreground); transition: border-color .2s, color .2s;
 }
 .chip:hover { border-color: var(--color-muted-foreground); color: var(--color-foreground); }
@@ -219,7 +219,7 @@ body {
 
 .status {
   display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--color-line-2); border-radius: 999px;
-  padding: .2rem .6rem; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .08em;
+  padding: .25rem .65rem; font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .08em;
   text-transform: uppercase; color: #a9b0b8; white-space: nowrap;
 }
 .s-ok { border-color: rgba(78,168,122,.3); background: rgba(78,168,122,.1); color: #7fd0a3; }
@@ -362,4 +362,27 @@ body {
   .marquee-track { animation: none; }
   .js-ready .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }
+}
+
+/* ─── Phone: smaller type scale, everything tappable ───────────────────────
+   On a 390px screen the desktop scale was too large and several links were
+   only a text line tall. Interactive elements get a 40px minimum height here
+   (the footer link lists get it in the component, since they are lists). */
+@media (max-width: 640px) {
+  .page { padding: 6rem 1.15rem 4rem; }
+  .h1 { font-size: clamp(1.85rem, 8vw, 2.6rem); }
+  .h2 { font-size: clamp(1.35rem, 6vw, 1.7rem); }
+  .lede { font-size: 15.5px; line-height: 1.7; }
+  .article { font-size: 17px; line-height: 1.75; }
+  .ahero-body { padding: 1.35rem 1.25rem; }
+  .ahero-title { font-size: clamp(1.6rem, 7.6vw, 2.3rem); max-width: none; }
+  .ahero-lede { font-size: 15.5px; }
+  .btn-primary, .btn-ghost { min-height: 44px; padding: 12px 18px; font-size: 14px; }
+  .chip, .status, .label-field { min-height: 34px; }
+  .chip { padding: .45rem .75rem; }
+  .term-body { height: 264px; font-size: 12.2px; }
+  .wrow { padding: 18px 0; gap: 14px; }
+  .wrow:hover { padding-left: 0; }
+  .pcard-body { padding: 1rem 1.1rem 1.15rem; }
+  .pcard-wide .pcard-media, .pcard-media { min-height: 0; }
 }

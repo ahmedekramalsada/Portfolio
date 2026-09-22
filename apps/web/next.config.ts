@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // Hide the development indicator: it floats over page content and gets
+  // mistaken for part of the design.
+  devIndicators: false,
+
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '**.cloudflare.com' },

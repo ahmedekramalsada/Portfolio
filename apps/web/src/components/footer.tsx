@@ -50,20 +50,20 @@ export function Footer() {
         {columns.map((column) => (
           <nav key={column.title} aria-label={column.title}>
             <h3 className="label mb-4">{column.title}</h3>
-            <ul className="flex flex-col gap-2.5">
+            <ul className="flex flex-col gap-1">
               {column.links.map((link) => (
                 <li key={link.href}>
                   {link.href.startsWith('http') ? (
-                    <a
+                    <Link
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[14px] text-muted-foreground transition hover:text-foreground"
+                      className="inline-flex min-h-[36px] items-center text-[14.5px] text-muted-foreground transition hover:text-foreground"
                     >
                       {link.label}
-                    </a>
+                    </Link>
                   ) : (
-                    <Link href={link.href} className="text-[14px] text-muted-foreground transition hover:text-foreground">
+                    <Link href={link.href} className="inline-flex min-h-[36px] items-center text-[14.5px] text-muted-foreground transition hover:text-foreground">
                       {link.label}
                     </Link>
                   )}

@@ -76,7 +76,9 @@ export function Pipeline({ stages }: { stages: PipelineStage[] }) {
         ))}
       </div>
 
-      <aside className="panel p-6 lg:sticky lg:top-28">
+      {/* On a phone the panel would repeat the entry that is already on screen,
+          so the steps stand on their own and the panel is desktop only. */}
+      <aside className="panel hidden p-6 lg:sticky lg:top-28 lg:block">
         <span className="label mb-3 block">
           Step <b className="text-foreground">{String(active + 1).padStart(2, '0')}</b> of{' '}
           {String(stages.length).padStart(2, '0')}

@@ -92,9 +92,9 @@ export function Navbar() {
           onClick={() => setMobileOpen((open) => !open)}
           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileOpen}
-          className="rounded-lg border border-transparent p-2 text-muted-foreground hover:border-line hover:bg-card hover:text-foreground md:hidden"
+          className="-mr-2 grid h-11 w-11 place-items-center rounded-lg border border-transparent text-muted-foreground hover:border-line hover:bg-card hover:text-foreground md:hidden"
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
+          <svg width="22" height="22" viewBox="0 0 20 20" fill="none" aria-hidden>
             {mobileOpen ? (
               <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             ) : (

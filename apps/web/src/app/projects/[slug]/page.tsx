@@ -65,7 +65,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="page">
-      <Link href="/projects" className="mb-10 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[.09em] text-dim transition hover:text-warm">
+      <Link href="/projects" className="mb-4 inline-flex min-h-[36px] items-center gap-2 font-mono text-[11.5px] uppercase tracking-[.09em] text-dim transition hover:text-warm">
         ← Back to projects
       </Link>
 

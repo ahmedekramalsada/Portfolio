@@ -49,9 +49,9 @@ export default async function ResumePage() {
           <p className="mt-4 text-[15px] text-muted-foreground">DevOps Engineer & Software Architect</p>
           <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11.5px] uppercase tracking-[.08em] text-dim">
             <span>Cairo, Egypt</span>
-            <a href="mailto:ahmedekramalsada@gmail.com" className="transition hover:text-warm">ahmedekramalsada@gmail.com</a>
-            <a href="https://linkedin.com/in/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="transition hover:text-warm">LinkedIn</a>
-            <a href="https://github.com/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="transition hover:text-warm">GitHub</a>
+            <a href="mailto:ahmedekramalsada@gmail.com" className="inline-flex min-h-[36px] items-center transition hover:text-warm">ahmedekramalsada@gmail.com</a>
+            <a href="https://linkedin.com/in/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[36px] items-center transition hover:text-warm">LinkedIn</a>
+            <a href="https://github.com/ahmedekramalsada" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[36px] items-center transition hover:text-warm">GitHub</a>
           </div>
         </div>
         <DownloadButton />

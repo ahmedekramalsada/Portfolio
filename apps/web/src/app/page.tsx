@@ -148,7 +148,7 @@ export default async function HomePage() {
               DevOps engineer at SmartSigma · Cairo
             </div>
 
-            <h1 className="mt-7 text-[clamp(2.9rem,7.6vw,6.2rem)] font-semibold leading-[1.04] tracking-[-.045em]">
+            <h1 className="mt-7 text-[clamp(2.1rem,8.4vw,6.2rem)] font-semibold leading-[1.06] tracking-[-.045em] lg:leading-[1.04]">
               <span className="kline">
                 <span>I build the rails</span>
               </span>
@@ -215,7 +215,7 @@ export default async function HomePage() {
       {/* ── How a change ships ───────────────────────────────────────────── */}
       <section id="how-it-ships" className="relative z-10 mx-auto max-w-[1200px] scroll-mt-24 px-6 py-24 lg:px-8">
         <span className="label">How it ships</span>
-        <h2 className="mt-5 max-w-[24ch] text-[clamp(1.9rem,3.4vw,2.9rem)] font-semibold leading-[1.06] tracking-[-.035em]">
+        <h2 className="mt-5 max-w-[24ch] text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">
           What happens between a commit and a live server
         </h2>
         <p className="mt-5 max-w-[62ch] text-[15.5px] leading-relaxed text-muted-foreground">
@@ -230,11 +230,11 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="label">Selected work</span>
-              <h2 className="mt-5 max-w-[24ch] text-[clamp(1.9rem,3.4vw,2.9rem)] font-semibold leading-[1.06] tracking-[-.035em]">
+              <h2 className="mt-5 max-w-[24ch] text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">
                 Things I have built and kept running
               </h2>
             </div>
-            <Link href="/projects" className="text-[14px] text-muted-foreground transition hover:text-warm">
+            <Link href="/projects" className="inline-flex min-h-[36px] items-center text-[14px] text-muted-foreground transition hover:text-warm">
               All projects →
             </Link>
           </div>
@@ -285,7 +285,7 @@ export default async function HomePage() {
         <div className="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
           <div>
             <span className="label">Ask directly</span>
-            <h2 className="mt-5 max-w-[22ch] text-[clamp(1.9rem,3.4vw,2.9rem)] font-semibold leading-[1.06] tracking-[-.035em]">
+            <h2 className="mt-5 max-w-[22ch] text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">
               Ask the terminal who I am
             </h2>
             <p className="mt-5 max-w-[46ch] text-[15.5px] leading-relaxed text-muted-foreground">
@@ -314,11 +314,11 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span className="label">Writing</span>
-              <h2 className="mt-5 text-[clamp(1.9rem,3.4vw,2.9rem)] font-semibold leading-[1.06] tracking-[-.035em]">
+              <h2 className="mt-5 text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">
                 Notes from production
               </h2>
             </div>
-            <Link href="/blog" className="text-[14px] text-muted-foreground transition hover:text-warm">
+            <Link href="/blog" className="inline-flex min-h-[36px] items-center text-[14px] text-muted-foreground transition hover:text-warm">
               All writing →
             </Link>
           </div>
@@ -356,7 +356,7 @@ export default async function HomePage() {
       {/* ── Closing ──────────────────────────────────────────────────────── */}
       <Reveal className="relative z-10 mx-auto max-w-[1200px] px-6 pb-28 pt-20 lg:px-8">
         <span className="label">Next</span>
-        <h2 className="mt-5 max-w-[26ch] text-[clamp(2.1rem,4.6vw,4rem)] font-semibold leading-[1.02] tracking-[-.04em]">
+        <h2 className="mt-5 max-w-[26ch] text-[clamp(1.8rem,7vw,4rem)] font-semibold leading-[1.08] tracking-[-.04em]">
           Reliable infrastructure is quiet. Hiring for it is loud.
         </h2>
         <p className="mt-6 max-w-[58ch] text-[15.5px] leading-relaxed text-muted-foreground">
