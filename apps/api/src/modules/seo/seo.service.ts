@@ -163,7 +163,6 @@ ${posts.map((post) => `  <item>
       url: 'https://ahmedekram.site',
       image: 'https://media.ahmedekram.site/media/1785021278987-ahmed_ekram_alsada_profile_photo.webp',
       jobTitle: 'DevOps Engineer',
-      worksFor: { '@type': 'Organization', name: 'SmartSigma' },
       sameAs: [
         'https://github.com/ahmedekramalsada',
         'https://linkedin.com/in/ahmedekramalsada',

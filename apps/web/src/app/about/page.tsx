@@ -24,7 +24,7 @@ async function getExperiences() {
 const TIMELINE = [
   {
     period: 'May 2026 — Present',
-    role: 'DevOps Engineer @ SmartSigma',
+    role: 'DevOps Engineer',
     body: 'Managing production infrastructure, CI/CD pipelines, Docker orchestration, SSL automation, and platform integrations across a fleet of production VPS servers.',
   },
   {
@@ -64,7 +64,7 @@ export default async function AboutPage() {
       <PageHeader
         label="About"
         title="I keep production boring on purpose"
-        lede="DevOps engineer at SmartSigma, building and automating production infrastructure for a fleet of VPS servers. Passionate about automation, platform engineering, and creating systems that just work."
+        lede="DevOps engineer building and automating production infrastructure for a fleet of production VPS servers. Passionate about automation, platform engineering, and creating systems that just work."
       />
 
       {/* Journey */}

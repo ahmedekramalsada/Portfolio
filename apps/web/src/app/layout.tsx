@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   keywords: [
     'DevOps Engineer', 'Software Architect', 'Docker', 'Kubernetes', 'CI/CD',
-    'Platform Engineering', 'SmartSigma', 'AI Engineering', 'Infrastructure',
+    'Platform Engineering', 'AI Engineering', 'Infrastructure',
     'احمد اكرام السادة', 'أحمد أكرم السادة', 'مهندس DevOps', 'مصر', 'القاهرة',
   ],
   authors: [{ name: siteConfig.creator }],
@@ -80,7 +80,6 @@ export default function RootLayout({
     name: siteConfig.name,
     url: siteConfig.url,
     jobTitle: 'DevOps Engineer',
-    worksFor: { '@type': 'Organization', name: 'SmartSigma' },
     sameAs: [siteConfig.links.github, siteConfig.links.linkedin, siteConfig.url],
     knowsAbout: ['DevOps', 'Docker', 'Kubernetes', 'CI/CD', 'AI Engineering', 'Platform Engineering'],
   };

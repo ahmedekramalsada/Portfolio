@@ -1,9 +1,9 @@
 export const siteConfig = {
   name: 'Ahmed Ekram Alsada',
   title: 'Ahmed Ekram Alsada — DevOps Engineer & Software Architect',
-  description: 'DevOps Engineer and Software Architect at SmartSigma. Building production-grade systems with Docker, Kubernetes, CI/CD, cloud infrastructure, and AI-powered platform engineering.',
+  description: 'DevOps Engineer and Software Architect. Building production-grade systems with Docker, Kubernetes, CI/CD, cloud infrastructure and platform engineering.',
   arabicName: 'احمد اكرام السادة',
-  arabicDescription: 'مهندس DevOps ومهندس برمجيات في SmartSigma. خبرة في Docker و Kubernetes و CI/CD والبنية التحتية السحابية.',
+  arabicDescription: 'مهندس DevOps ومهندس برمجيات. خبرة في Docker و Kubernetes و CI/CD والبنية التحتية السحابية.',
   url: 'https://ahmedekram.site',
   ogImage: 'https://ahmedekram.site/og.png',
   links: {
@@ -22,7 +22,7 @@ export const defaultMetadata = {
   description: siteConfig.description,
   keywords: [
     'DevOps Engineer', 'Software Architect', 'Docker', 'Kubernetes', 'CI/CD',
-    'Platform Engineering', 'SmartSigma', 'Cairo', 'Egypt', 'AI Engineering',
+    'Platform Engineering', 'Cairo', 'Egypt', 'AI Engineering',
     'Infrastructure', 'Cloud', 'NestJS', 'Next.js', 'TypeScript', 'PostgreSQL',
   ],
   authors: [{ name: siteConfig.creator }],

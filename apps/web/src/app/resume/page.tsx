@@ -25,7 +25,7 @@ async function getData() {
 
 const FALLBACK_EXPERIENCE = {
   position: 'DevOps Engineer',
-  company: 'SmartSigma · Cairo',
+  company: 'Cairo, Egypt',
   description: 'Managing production infrastructure, CI/CD pipelines, Docker orchestration, and platform integrations.',
 };
 

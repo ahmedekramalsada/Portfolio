@@ -109,7 +109,6 @@ export default async function HomePage() {
   const terminalData: TerminalData = {
     name: 'Ahmed Ekram Alsada',
     role: 'DevOps Engineer',
-    company: 'SmartSigma',
     location: 'Cairo, Egypt',
     focus: 'container platforms, delivery pipelines and monitoring that tells me before a user does',
     skills: skills.map((skill) => skill.name),
@@ -145,7 +144,7 @@ export default async function HomePage() {
 
             <div className="fade-up inline-flex items-center gap-2.5 rounded-full border border-line bg-card px-3.5 py-2 font-mono text-[11.5px] uppercase tracking-[.09em] text-muted-foreground">
               <span className="pulse-dot block h-1.5 w-1.5 rounded-full bg-ok" />
-              DevOps engineer at SmartSigma · Cairo
+              DevOps engineer · Cairo
             </div>
 
             <h1 className="mt-7 text-[clamp(2.1rem,8.4vw,6.2rem)] font-semibold leading-[1.06] tracking-[-.045em] lg:leading-[1.04]">
@@ -179,7 +178,7 @@ export default async function HomePage() {
             <span className="label">Current state</span>
             <dl className="mt-5 flex flex-col gap-4">
               {[
-                ['Role', 'DevOps Engineer · SmartSigma'],
+                ['Role', 'DevOps Engineer'],
                 ['Based in', 'Cairo, Egypt'],
                 ['Working with', 'Docker · Kubernetes · Traefik · Terraform'],
                 ['Shipped', `${projects.length} projects · ${posts.length} published articles`],
@@ -212,17 +211,15 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* ── How a change ships ───────────────────────────────────────────── */}
-      <section id="how-it-ships" className="relative z-10 mx-auto max-w-[1200px] scroll-mt-24 px-6 py-24 lg:px-8">
-        <span className="label">How it ships</span>
-        <h2 className="mt-5 max-w-[24ch] text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">
-          What happens between a commit and a live server
-        </h2>
-        <p className="mt-5 max-w-[62ch] text-[15.5px] leading-relaxed text-muted-foreground">
-          Six steps, in this order, every time. Scroll and the rail follows — or click a step to read it on its own.
-        </p>
-        <Pipeline stages={STAGES} />
-      </section>
+      {/* ── Numbers ──────────────────────────────────────────────────────── */}
+      <Reveal className="relative z-10 mx-auto max-w-[1200px] px-6 py-10 lg:px-8">
+        <div className="panel grid divide-line sm:grid-cols-2 sm:divide-x lg:grid-cols-4">
+          <Counter value={projects.length} label="Projects built and operated" />
+          <Counter value={posts.length} label="Articles published" />
+          <Counter value={categories.length} label="Topics on this site" />
+          <Counter value={skills.length} label="Tools in the working stack" />
+        </div>
+      </Reveal>
 
       {/* ── Work ─────────────────────────────────────────────────────────── */}
       {projects.length > 0 && (
@@ -280,34 +277,6 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── Terminal ─────────────────────────────────────────────────────── */}
-      <section className="relative z-10 mx-auto max-w-[1200px] px-6 py-24 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
-          <div>
-            <span className="label">Ask directly</span>
-            <h2 className="mt-5 max-w-[22ch] text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">
-              Ask the terminal who I am
-            </h2>
-            <p className="mt-5 max-w-[46ch] text-[15.5px] leading-relaxed text-muted-foreground">
-              Everything it answers comes from the same database this site reads. Try{' '}
-              <code className="rounded-md border border-line bg-muted px-1.5 py-0.5 font-mono text-[13px] text-warm">
-                whoami
-              </code>
-              ,{' '}
-              <code className="rounded-md border border-line bg-muted px-1.5 py-0.5 font-mono text-[13px] text-warm">
-                stack
-              </code>{' '}
-              or{' '}
-              <code className="rounded-md border border-line bg-muted px-1.5 py-0.5 font-mono text-[13px] text-warm">
-                how
-              </code>
-              .
-            </p>
-          </div>
-          <Terminal data={terminalData} />
-        </div>
-      </section>
-
       {/* ── Writing ──────────────────────────────────────────────────────── */}
       {posts.length > 0 && (
         <section className="relative z-10 mx-auto max-w-[1200px] px-6 py-16 lg:px-8">
@@ -343,15 +312,45 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── Numbers ──────────────────────────────────────────────────────── */}
-      <Reveal className="relative z-10 mx-auto max-w-[1200px] px-6 py-10 lg:px-8">
-        <div className="panel grid divide-line sm:grid-cols-2 sm:divide-x lg:grid-cols-4">
-          <Counter value={projects.length} label="Projects built and operated" />
-          <Counter value={posts.length} label="Articles published" />
-          <Counter value={categories.length} label="Topics on this site" />
-          <Counter value={skills.length} label="Tools in the working stack" />
+      {/* ── How a change ships ───────────────────────────────────────────── */}
+      <section id="how-it-ships" className="relative z-10 mx-auto max-w-[1200px] scroll-mt-24 px-6 py-24 lg:px-8">
+        <span className="label">How it ships</span>
+        <h2 className="mt-5 max-w-[24ch] text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">
+          What happens between a commit and a live server
+        </h2>
+        <p className="mt-5 max-w-[62ch] text-[15.5px] leading-relaxed text-muted-foreground">
+          Six steps, in this order, every time. Scroll and the rail follows — or click a step to read it on its own.
+        </p>
+        <Pipeline stages={STAGES} />
+      </section>
+
+      {/* ── Terminal ─────────────────────────────────────────────────────── */}
+      <section className="relative z-10 mx-auto max-w-[1200px] px-6 py-24 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
+          <div>
+            <span className="label">Ask directly</span>
+            <h2 className="mt-5 max-w-[22ch] text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">
+              Ask the terminal who I am
+            </h2>
+            <p className="mt-5 max-w-[46ch] text-[15.5px] leading-relaxed text-muted-foreground">
+              Everything it answers comes from the same database this site reads. Try{' '}
+              <code className="rounded-md border border-line bg-muted px-1.5 py-0.5 font-mono text-[13px] text-warm">
+                whoami
+              </code>
+              ,{' '}
+              <code className="rounded-md border border-line bg-muted px-1.5 py-0.5 font-mono text-[13px] text-warm">
+                stack
+              </code>{' '}
+              or{' '}
+              <code className="rounded-md border border-line bg-muted px-1.5 py-0.5 font-mono text-[13px] text-warm">
+                how
+              </code>
+              .
+            </p>
+          </div>
+          <Terminal data={terminalData} />
         </div>
-      </Reveal>
+      </section>
 
       {/* ── Closing ──────────────────────────────────────────────────────── */}
       <Reveal className="relative z-10 mx-auto max-w-[1200px] px-6 pb-28 pt-20 lg:px-8">

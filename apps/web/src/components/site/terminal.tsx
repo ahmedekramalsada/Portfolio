@@ -5,7 +5,6 @@ import { useRef } from 'react';
 export type TerminalData = {
   name: string;
   role: string;
-  company: string;
   location: string;
   focus: string;
   skills: string[];
@@ -49,7 +48,7 @@ export function Terminal({ data }: { data: TerminalData }) {
   const commands: Record<string, () => void> = {
     help: () => {
       const rows: [string, string][] = [
-        ['whoami', 'role, company, where I am'],
+        ['whoami', 'role and where I am'],
         ['stack', 'the tools I actually use'],
         ['projects', 'things I have shipped'],
         ['writing', 'published articles'],
@@ -62,7 +61,7 @@ export function Terminal({ data }: { data: TerminalData }) {
       );
     },
     whoami: () => {
-      write(`<span class="g">${escape(data.name)}</span> — ${escape(data.role)} at ${escape(data.company)}, ${escape(data.location)}.`);
+      write(`<span class="g">${escape(data.name)}</span> — ${escape(data.role)}, ${escape(data.location)}.`);
       write(`<span class="d">Focus: ${escape(data.focus)}</span>`);
     },
     stack: () => {
