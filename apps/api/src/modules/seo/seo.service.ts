@@ -13,7 +13,7 @@ export class SeoService {
     const urls: string[] = [];
 
     // Static pages
-    const staticPages = ['', '/about', '/resume', '/blog', '/projects', '/contact', '/search'];
+    const staticPages = ['', '/about', '/blog', '/projects', '/contact', '/search'];
     for (const page of staticPages) {
       urls.push(this.sitemapEntry(`${baseUrl}${page}`, this.getPriority(page), this.getChangeFreq(page)));
     }
@@ -82,7 +82,6 @@ ${urls.join('')}
     if (page === '' || page === '/about') return '1.0';
     if (page === '/blog') return '0.9';
     if (page === '/projects') return '0.9';
-    if (page === '/resume') return '0.8';
     return '0.5';
   }
 

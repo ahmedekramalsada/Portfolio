@@ -7,7 +7,6 @@ const columns = [
       { href: '/blog', label: 'Writing' },
       { href: '/projects', label: 'Work' },
       { href: '/about', label: 'About' },
-      { href: '/resume', label: 'Résumé' },
     ],
   },
   {

@@ -96,7 +96,7 @@ export function Terminal({ data }: { data: TerminalData }) {
     clear: () => {
       if (outRef.current) outRef.current.innerHTML = '';
     },
-    ls: () => write('<span class="b">writing/</span>  <span class="b">projects/</span>  <span class="b">about/</span>  <span class="b">resume/</span>  <span class="b">contact/</span>'),
+    ls: () => write('<span class="b">writing/</span>  <span class="b">projects/</span>  <span class="b">about/</span>  <span class="b">contact/</span>'),
   };
 
   const run = (raw: string) => {
