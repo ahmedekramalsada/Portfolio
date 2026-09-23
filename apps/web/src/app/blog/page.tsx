@@ -60,7 +60,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
     <div className="page page-wide">
       <PageHeader
         label="Writing"
-        title="Notes from production"
+        title="Latest posts"
         lede="DevOps, cloud infrastructure and platform engineering — written from what actually broke, and what fixed it."
       />
 

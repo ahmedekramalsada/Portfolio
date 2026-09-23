@@ -284,7 +284,7 @@ export default async function HomePage() {
             <div>
               <span className="label">Writing</span>
               <h2 className="mt-5 text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">
-                Notes from production
+                Latest posts
               </h2>
             </div>
             <Link href="/blog" className="inline-flex min-h-[36px] items-center text-[14px] text-muted-foreground transition hover:text-warm">
