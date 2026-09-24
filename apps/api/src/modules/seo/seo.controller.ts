@@ -1,6 +1,5 @@
-import { Controller, Get, Param, Res, HttpCode, Header } from '@nestjs/common';
+import { Controller, Get, Query, Param, Header } from '@nestjs/common';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
-import { Response } from 'express';
 import { SeoService } from './seo.service';
 
 @Controller()
@@ -24,8 +23,8 @@ export class SeoController {
   @Get('feed.xml')
   @ApiExcludeEndpoint()
   @Header('Content-Type', 'application/rss+xml')
-  async getRss() {
-    return this.seoService.getRss();
+  async getRss(@Query('lang') lang?: string) {
+    return this.seoService.getRss(lang === 'ar' ? 'ar' : 'en');
   }
 
   @Get('json-ld/person')

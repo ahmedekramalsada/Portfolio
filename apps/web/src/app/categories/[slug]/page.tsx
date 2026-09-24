@@ -6,12 +6,12 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  return { title: slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '), description: `Articles about ${slug}.` };
+  return { title: slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '), description: `English articles about ${slug}.`, robots: { index: false, follow: true } };
 }
 
 async function getPostsByCategory(slug: string) {
   try {
-    const res = await fetch(`${API_URL}/posts?category=${slug}&limit=50`, { next: { revalidate: 60 } });
+    const res = await fetch(`${API_URL}/posts?category=${encodeURIComponent(slug)}&language=en&status=published&limit=50`, { next: { revalidate: 60 } });
     if (!res.ok) return [];
     const data = await res.json();
     return data.data || data || [];

@@ -5,14 +5,16 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class BlogService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(params: { page?: number; limit?: number; status?: string; categoryId?: string }) {
+  async findAll(params: { page?: number; limit?: number; status?: string; language?: string; category?: string; categoryId?: string }) {
     const page = params.page || 1;
     const limit = Math.min(params.limit || 20, 100);
     const skip = (page - 1) * limit;
 
     const where: any = { deletedAt: null };
     if (params.status) where.status = params.status;
+    if (params.language) where.language = params.language;
     if (params.categoryId) where.categoryId = params.categoryId;
+    else if (params.category) where.category = { slug: params.category };
 
     const [posts, total] = await Promise.all([
       this.prisma.blogPost.findMany({

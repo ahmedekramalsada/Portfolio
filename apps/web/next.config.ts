@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next';
 
+const seoApiBase = (process.env.SEO_API_URL || process.env.API_URL || 'http://localhost:4000').replace(/\/api\/v1\/?$/, '');
+
 const nextConfig: NextConfig = {
   // Hide the development indicator: it floats over page content and gets
   // mistaken for part of the design.
@@ -16,10 +18,10 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return [
-      { source: '/sitemap.xml', destination: `${process.env.API_URL || 'http://localhost:4000'}/sitemap.xml` },
-      { source: '/robots.txt', destination: `${process.env.API_URL || 'http://localhost:4000'}/robots.txt` },
-      { source: '/feed.xml', destination: `${process.env.API_URL || 'http://localhost:4000'}/feed.xml` },
-      { source: '/json-ld/:path*', destination: `${process.env.API_URL || 'http://localhost:4000'}/json-ld/:path*` },
+      { source: '/sitemap.xml', destination: `${seoApiBase}/sitemap.xml` },
+      { source: '/robots.txt', destination: `${seoApiBase}/robots.txt` },
+      { source: '/feed.xml', destination: `${seoApiBase}/feed.xml` },
+      { source: '/json-ld/:path*', destination: `${seoApiBase}/json-ld/:path*` },
     ];
   },
 };

@@ -1,34 +1,32 @@
 'use client';
 
-/**
- * Post image with a designed fallback. Cover uploads can go stale — the stored
- * URL may point at a file that is no longer on the media host — so a broken
- * image swaps to the same gradient monogram the design uses elsewhere instead
- * of showing the browser's broken-image icon.
- */
-
 import { useState } from 'react';
 
-type Props = {
-  src?: string;
-  alt: string;
-  /** Letter shown when there is no usable image (category or title initial). */
-  fallback: string;
-  className?: string;
-  fallbackFontSize?: string;
-};
+type Props = { src?: string | null; alt: string; fallback: string; className?: string; fallbackFontSize?: string };
 
 export function Cover({ src, alt, fallback, className, fallbackFontSize }: Props) {
   const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   if (!src || failed) {
-    return (
-      <span className={`pcard-art ${className || ''}`} style={fallbackFontSize ? { fontSize: fallbackFontSize } : undefined}>
-        {fallback}
-      </span>
-    );
+    return <span className={`pcard-art ${className || ''}`} style={fallbackFontSize ? { fontSize: fallbackFontSize } : undefined}>{fallback}</span>;
   }
 
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={alt} onError={() => setFailed(true)} />;
+  return (
+    <span className="relative block h-full w-full">
+      <img
+        src={src}
+        alt={alt}
+        className={`h-full w-full object-cover ${className || ''}`}
+        onLoad={(event) => {
+          const image = event.currentTarget;
+          if (image.naturalWidth === 0) setFailed(true);
+          else setLoaded(true);
+        }}
+        onError={() => setFailed(true)}
+        style={{ display: loaded || failed ? 'block' : 'none' }}
+      />
+      {!loaded && !failed && <span className="pcard-art absolute inset-0" aria-hidden />}
+    </span>
+  );
 }

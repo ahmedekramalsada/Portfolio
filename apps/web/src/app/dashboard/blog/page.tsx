@@ -10,6 +10,7 @@ export default function BlogAdminPage() {
   const [content, setContent] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [coverImage, setCoverImage] = useState('');
+  const [language, setLanguage] = useState<'en' | 'ar'>('en');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -17,7 +18,7 @@ export default function BlogAdminPage() {
   const load = () => api.get('/posts?limit=50').then((r: any) => setPosts(r.data || []));
   useEffect(() => { load(); }, []);
 
-  const reset = () => { setTitle(''); setSlug(''); setContent(''); setExcerpt(''); setCoverImage(''); setEditingId(null); };
+  const reset = () => { setTitle(''); setSlug(''); setContent(''); setExcerpt(''); setCoverImage(''); setLanguage('en'); setEditingId(null); };
 
   const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -36,7 +37,7 @@ export default function BlogAdminPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data: any = { title, slug, content, excerpt, coverImage };
+    const data: any = { title, slug, content, excerpt, coverImage, language };
     if (editingId) {
       await api.patch(`/posts/${editingId}`, data);
     } else {
@@ -55,6 +56,7 @@ export default function BlogAdminPage() {
       setContent(full.content || '');
       setExcerpt(full.excerpt || '');
       setCoverImage(full.coverImage || '');
+      setLanguage(full.language === 'ar' ? 'ar' : 'en');
     } catch {
       setContent(post.content || '');
     }
@@ -74,6 +76,13 @@ export default function BlogAdminPage() {
             className="field" required />
           <input placeholder="slug-post-title" value={slug} onChange={(e) => setSlug(e.target.value)}
             className="field" required />
+        </div>
+        <div>
+          <label className="label-field" htmlFor="post-language">Article language</label>
+          <select id="post-language" value={language} onChange={(e) => setLanguage(e.target.value as 'en' | 'ar')} className="field">
+            <option value="en">English — /blog/</option>
+            <option value="ar">العربية — /ar/blog/</option>
+          </select>
         </div>
 
         {/* Image upload */}

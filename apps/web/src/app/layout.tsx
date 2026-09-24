@@ -1,95 +1,41 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { headers } from 'next/headers';
 import '@/styles/globals.css';
 import { Providers } from '@/providers/providers';
+import { LocaleDocumentSync } from '@/providers/locale-document-sync';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
-import { siteConfig, getJsonLdScript } from '@/config/seo';
+import { defaultMetadata, getJsonLdScript, siteConfig } from '@/config/seo';
 import Script from 'next/script';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
+const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
+const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+export const metadata: Metadata = defaultMetadata;
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: {
-    default: siteConfig.title,
-    template: `%s — ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  keywords: [
-    'DevOps Engineer', 'Software Architect', 'Docker', 'Kubernetes', 'CI/CD',
-    'Platform Engineering', 'AI Engineering', 'Infrastructure',
-    'احمد اكرام السادة', 'أحمد أكرم السادة', 'مهندس DevOps', 'مصر', 'القاهرة',
-  ],
-  authors: [{ name: siteConfig.creator }],
-  creator: siteConfig.creator,
-  openGraph: {
-    type: 'website' as const,
-    locale: 'en_US',
-    alternateLocale: ['ar_AE'],
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-    title: siteConfig.title,
-    description: siteConfig.description,
-    images: [{ url: `${siteConfig.url}/og.png`, width: 1200, height: 630 }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: [`${siteConfig.url}/og.png`],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  alternates: {
-    canonical: siteConfig.url,
-    languages: {
-      'en': siteConfig.url,
-      'ar': siteConfig.url,
-      'x-default': siteConfig.url,
-    },
-    types: {
-      'application/rss+xml': `${siteConfig.url}/feed.xml`,
-    },
-  },
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const requestHeaders = await headers();
+  const locale = requestHeaders.get('x-ahmed-locale') === 'ar' ? 'ar' : 'en';
   const personJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: siteConfig.name,
+    alternateName: siteConfig.arabicName,
     url: siteConfig.url,
     jobTitle: 'DevOps Engineer',
-    sameAs: [siteConfig.links.github, siteConfig.links.linkedin, siteConfig.url],
-    knowsAbout: ['DevOps', 'Docker', 'Kubernetes', 'CI/CD', 'AI Engineering', 'Platform Engineering'],
+    workLocation: { '@type': 'Place', name: 'Cairo, Egypt' },
+    sameAs: [siteConfig.links.github, siteConfig.links.linkedin],
+    knowsAbout: ['DevOps', 'Docker', 'Kubernetes', 'CI/CD', 'Cloud infrastructure', 'AI systems'],
+    knowsLanguage: ['Arabic', 'English'],
   };
-
   const websiteJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: siteConfig.name,
     url: siteConfig.url,
     description: siteConfig.description,
+    inLanguage: ['en-US', 'ar-EG'],
     potentialAction: {
       '@type': 'SearchAction',
       target: { '@type': 'EntryPoint', urlTemplate: `${siteConfig.url}/search?q={search_term_string}` },
@@ -98,35 +44,18 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang={locale === 'ar' ? 'ar-EG' : 'en-US'} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="dark" suppressHydrationWarning>
       <head>
-        {/* Favicon */}
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
-        {/* JSON-LD Structured Data */}
-        <Script id="person-jsonld" type="application/ld+json" strategy="beforeInteractive"
-          dangerouslySetInnerHTML={getJsonLdScript(JSON.stringify(personJsonLd))} />
-        <Script id="website-jsonld" type="application/ld+json" strategy="beforeInteractive"
-          dangerouslySetInnerHTML={getJsonLdScript(JSON.stringify(websiteJsonLd))} />
-        {/* Canonical URL */}
-        <link rel="canonical" href={siteConfig.url} />
-        {/* RSS Feed */}
-        <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} Blog`} href="/feed.xml" />
-        {/* Marks the document as JavaScript-capable before the first paint, so the
-            entrance animations start hidden only when they are certain to run.
-            Without JavaScript every headline and section stays plainly visible. */}
-        <script
-          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js-ready');" }}
-        />
+        <Script id="person-jsonld" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={getJsonLdScript(JSON.stringify(personJsonLd))} />
+        <Script id="website-jsonld" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={getJsonLdScript(JSON.stringify(websiteJsonLd))} />
+        <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} Writing`} href="/feed.xml" />
+        <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} — الكتابة`} href="/feed.xml?lang=ar" />
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js-ready');" }} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}>
-        <Providers>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-        </Providers>
+        <Providers><LocaleDocumentSync /><div className="flex min-h-screen flex-col"><Navbar /><main className="flex-1">{children}</main><Footer /></div></Providers>
       </body>
     </html>
   );

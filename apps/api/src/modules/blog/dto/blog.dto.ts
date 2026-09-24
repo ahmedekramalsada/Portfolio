@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEnum, IsUUID, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsUUID, IsArray, IsIn } from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -18,6 +18,10 @@ export class CreatePostDto {
   @IsOptional()
   @IsString()
   coverImage?: string;
+
+  @IsOptional()
+  @IsIn(['en', 'ar'])
+  language?: string;
 
   @IsOptional()
   @IsString()
@@ -63,6 +67,10 @@ export class UpdatePostDto {
   coverImage?: string;
 
   @IsOptional()
+  @IsIn(['en', 'ar'])
+  language?: string;
+
+  @IsOptional()
   @IsString()
   status?: string;
 
@@ -94,6 +102,14 @@ export class PostQueryDto {
   @IsOptional()
   @IsString()
   status?: string;
+
+  @IsOptional()
+  @IsIn(['en', 'ar'])
+  language?: string;
+
+  @IsOptional()
+  @IsString()
+  category?: string;
 
   @IsOptional()
   @IsUUID()

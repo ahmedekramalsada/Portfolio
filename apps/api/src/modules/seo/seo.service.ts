@@ -1,174 +1,150 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+
+const PUBLIC_PROJECT_SLUGS = new Set(['final-project-devops', 'final-project', 'ahmed-os']);
+const LOCALIZED_PAGES: Array<[string, string]> = [
+  ['', '/ar'],
+  ['/about', '/ar/about'],
+  ['/blog', '/ar/blog'],
+  ['/projects', '/ar/projects'],
+  ['/contact', '/ar/contact'],
+];
 
 @Injectable()
 export class SeoService {
-  private readonly logger = new Logger(SeoService.name);
-
   constructor(private prisma: PrismaService) {}
 
-  // === SITEMAP XML ===
-  async getSitemap(): Promise<string> {
-    const baseUrl = 'https://ahmedekram.site';
-    const urls: string[] = [];
+  private readonly baseUrl = 'https://ahmedekram.site';
+  private readonly siteName = 'Ahmed Ekram Alsada';
+  private readonly description = 'DevOps Engineer in Cairo building reliable cloud platforms and AI-powered business systems.';
+  private readonly arabicDescription = 'مهندس DevOps في القاهرة. أبني منصات سحابية موثوقة وأنظمة أعمال مدعومة بالذكاء الاصطناعي.';
 
-    // Static pages
-    const staticPages = ['', '/about', '/blog', '/projects', '/contact', '/search'];
-    for (const page of staticPages) {
-      urls.push(this.sitemapEntry(`${baseUrl}${page}`, this.getPriority(page), this.getChangeFreq(page)));
+  async getSitemap(): Promise<string> {
+    const urls: string[] = [];
+    for (const [path, alternate] of LOCALIZED_PAGES) {
+      urls.push(this.sitemapEntry(`${this.baseUrl}${path}`, this.getPriority(path), this.getChangeFreq(path), path, undefined, alternate));
+      urls.push(this.sitemapEntry(`${this.baseUrl}${alternate}`, this.getPriority(path), this.getChangeFreq(path), alternate, undefined, path));
     }
 
-    // Blog posts
     const posts = await this.prisma.blogPost.findMany({
       where: { status: 'published', deletedAt: null },
-      select: { slug: true, updatedAt: true, publishedAt: true },
+      select: { slug: true, language: true, updatedAt: true, publishedAt: true },
+      orderBy: { publishedAt: 'desc' },
     });
     for (const post of posts) {
-      urls.push(this.sitemapEntry(
-        `${baseUrl}/blog/${post.slug}`,
-        '0.7',
-        'weekly',
-        (post.updatedAt || post.publishedAt).toISOString(),
-      ));
+      const path = this.postPath(post.slug, post.language);
+      // Post slugs are unique in the current schema, so do not invent an
+      // alternate language URL when no translated record exists.
+      urls.push(this.sitemapEntry(`${this.baseUrl}${path}`, '0.7', 'weekly', path, (post.updatedAt || post.publishedAt)?.toISOString()));
     }
 
-    // Projects
     const projects = await this.prisma.project.findMany({
-      where: { deletedAt: null },
+      where: { deletedAt: null, slug: { in: [...PUBLIC_PROJECT_SLUGS] } },
       select: { slug: true, updatedAt: true },
     });
     for (const project of projects) {
-      urls.push(this.sitemapEntry(
-        `${baseUrl}/projects/${project.slug}`,
-        '0.6',
-        'monthly',
-        project.updatedAt?.toISOString(),
-      ));
-    }
-
-    // Pages
-    const pages = await this.prisma.page.findMany({
-      where: { published: true, deletedAt: null },
-      select: { slug: true, updatedAt: true },
-    });
-    for (const page of pages) {
-      urls.push(this.sitemapEntry(
-        `${baseUrl}/pages/${page.slug}`,
-        '0.5',
-        'monthly',
-        page.updatedAt?.toISOString(),
-      ));
+      const path = `/projects/${project.slug}`;
+      const alternate = `/ar${path}`;
+      urls.push(this.sitemapEntry(`${this.baseUrl}${path}`, '0.6', 'monthly', path, project.updatedAt?.toISOString(), alternate));
+      urls.push(this.sitemapEntry(`${this.baseUrl}${alternate}`, '0.6', 'monthly', alternate, project.updatedAt?.toISOString(), path));
     }
 
     return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls.join('')}
 </urlset>`;
   }
 
-  private sitemapEntry(loc: string, priority: string, changefreq: string, lastmod?: string): string {
-    return `  <url>
-    <loc>${this.escapeXml(loc)}</loc>
-    <priority>${priority}</priority>
-    <changefreq>${changefreq}</changefreq>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ''}
-    <xhtml:link rel="alternate" hreflang="en" href="${this.escapeXml(loc)}"/>
-    <xhtml:link rel="alternate" hreflang="ar" href="${this.escapeXml(loc)}"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="${this.escapeXml(loc)}"/>
-  </url>\n`;
-  }
-
-  private getPriority(page: string): string {
-    if (page === '' || page === '/about') return '1.0';
-    if (page === '/blog') return '0.9';
-    if (page === '/projects') return '0.9';
-    return '0.5';
-  }
-
-  private getChangeFreq(page: string): string {
-    if (page === '') return 'weekly';
-    if (page === '/blog') return 'daily';
-    return 'monthly';
-  }
-
-  // === ROBOTS.TXT ===
   async getRobots(): Promise<string> {
+    const privateRules = `Disallow: /dashboard
+Disallow: /login
+Disallow: /api/`;
     return `User-agent: *
 Allow: /
-Disallow: /dashboard
-Disallow: /login
-Disallow: /api/
-Disallow: /_next/
+${privateRules}
 
-Sitemap: https://ahmedekram.site/sitemap.xml
+Sitemap: ${this.baseUrl}/sitemap.xml
 
-# Allow crawlers to index content
+# Public content is intentionally available to search and AI crawlers.
 User-agent: Googlebot
 Allow: /
-Disallow: /dashboard
-Disallow: /login
+${privateRules}
 
 User-agent: Bingbot
 Allow: /
-Disallow: /dashboard
-Disallow: /login
+${privateRules}
 
 User-agent: GPTBot
-Disallow: /
+Allow: /
+${privateRules}
+
+User-agent: ClaudeBot
+Allow: /
+${privateRules}
+
+User-agent: PerplexityBot
+Allow: /
+${privateRules}
+
+User-agent: Google-Extended
+Allow: /
+${privateRules}
 `;
   }
 
-  // === RSS FEED ===
-  async getRss(): Promise<string> {
-    const baseUrl = 'https://ahmedekram.site';
+  async getRss(locale: 'en' | 'ar' = 'en'): Promise<string> {
+    const ar = locale === 'ar';
     const posts = await this.prisma.blogPost.findMany({
-      where: { status: 'published', deletedAt: null },
+      where: { status: 'published', deletedAt: null, language: locale },
       orderBy: { publishedAt: 'desc' },
       take: 50,
       include: { category: true, tags: { include: { tag: true } } },
     });
+    const root = `${this.baseUrl}${ar ? '/ar' : ''}`;
+    const language = ar ? 'ar-EG' : 'en-US';
+    const description = ar ? this.arabicDescription : this.description;
+    const self = `${this.baseUrl}/feed.xml${ar ? '?lang=ar' : ''}`;
+    const items = posts.map((post) => {
+      const path = this.postPath(post.slug, post.language);
+      const url = `${this.baseUrl}${path}`;
+      return `  <item>
+    <title>${this.cdata(post.title)}</title>
+    <link>${this.escapeXml(url)}</link>
+    <guid isPermaLink="true">${this.escapeXml(url)}</guid>
+    <pubDate>${(post.publishedAt || post.createdAt).toUTCString()}</pubDate>
+    <dc:creator>${this.cdata(this.siteName)}</dc:creator>
+    ${post.category ? `<category>${this.cdata(post.category.name)}</category>` : ''}
+    ${post.excerpt ? `<description>${this.cdata(post.excerpt)}</description>` : ''}
+    ${post.content ? `<content:encoded>${this.cdata(post.content.slice(0, 5000))}</content:encoded>` : ''}
+  </item>`;
+    }).join('\n');
 
     return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"
-  xmlns:dc="http://purl.org/dc/elements/1.1/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
 <channel>
-  <title>Ahmed Ekram Alsada</title>
-  <link>${baseUrl}</link>
-  <description>DevOps Engineer &amp; Software Architect. Articles on Docker, Kubernetes, CI/CD, AI, and platform engineering.</description>
-  <language>en-us</language>
+  <title>${this.cdata(`${this.siteName} — ${ar ? 'الكتابة' : 'Writing'}`)}</title>
+  <link>${this.escapeXml(root || this.baseUrl)}</link>
+  <description>${this.cdata(description)}</description>
+  <language>${language}</language>
   <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-  <atom:link href="${baseUrl}/feed.xml" rel="self" type="application/rss+xml"/>
-${posts.map((post) => `  <item>
-    <title><![CDATA[${post.title}]]></title>
-    <link>${baseUrl}/blog/${post.slug}</link>
-    <guid isPermaLink="true">${baseUrl}/blog/${post.slug}</guid>
-    <pubDate>${(post.publishedAt || post.createdAt).toUTCString()}</pubDate>
-    <dc:creator>Ahmed Ekram Alsada</dc:creator>
-    ${post.category ? `<category>${post.category.name}</category>` : ''}
-    ${post.excerpt ? `<description><![CDATA[${post.excerpt}]]></description>` : ''}
-    ${post.content ? `<content:encoded><![CDATA[${post.content.slice(0, 5000)}]]></content:encoded>` : ''}
-  </item>`).join('\n')}
+  <atom:link href="${self}" rel="self" type="application/rss+xml"/>
+${items}
 </channel>
 </rss>`;
   }
 
-  // === JSON-LD STRUCTURED DATA ===
   async getPersonJsonLd(): Promise<string> {
     return JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Person',
-      name: 'Ahmed Ekram Alsada',
-      alternateName: 'احمد اكرام السادة',
-      url: 'https://ahmedekram.site',
+      name: this.siteName,
+      alternateName: 'أحمد أكرم السادة',
+      url: this.baseUrl,
       image: 'https://media.ahmedekram.site/media/1785021278987-ahmed_ekram_alsada_profile_photo.webp',
       jobTitle: 'DevOps Engineer',
-      sameAs: [
-        'https://github.com/ahmedekramalsada',
-        'https://linkedin.com/in/ahmedekramalsada',
-        'https://ahmedekram.site',
-      ],
-      knowsAbout: ['DevOps', 'Docker', 'Kubernetes', 'CI/CD', 'AI Engineering', 'Platform Engineering'],
-      description: 'DevOps Engineer and Software Architect building production-grade systems.',
+      sameAs: ['https://github.com/ahmedekramalsada', 'https://www.linkedin.com/in/ahmedekramalsada'],
+      knowsAbout: ['DevOps', 'Docker', 'Kubernetes', 'CI/CD', 'AI systems', 'Platform Engineering'],
+      description: this.description,
       knowsLanguage: [
         { '@type': 'Language', name: 'Arabic', alternateName: 'العربية' },
         { '@type': 'Language', name: 'English' },
@@ -181,50 +157,46 @@ ${posts.map((post) => `  <item>
     return JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'Ahmed Ekram Alsada',
-      url: 'https://ahmedekram.site',
-      description: 'Personal developer platform featuring projects, blog, and AI assistant.',
+      name: this.siteName,
+      url: this.baseUrl,
+      description: this.description,
+      inLanguage: ['en-US', 'ar-EG'],
       potentialAction: {
         '@type': 'SearchAction',
-        target: { '@type': 'EntryPoint', urlTemplate: 'https://ahmedekram.site/search?q={search_term_string}' },
+        target: { '@type': 'EntryPoint', urlTemplate: `${this.baseUrl}/search?q={search_term_string}` },
         'query-input': 'required name=search_term_string',
       },
     });
   }
 
   async getBlogPostJsonLd(slug: string): Promise<string | null> {
-    const post = await this.prisma.blogPost.findFirst({
-      where: { slug, status: 'published', deletedAt: null },
-      include: { category: true, tags: { include: { tag: true } } },
-    });
+    const post = await this.prisma.blogPost.findFirst({ where: { slug, status: 'published', deletedAt: null }, include: { category: true, tags: { include: { tag: true } } } });
     if (!post) return null;
-
+    const path = this.postPath(post.slug, post.language);
     return JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
       headline: post.title,
       description: post.excerpt || post.title,
-      url: `https://ahmedekram.site/blog/${post.slug}`,
+      url: `${this.baseUrl}${path}`,
+      inLanguage: post.language === 'ar' ? 'ar-EG' : 'en-US',
       datePublished: post.publishedAt?.toISOString(),
       dateModified: post.updatedAt?.toISOString(),
-      author: { '@type': 'Person', name: 'Ahmed Ekram Alsada' },
-      keywords: post.tags?.map((t: any) => t.tag.name).join(', ') || undefined,
+      author: { '@type': 'Person', name: this.siteName, url: this.baseUrl },
+      keywords: post.tags?.map((item) => item.tag.name).join(', ') || undefined,
     });
   }
 
   async getProjectJsonLd(slug: string): Promise<string | null> {
-    const project = await this.prisma.project.findFirst({
-      where: { slug, deletedAt: null },
-      include: { technologies: { include: { technology: true } } },
-    });
+    if (!PUBLIC_PROJECT_SLUGS.has(slug)) return null;
+    const project = await this.prisma.project.findFirst({ where: { slug, deletedAt: null }, include: { technologies: { include: { technology: true } } } });
     if (!project) return null;
-
     return JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Project',
       name: project.title,
       description: project.description,
-      url: `https://ahmedekram.site/projects/${project.slug}`,
+      url: `${this.baseUrl}/projects/${project.slug}`,
       status: project.status === 'completed' ? 'Completed' : 'Active',
     });
   }
@@ -233,13 +205,43 @@ ${posts.map((post) => `  <item>
     return JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
-      itemListElement: items.map((item, i) => ({
-        '@type': 'ListItem',
-        position: i + 1,
-        name: item.name,
-        item: `https://ahmedekram.site${item.url}`,
-      })),
+      itemListElement: items.map((item, index) => ({ '@type': 'ListItem', position: index + 1, name: item.name, item: `${this.baseUrl}${item.url}` })),
     });
+  }
+
+  private postPath(slug: string, language: string | null | undefined) {
+    return language === 'ar' ? `/ar/blog/${slug}` : `/blog/${slug}`;
+  }
+
+  private sitemapEntry(loc: string, priority: string, changefreq: string, path: string, lastmod?: string, alternatePath?: string): string {
+    const alternates = alternatePath !== undefined
+      ? `\n${this.alternateLink('en-US', path === '/ar' || path.startsWith('/ar/') ? alternatePath : path)}\n${this.alternateLink('ar-EG', path === '/ar' || path.startsWith('/ar/') ? path : alternatePath)}\n${this.alternateLink('x-default', path === '/ar' || path.startsWith('/ar/') ? alternatePath : path)}`
+      : '';
+    return `  <url>
+    <loc>${this.escapeXml(loc)}</loc>
+    <priority>${priority}</priority>
+    <changefreq>${changefreq}</changefreq>${lastmod ? `\n    <lastmod>${this.escapeXml(lastmod)}</lastmod>` : ''}${alternates}
+  </url>\n`;
+  }
+
+  private alternateLink(language: string, path: string): string {
+    return `    <xhtml:link rel="alternate" hreflang="${language}" href="${this.escapeXml(`${this.baseUrl}${path === '/' ? '' : path}`)}"/>`;
+  }
+
+  private getPriority(page: string): string {
+    if (page === '' || page === '/about' || page === '/ar/about') return '1.0';
+    if (page === '/blog' || page === '/ar/blog' || page === '/projects' || page === '/ar/projects') return '0.9';
+    return '0.5';
+  }
+
+  private getChangeFreq(page: string): string {
+    if (page === '') return 'weekly';
+    if (page === '/blog' || page === '/ar/blog') return 'daily';
+    return 'monthly';
+  }
+
+  private cdata(text: string): string {
+    return `<![CDATA[${text.replace(/]]>/g, ']]]]><![CDATA[>')}]]>`;
   }
 
   private escapeXml(text: string): string {

@@ -103,6 +103,7 @@ model BlogPost {
   slug         String     @unique
   excerpt      String?    @db.Text
   content      String     @db.Text
+  language     String     @default("en")
   coverImage   String?
   status       PostStatus @default(draft)
   seoTitle     String?
