@@ -7,22 +7,29 @@ export default function MediaAdminPage() {
   const [files, setFiles] = useState<any[]>([]);
   const [uploading, setUploading] = useState(false);
 
-  const load = () => api.get('/media?limit=50').then((r: any) => setFiles(r.data || [])).catch(() => {});
-  useEffect(() => { load(); }, []);
+  const load = async () => {
+    const result = await api.get<{ data?: any[] }>('/media?limit=50');
+    setFiles(result.data || []);
+  };
+  useEffect(() => { void load(); }, []);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = '';
     if (!file) return;
+    if (!file.type.startsWith('image/')) return;
+    if (file.size > 10 * 1024 * 1024) return;
     setUploading(true);
     const formData = new FormData();
     formData.append('file', file);
     try {
-      await fetch(`${API_BASE_URL}/media/upload`, {
+      const response = await fetch(`${API_BASE_URL}/media/upload`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+        credentials: 'include',
         body: formData,
       });
-      load();
+      if (!response.ok) throw new Error('Upload failed');
+      await load();
     } catch {}
     setUploading(false);
   };

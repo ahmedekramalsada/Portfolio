@@ -1,8 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
+
+function safeNextPath(value: string | null): string {
+  if (!value || !value.startsWith('/') || value.startsWith('//')) return '/dashboard';
+  return value;
+}
 
 export default function LoginClient() {
   const [email, setEmail] = useState('');
@@ -10,13 +15,15 @@ export default function LoginClient() {
   const [error, setError] = useState('');
   const { login, isLoading } = useAuthStore();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = safeNextPath(searchParams.get('next'));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
       await login(email, password);
-      router.push('/dashboard');
+      router.replace(next);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Login failed');
     }

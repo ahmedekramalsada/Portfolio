@@ -1,6 +1,8 @@
 node_modules/
 dist/
 .next/
+.wrangler/
+.vinext/
 *.log
 .env
 .env.local
@@ -11,3 +13,5 @@ prisma/generated/
 coverage/
 .turbo/
 *.tsbuildinfo
+.DS_Store
+.hermes/

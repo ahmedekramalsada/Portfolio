@@ -8,7 +8,7 @@ export default function ContactsAdminPage() {
   const [selected, setSelected] = useState<any>(null);
 
   useEffect(() => {
-    api.get('/contacts?limit=100').then((data: any) => setContacts(data || [])).catch(() => {});
+    api.get('/contacts?limit=100').then((data: any) => setContacts(Array.isArray(data) ? data : data?.data || [])).catch(() => {});
   }, []);
 
   const deleteContact = async (id: string) => {

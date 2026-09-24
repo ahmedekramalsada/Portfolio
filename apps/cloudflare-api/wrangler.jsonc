@@ -1,0 +1,32 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "ahmed-os-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-24",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ahmed-os-content",
+      "database_id": "6ff67965-4d38-4c78-84d5-a4132493b8e5"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "ahmedekramalsada"
+    }
+  ],
+  "vars": {
+    "SITE_URL": "https://ahmedekram.site",
+    "R2_PUBLIC_URL": "https://media.ahmedekram.site",
+    "CONTENT_API_USER_EMAIL": "admin@ahmedekram.site",
+    "ALLOWED_ORIGINS": "https://ahmedekram.site,http://localhost:3000"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 0.01 }
+  }
+}

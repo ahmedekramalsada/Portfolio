@@ -1,6 +1,7 @@
 import type { Locale } from './site-content';
+import { SERVER_API_URL } from './api-config';
 
-export const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
+export const API_URL = SERVER_API_URL;
 
 export type Post = {
   id: string;

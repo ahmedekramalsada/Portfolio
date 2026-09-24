@@ -11,13 +11,19 @@ export class MediaService {
   private readonly endpoint: string;
 
   constructor(private prisma: PrismaService) {
-    this.endpoint = process.env.R2_ENDPOINT || 'https://fbf23646cc6184a8c0838e10b3ffd2ad.r2.cloudflarestorage.com';
+    const endpoint = process.env.R2_ENDPOINT;
+    const accessKeyId = process.env.R2_ACCESS_KEY_ID;
+    const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
+    if (!endpoint || !accessKeyId || !secretAccessKey) {
+      throw new Error('R2_ENDPOINT, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY are required for the legacy media service');
+    }
+    this.endpoint = endpoint;
     this.s3 = new S3Client({
       region: 'auto',
       endpoint: this.endpoint,
       credentials: {
-        accessKeyId: process.env.R2_ACCESS_KEY_ID || 'cf26eb02c7c238c58760b161ef8cc4c0',
-        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '0da463c85f47e08546a065f6b93f42e5acddd8dd9e44ad7fd3eac690c4e48d32',
+        accessKeyId,
+        secretAccessKey,
       },
     });
     this.bucket = process.env.R2_BUCKET || 'ahmedekramalsada';

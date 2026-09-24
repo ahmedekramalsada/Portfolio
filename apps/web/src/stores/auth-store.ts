@@ -19,9 +19,9 @@ interface AuthState {
   fetchMe: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  accessToken: typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null,
+  accessToken: null,
   isAuthenticated: false,
   isLoading: false,
 
@@ -29,13 +29,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoading: true });
     try {
       const res: any = await api.post('/auth/login', { email, password });
-      localStorage.setItem('accessToken', res.accessToken);
-      set({
-        user: res.user,
-        accessToken: res.accessToken,
-        isAuthenticated: true,
-        isLoading: false,
-      });
+      set({ user: res.user, isAuthenticated: true, isLoading: false });
     } catch (error) {
       set({ isLoading: false });
       throw error;
@@ -48,18 +42,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch {
       // ignore logout errors
     }
-    localStorage.removeItem('accessToken');
     set({ user: null, accessToken: null, isAuthenticated: false });
   },
 
   fetchMe: async () => {
-    const token = get().accessToken;
-    if (!token) return;
     try {
       const res: any = await api.get('/auth/me');
       set({ user: res, isAuthenticated: true });
     } catch {
-      localStorage.removeItem('accessToken');
       set({ user: null, accessToken: null, isAuthenticated: false });
     }
   },

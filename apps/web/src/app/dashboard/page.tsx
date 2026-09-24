@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ProtectedRoute } from '@/components/protected-route';
 import { api } from '@/services/api';
 import Link from 'next/link';
 
@@ -32,7 +31,7 @@ function DashboardContent() {
     { label: 'Blog Posts', value: stats.posts, href: '/dashboard/blog' },
     { label: 'Projects', value: stats.projects, href: '/dashboard/projects' },
     { label: 'Categories', value: stats.categories, href: '/dashboard/categories' },
-    { label: 'Skills', value: stats.skills, href: '/dashboard/settings' },
+    { label: 'Skills', value: stats.skills, href: '/dashboard/skills' },
   ];
 
   return (
@@ -118,6 +117,12 @@ function DashboardContent() {
           <Link href="/dashboard/categories" className="btn-ghost">
             🏷 Manage Categories
           </Link>
+          <Link href="/dashboard/skills" className="btn-ghost">
+            ✦ Manage Skills
+          </Link>
+          <Link href="/dashboard/experiences" className="btn-ghost">
+            ◷ Manage Experience
+          </Link>
         </div>
       </div>
     </div>
@@ -125,9 +130,5 @@ function DashboardContent() {
 }
 
 export default function DashboardPage() {
-  return (
-    <ProtectedRoute>
-      <DashboardContent />
-    </ProtectedRoute>
-  );
+  return <DashboardContent />;
 }

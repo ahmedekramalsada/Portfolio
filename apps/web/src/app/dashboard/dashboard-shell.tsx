@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
+import type { AuthUser } from '@/lib/server-auth';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: '◉' },
@@ -11,12 +12,14 @@ const navItems = [
   { href: '/dashboard/projects', label: 'Projects', icon: '📁' },
   { href: '/dashboard/media', label: 'Media', icon: '🖼' },
   { href: '/dashboard/categories', label: 'Categories', icon: '🏷' },
+  { href: '/dashboard/skills', label: 'Skills', icon: '✦' },
+  { href: '/dashboard/experiences', label: 'Experience', icon: '◷' },
   { href: '/dashboard/settings', label: 'Settings', icon: '⚙' },
 ];
 
-export function DashboardShell({ children }: { children: React.ReactNode }) {
+export function DashboardShell({ children, user }: { children: React.ReactNode; user: AuthUser }) {
   const pathname = usePathname();
-  const { user, logout } = useAuthStore();
+  const { logout } = useAuthStore();
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)]">

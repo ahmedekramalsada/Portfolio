@@ -4,10 +4,9 @@ import { useState } from 'react';
 import { PageHeader } from '@/components/site/page-header';
 import { JsonLd } from '@/components/site/json-ld';
 import { CONTACT, localePath, type Locale } from '@/lib/site-content';
+import { API_BASE_URL } from '@/lib/api-config';
 
 const copy = { en: { label: 'Contact', title: 'Send me the problem, not a job title', lede: 'Have a platform that needs to be more reliable, or a technical question you want to work through? Start with the context.', startHere: 'Start here', asideTitle: 'Clear context beats a polished cover letter.', asideBody: 'Share the symptom, the impact, and what you have already tried. A real constraint is the best place to begin.', asideNote: 'A good message can be short. It only needs to be specific.', form: 'Message form', direct: 'Direct channel', sent: 'Message sent', sentBody: 'Thank you. Your message reached the local contact flow.', send: 'Send message', sending: 'Sending…', error: 'Something went wrong. Try again, or email me directly.', name: 'Name', email: 'Email', subject: 'Subject', message: 'Message', directLinks: 'Direct links', directBody: 'Prefer a direct route? Choose one below.', github: 'GitHub', linkedin: 'LinkedIn' }, ar: { label: 'تواصل', title: 'أرسل المشكلة، وليس المسمى الوظيفي', lede: 'لديك منصة تحتاج إلى موثوقية أكثر، أو سؤال تقني تريد فهمه؟ ابدأ بالسياق.', startHere: 'ابدأ من هنا', asideTitle: 'السياق الواضح أهم من رسالة توظيف مرتبة.', asideBody: 'شارك العرض، والأثر، وما جربته بالفعل. القيد الحقيقي هو أفضل نقطة بداية.', asideNote: 'الرسالة الجيدة يمكن أن تكون قصيرة. يكفي أن تكون محددة.', form: 'نموذج الرسالة', direct: 'قناة مباشرة', sent: 'تم إرسال الرسالة', sentBody: 'شكرًا لك. وصلت رسالتك إلى تدفق التواصل المحلي.', send: 'إرسال الرسالة', sending: 'جارٍ الإرسال…', error: 'حدث خطأ. حاول مرة أخرى، أو راسلني مباشرة.', name: 'الاسم', email: 'البريد الإلكتروني', subject: 'الموضوع', message: 'الرسالة', directLinks: 'روابط مباشرة', directBody: 'تفضل التواصل مباشرة؟ اختر رابطًا بالأسفل.', github: 'GitHub', linkedin: 'LinkedIn' } } as const;
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
 export function PublicContact({ locale }: { locale: Locale }) {
   const t = copy[locale];

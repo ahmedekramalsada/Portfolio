@@ -15,8 +15,11 @@ export default function BlogAdminPage() {
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const load = () => api.get('/posts?limit=50').then((r: any) => setPosts(r.data || []));
-  useEffect(() => { load(); }, []);
+  const load = async () => {
+    const result = await api.get<{ data?: any[] }>('/posts?limit=50');
+    setPosts(result.data || []);
+  };
+  useEffect(() => { void load(); }, []);
 
   const reset = () => { setTitle(''); setSlug(''); setContent(''); setExcerpt(''); setCoverImage(''); setLanguage('en'); setEditingId(null); };
 
@@ -27,8 +30,8 @@ export default function BlogAdminPage() {
     try {
       const fd = new FormData();
       fd.append('file', file);
-      const token = localStorage.getItem('accessToken');
-      const res = await fetch(`${API_BASE_URL}/media/upload`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd });
+      const res = await fetch(`${API_BASE_URL}/media/upload`, { method: 'POST', credentials: 'include', body: fd });
+      if (!res.ok) throw new Error('Upload failed');
       const data = await res.json();
       if (data.publicUrl) setCoverImage(data.publicUrl);
     } catch {}
@@ -37,14 +40,11 @@ export default function BlogAdminPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data: any = { title, slug, content, excerpt, coverImage, language };
-    if (editingId) {
-      await api.patch(`/posts/${editingId}`, data);
-    } else {
-      await api.post('/posts', data);
-    }
+    const data: any = { title, slug, content, excerpt, coverImage, language, status: 'draft' };
+    if (editingId) await api.patch(`/posts/${editingId}`, data);
+    else await api.post('/posts', data);
     reset();
-    load();
+    await load();
   };
 
   const edit = async (post: any) => {
@@ -52,7 +52,7 @@ export default function BlogAdminPage() {
     setTitle(post.title);
     setSlug(post.slug);
     try {
-      const full: any = await api.get(`/posts/${post.slug}`);
+      const full = await api.get<{ content?: string; excerpt?: string; coverImage?: string; language?: string }>(`/posts/${post.slug}`);
       setContent(full.content || '');
       setExcerpt(full.excerpt || '');
       setCoverImage(full.coverImage || '');
@@ -62,8 +62,9 @@ export default function BlogAdminPage() {
     }
   };
 
-  const publish = async (id: string) => { await api.post(`/posts/${id}/publish`); load(); };
-  const remove = async (id: string) => { if (confirm('Delete?')) { await api.delete(`/posts/${id}`); load(); } };
+  const publish = async (id: string) => { await api.post(`/posts/${id}/publish`); await load(); };
+  const remove = async (id: string) => { if (confirm('Delete?')) { await api.delete(`/posts/${id}`); await load(); } };
+  const archive = async (id: string) => { if (confirm('Archive this post?')) { await api.post(`/posts/${id}/archive`); await load(); } };
 
   return (
     <div>
@@ -132,6 +133,9 @@ export default function BlogAdminPage() {
             <div className="flex shrink-0 gap-2">
               {post.status !== 'published' && (
                 <button onClick={() => publish(post.id)} className="rounded-[10px] border border-ok/35 bg-ok/10 px-3 py-1.5 text-xs font-medium text-ok transition-colors hover:bg-ok/20">Publish</button>
+              )}
+              {post.status === 'published' && (
+                <button onClick={() => archive(post.id)} className="rounded-[10px] border border-line-2 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-muted-foreground hover:text-foreground">Archive</button>
               )}
               <button onClick={() => edit(post)} className="rounded-[10px] border border-line-2 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-muted-foreground hover:text-foreground">Edit</button>
               <button onClick={() => remove(post.id)} className="rounded-[10px] border border-line-2 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:border-muted-foreground hover:text-foreground">Delete</button>

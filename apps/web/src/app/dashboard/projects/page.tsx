@@ -19,8 +19,11 @@ export default function ProjectsAdminPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
 
-  const load = () => api.get('/projects?limit=50').then((r: any) => setProjects(r.data || []));
-  useEffect(() => { load(); }, []);
+  const load = async () => {
+    const result = await api.get<{ data?: any[] }>('/projects?limit=50');
+    setProjects(result.data || []);
+  };
+  useEffect(() => { void load(); }, []);
 
   const resetForm = () => {
     setTitle(''); setSlug(''); setDescription(''); setContent('');
@@ -35,12 +38,12 @@ export default function ProjectsAdminPage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const token = localStorage.getItem('accessToken');
       const res = await fetch(`${API_BASE_URL}/media/upload`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include',
         body: formData,
       });
+      if (!res.ok) throw new Error('Upload failed');
       const data = await res.json();
       if (data.publicUrl) setCoverImage(data.publicUrl);
     } catch (err) {
@@ -53,14 +56,16 @@ export default function ProjectsAdminPage() {
     const files = e.target.files;
     if (!files?.length) return;
     setUploading(true);
-    const token = localStorage.getItem('accessToken');
     for (const file of Array.from(files)) {
       try {
         const fd = new FormData();
         fd.append('file', file);
         const res = await fetch(`${API_BASE_URL}/media/upload`, {
-          method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd,
+          method: 'POST',
+          credentials: 'include',
+          body: fd,
         });
+        if (!res.ok) throw new Error('Upload failed');
         const data = await res.json();
         if (data.id) {
           // If editing, associate with project
@@ -81,14 +86,11 @@ export default function ProjectsAdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data = { title, slug, description, content, coverImage, githubUrl, demoUrl, status };
-    if (editingId) {
-      await api.patch(`/projects/${editingId}`, data);
-    } else {
-      await api.post('/projects', data);
-    }
+    const data = { title, slug, description, content, coverImage, githubUrl, demoUrl, status, featured: editingId ? Boolean(projects.find((project) => project.id === editingId)?.featured) : false };
+    if (editingId) await api.patch(`/projects/${editingId}`, { ...data, featured: undefined });
+    else await api.post('/projects', data);
     resetForm();
-    load();
+    await load();
   };
 
   const editProject = async (project: any) => {
@@ -98,13 +100,13 @@ export default function ProjectsAdminPage() {
     setCoverImage(project.coverImage || ''); setGithubUrl(project.githubUrl || '');
     setDemoUrl(project.demoUrl || ''); setStatus(project.status || 'planning');
     // Load gallery
-    api.get('/media?projectId=' + project.id).then((data: any) => setGallery(data || [])).catch(() => setGallery([]));
+    api.get<{ data?: any[] }>('/media?projectId=' + project.id).then((r) => setGallery(r.data || [])).catch(() => setGallery([]));
   };
 
   const deleteProject = async (id: string) => {
     if (confirm('Delete this project?')) {
       await api.delete(`/projects/${id}`);
-      load();
+      await load();
     }
   };
 
@@ -212,7 +214,6 @@ export default function ProjectsAdminPage() {
               <option value="planning">Planning</option>
               <option value="in_progress">In Progress</option>
               <option value="completed">Completed</option>
-              <option value="on_hold">On Hold</option>
             </select>
           </div>
           <div className="flex items-end gap-2">
