@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
 
-const seoApiBase = (process.env.SEO_API_URL || process.env.API_URL || 'http://localhost:4000').replace(/\/api\/v1\/?$/, '');
+const seoApiBase = (process.env.SEO_API_URL || process.env.API_URL || (
+  process.env.NODE_ENV === 'production'
+    ? 'https://ahmed-os-api.aekram8.workers.dev'
+    : 'http://localhost:4000'
+)).replace(/\/api\/v1\/?$/, '');
 
 const nextConfig: NextConfig = {
   // Hide the development indicator: it floats over page content and gets

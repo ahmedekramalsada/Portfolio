@@ -36,7 +36,7 @@ async function forward(request: Request, context: RouteContext, method: HttpMeth
     if (value) headers.set(name, value);
   }
   const token = (await cookies()).get(ACCESS_TOKEN_COOKIE)?.value;
-  const routeName = path.join('/');
+  const routeName = apiPath.join('/');
   if (token && routeName !== 'auth/login') headers.set('Authorization', `Bearer ${token}`);
 
   const body = method === 'GET' || method === 'HEAD' ? undefined : await request.arrayBuffer();

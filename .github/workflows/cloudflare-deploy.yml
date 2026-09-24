@@ -82,6 +82,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
-          preCommands: pnpm --filter @ahmed-os/web build:vinext
+          command: deploy --config dist/server/wrangler.json --keep-vars
+          preCommands: pnpm build:vinext
           workingDirectory: apps/web
