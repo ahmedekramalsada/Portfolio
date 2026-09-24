@@ -1,7 +1,7 @@
 import type { AuthContext, Env, UserRecord } from './types';
 
 const encoder = new TextEncoder();
-const PBKDF2_ITERATIONS = 210_000;
+const PBKDF2_ITERATIONS = 100_000;
 const ACCESS_TOKEN_SECONDS = 15 * 60;
 
 function base64Url(bytes: Uint8Array): string {
