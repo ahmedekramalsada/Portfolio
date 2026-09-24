@@ -55,15 +55,11 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
           workingDirectory: apps/cloudflare-api
-      - name: Set API Worker secrets
+      - name: Set API Worker signing secret
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           AUTH_SIGNING_KEY: ${{ secrets.AUTH_SIGNING_KEY }}
-          CONTENT_API_USER_EMAIL: ${{ secrets.CONTENT_API_USER_EMAIL }}
         run: |
           printf '%s' "$AUTH_SIGNING_KEY" | npx wrangler secret put AUTH_SIGNING_KEY --config apps/cloudflare-api/wrangler.jsonc
-          printf '%s' "$CONTENT_API_USER_EMAIL" | npx wrangler secret put CONTENT_API_USER_EMAIL --config apps/cloudflare-api/wrangler.jsonc
 
   deploy-web:
     name: Deploy Web Worker
@@ -81,11 +77,11 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @ahmed-os/web build:vinext
       - name: Deploy Web
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
+          preCommands: pnpm --filter @ahmed-os/web build:vinext
           workingDirectory: apps/web

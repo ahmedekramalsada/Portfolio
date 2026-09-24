@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "web",
   "compatibility_date": "2026-09-24",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "observability": {
     "enabled": true,
     "logs": { "enabled": true, "head_sampling_rate": 1 },
@@ -16,5 +16,9 @@
   },
   "images": {
     "binding": "IMAGES"
+  },
+  "vars": {
+    "API_URL": "https://ahmed-os-api.aekram8.workers.dev/api/v1",
+    "SEO_API_URL": "https://ahmed-os-api.aekram8.workers.dev"
   }
 }

@@ -26,7 +26,9 @@ async function forward(request: Request, context: RouteContext, method: HttpMeth
     return new Response('Bad Request', { status: 400 });
   }
 
-  const target = new URL(`${SERVER_API_URL}/${path.map((segment) => encodeURIComponent(segment)).join('/')}`);
+  const apiPath = path[0] === 'v1' ? path.slice(1) : path;
+  if (!apiPath.length) return new Response('Bad Request', { status: 400 });
+  const target = new URL(`${SERVER_API_URL}/${apiPath.map((segment) => encodeURIComponent(segment)).join('/')}`);
   target.search = new URL(request.url).search;
   const headers = new Headers();
   for (const name of ['accept', 'accept-language', 'content-type', 'user-agent']) {

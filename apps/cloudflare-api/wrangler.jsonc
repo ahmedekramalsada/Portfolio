@@ -3,7 +3,7 @@
   "name": "ahmed-os-api",
   "main": "src/index.ts",
   "compatibility_date": "2026-09-24",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "workers_dev": true,
   "d1_databases": [
     {
