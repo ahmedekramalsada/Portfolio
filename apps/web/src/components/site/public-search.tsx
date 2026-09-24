@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { api } from '@/services/api';
 import { localePath, type Locale } from '@/lib/site-content';
+import { projectCopy } from '@/lib/project-copy';
 
 type SearchResult = { id: string; title: string; slug: string; type: 'post' | 'project'; excerpt?: string | null; rank?: number };
 type Suggestion = { text: string; type: 'post' | 'project'; slug: string };
@@ -66,6 +67,8 @@ export function PublicSearch({ locale, initialQuery = '' }: { locale: Locale; in
   }, [initialQuery]);
 
   const hrefFor = (result: SearchResult) => localePath(locale, result.type === 'post' ? `/blog/${result.slug}` : `/projects/${result.slug}`);
+  const titleFor = (result: SearchResult) => result.type === 'project' ? (projectCopy(locale, result.slug)?.title || result.title) : result.title;
+  const excerptFor = (result: SearchResult) => result.type === 'project' ? (projectCopy(locale, result.slug)?.result || result.excerpt) : result.excerpt;
 
   return (
     <div className="page" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
@@ -83,7 +86,7 @@ export function PublicSearch({ locale, initialQuery = '' }: { locale: Locale; in
         )}
         <button type="submit" className="btn-primary mt-3" disabled={loading}>{loading ? (locale === 'ar' ? 'جارٍ البحث…' : 'Searching…') : (locale === 'ar' ? 'ابحث' : 'Search')} <span aria-hidden>→</span></button>
       </form>
-      {searched && <div className="mt-12"><p className="font-mono text-[11px] uppercase tracking-[.09em] text-dim">{results.length} {results.length === 1 ? t.results : t.resultsPlural} {locale === 'ar' ? 'عن' : 'for'} “{query.trim()}”</p>{results.length === 0 ? <div className="panel mt-5 px-8 py-16 text-center"><p className="text-muted-foreground">{t.noResults}</p></div> : <div className="mt-5">{results.map((result) => <a key={`${result.type}-${result.id}`} href={hrefFor(result)} className="wrow group"><div className="min-w-0"><span className="font-mono text-[10px] uppercase tracking-[.08em] text-dim">{result.type === 'post' ? t.post : t.project}</span><p className="wtitle mt-1.5 text-[17px] font-medium transition-colors">{result.title}</p>{result.excerpt && <p className="mt-2 line-clamp-1 text-[14px] text-muted-foreground">{result.excerpt}</p>}</div><span className="shrink-0 font-mono text-[11px] uppercase tracking-[.08em] text-warm">{locale === 'ar' ? 'افتح' : 'Open'} →</span></a>)}</div>}</div>}
+      {searched && <div className="mt-12"><p className="font-mono text-[11px] uppercase tracking-[.09em] text-dim">{results.length} {results.length === 1 ? t.results : t.resultsPlural} {locale === 'ar' ? 'عن' : 'for'} “{query.trim()}”</p>{results.length === 0 ? <div className="panel mt-5 px-8 py-16 text-center"><p className="text-muted-foreground">{t.noResults}</p></div> : <div className="mt-5">{results.map((result) => <a key={`${result.type}-${result.id}`} href={hrefFor(result)} className="wrow group"><div className="min-w-0"><span className="font-mono text-[10px] uppercase tracking-[.08em] text-dim">{result.type === 'post' ? t.post : t.project}</span><p className="wtitle mt-1.5 text-[17px] font-medium transition-colors">{titleFor(result)}</p>{excerptFor(result) && <p className="mt-2 line-clamp-1 text-[14px] text-muted-foreground">{excerptFor(result)}</p>}</div><span className="shrink-0 font-mono text-[11px] uppercase tracking-[.08em] text-warm">{locale === 'ar' ? 'افتح' : 'Open'} →</span></a>)}</div>}</div>}
     </div>
   );
 }
