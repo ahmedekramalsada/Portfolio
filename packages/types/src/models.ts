@@ -1,3 +1,5 @@
+import type { PostStatus, UserRole } from './enums';
+
 export interface User {
   id: string;
   email: string;
@@ -20,7 +22,3 @@ export interface BlogPost {
   createdAt: string;
   updatedAt: string;
 }
-
-export type UserRole = 'admin' | 'editor' | 'reader';
-export type PostStatus = 'draft' | 'scheduled' | 'published' | 'archived';
-export type ProjectStatus = 'planning' | 'in_progress' | 'completed' | 'archived';
