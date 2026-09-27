@@ -6,7 +6,7 @@ export const dynamic = 'force-static';
 export async function GET() {
   const text = `# ${siteConfig.name}
 
-> DevOps Engineer in Cairo building reliable cloud platforms and AI-powered business systems.
+> DevOps Engineer building reliable cloud platforms and AI-powered business systems.
 
 This site is Ahmed Ekram Alsada's bilingual developer portfolio and writing site. English is the primary international-language version; Arabic is a real RTL site, not a machine translation of the navigation. The site makes no unsupported client, employer, metric, or production-deployment claims.
 

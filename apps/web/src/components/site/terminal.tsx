@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import type { Locale } from '@/lib/site-content';
 
-type TerminalData = { name: string; role: string; location: string; focus: string; skills: string[]; projects: { title: string; stack: string[] }[]; posts: { title: string; date: string; tags: string[] }[]; contact: { email: string; github: string; linkedin: string } };
+type TerminalData = { name: string; role: string; focus: string; skills: string[]; projects: { title: string; stack: string[] }[]; posts: { title: string; date: string; tags: string[] }[]; contact: { email: string; github: string; linkedin: string } };
 type Line = { html: string };
 const CHIPS = [['whoami', 'whoami'], ['stack', 'stack'], ['projects', 'projects'], ['writing', 'writing'], ['how', 'how it ships'], ['contact', 'contact']] as const;
 
@@ -16,8 +16,8 @@ export function Terminal({ data, locale = 'en' }: { data: TerminalData; locale?:
   const write = (html: string) => { const out = outRef.current; if (!out) return; const div = document.createElement('div'); div.className = 'l'; div.innerHTML = html; out.appendChild(div); out.scrollTop = out.scrollHeight; };
   const escape = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const commands: Record<string, () => void> = {
-    help: () => { [['whoami', ar ? 'الدور والموقع' : 'role and where I am'], ['stack', ar ? 'الأدوات' : 'the tools I use'], ['projects', ar ? 'المشاريع' : 'things I have shipped'], ['writing', ar ? 'المقالات' : 'published articles'], ['how', ar ? 'رحلة التغيير للإنتاج' : 'how a change reaches production'], ['contact', ar ? 'التواصل' : 'where to reach me'], ['clear', ar ? 'مسح' : 'clear this screen']].forEach(([cmd, what]) => write(`<span class="a">${cmd.padEnd(9, '\u00a0')}</span> <span class="d">— ${what}</span>`)); },
-    whoami: () => { write(`<span class="g">${escape(data.name)}</span> — ${escape(data.role)}, ${escape(data.location)}.`); write(`<span class="d">${ar ? 'التركيز' : 'Focus'}: ${escape(data.focus)}</span>`); },
+    help: () => { [['whoami', ar ? 'الدور والتركيز' : 'role and focus'], ['stack', ar ? 'الأدوات' : 'the tools I use'], ['projects', ar ? 'المشاريع' : 'things I have shipped'], ['writing', ar ? 'المقالات' : 'published articles'], ['how', ar ? 'رحلة التغيير للإنتاج' : 'how a change reaches production'], ['contact', ar ? 'التواصل' : 'where to reach me'], ['clear', ar ? 'مسح' : 'clear this screen']].forEach(([cmd, what]) => write(`<span class="a">${cmd.padEnd(9, '\u00a0')}</span> <span class="d">— ${what}</span>`)); },
+    whoami: () => { write(`<span class="g">${escape(data.name)}</span> — ${escape(data.role)}.`); write(`<span class="d">${ar ? 'التركيز' : 'Focus'}: ${escape(data.focus)}</span>`); },
     stack: () => { for (let i = 0; i < data.skills.length; i += 4) write(`<span class="b">${escape(data.skills.slice(i, i + 4).join(' · '))}</span>`); },
     projects: () => { data.projects.forEach((project, index) => write(`<span class="a">${String(index + 1).padStart(2, '0')}</span> ${escape(project.title)}${project.stack.length ? ` <span class="d">${escape(project.stack.join(' · ').toLowerCase())}</span>` : ''}`)); },
     writing: () => { data.posts.forEach((post) => write(`<span class="a">${escape(post.date)}</span> ${escape(post.title)}`)); },

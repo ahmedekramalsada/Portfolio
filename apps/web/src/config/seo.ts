@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 
 export const siteConfig = {
   name: 'Ahmed Ekram Alsada',
-  title: 'Ahmed Ekram Alsada — DevOps Engineer in Cairo',
-  description: 'DevOps Engineer in Cairo building reliable cloud platforms and AI-powered business systems. I write about Docker, Kubernetes, CI/CD, infrastructure, and the decisions behind production work.',
+  title: 'Ahmed Ekram Alsada — DevOps Engineer',
+  description: 'DevOps Engineer building reliable cloud platforms and AI-powered business systems. I write about Docker, Kubernetes, CI/CD, infrastructure, and the decisions behind production work.',
   arabicName: 'أحمد أكرم السادة',
-  arabicDescription: 'مهندس DevOps في القاهرة. أبني منصات سحابية موثوقة وأنظمة أعمال مدعومة بالذكاء الاصطناعي، وأكتب عن Docker وKubernetes وCI/CD والبنية التحتية.',
+  arabicDescription: 'مهندس DevOps. أبني منصات سحابية موثوقة وأنظمة أعمال مدعومة بالذكاء الاصطناعي، وأكتب عن Docker وKubernetes وCI/CD والبنية التحتية.',
   url: 'https://ahmedekram.site',
   ogImage: 'https://ahmedekram.site/og.png',
   links: {
@@ -19,7 +19,7 @@ export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: { default: siteConfig.title, template: `%s — ${siteConfig.name}` },
   description: siteConfig.description,
-  keywords: ['DevOps Engineer', 'Docker', 'Kubernetes', 'CI/CD', 'Platform Engineering', 'Cairo', 'Egypt', 'AI systems', 'Infrastructure', 'Cloud', 'NestJS', 'Next.js', 'TypeScript', 'PostgreSQL', 'أحمد أكرم السادة', 'مهندس DevOps', 'القاهرة', 'مصر'],
+  keywords: ['DevOps Engineer', 'Docker', 'Kubernetes', 'CI/CD', 'Platform Engineering', 'AI systems', 'Infrastructure', 'Cloud', 'NestJS', 'Next.js', 'TypeScript', 'PostgreSQL', 'أحمد أكرم السادة', 'مهندس DevOps'],
   authors: [{ name: siteConfig.creator }],
   creator: siteConfig.creator,
   openGraph: {

@@ -14,6 +14,7 @@ export function proxy(request: NextRequest) {
   }
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-ahmed-locale', locale);
+  requestHeaders.set('x-ahmed-pathname', pathname);
   return NextResponse.next({ request: { headers: requestHeaders } });
 }
 

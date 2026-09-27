@@ -17,6 +17,8 @@ export const metadata: Metadata = defaultMetadata;
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const requestHeaders = await headers();
   const locale = requestHeaders.get('x-ahmed-locale') === 'ar' ? 'ar' : 'en';
+  const pathname = requestHeaders.get('x-ahmed-pathname') || '/';
+  const bareChrome = pathname === '/login' || pathname === '/dashboard' || pathname.startsWith('/dashboard/');
   const personJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -24,10 +26,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     alternateName: siteConfig.arabicName,
     url: siteConfig.url,
     jobTitle: 'DevOps Engineer',
-    workLocation: { '@type': 'Place', name: 'Cairo, Egypt' },
     sameAs: [siteConfig.links.github, siteConfig.links.linkedin],
     knowsAbout: ['DevOps', 'Docker', 'Kubernetes', 'CI/CD', 'Cloud infrastructure', 'AI systems'],
-    knowsLanguage: ['Arabic', 'English'],
   };
   const websiteJsonLd = {
     '@context': 'https://schema.org',
@@ -55,7 +55,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js-ready');" }} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}>
-        <Providers><LocaleDocumentSync /><div className="flex min-h-screen flex-col"><Navbar /><main className="flex-1">{children}</main><Footer /></div></Providers>
+        <Providers><LocaleDocumentSync />{bareChrome ? (<main className="min-h-screen">{children}</main>) : (<div className="flex min-h-screen flex-col"><Navbar /><main className="flex-1">{children}</main><Footer /></div>)}</Providers>
       </body>
     </html>
   );

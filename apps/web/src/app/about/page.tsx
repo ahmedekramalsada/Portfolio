@@ -4,7 +4,7 @@ import { generatePageMetadata } from '@/config/seo';
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'About',
-  description: 'Learn about Ahmed Ekram Alsada, a DevOps Engineer in Cairo working on reliable cloud platforms and practical AI systems.',
+  description: 'Learn about Ahmed Ekram Alsada, a DevOps Engineer working on reliable cloud platforms and practical AI systems.',
   path: '/about',
 });
 

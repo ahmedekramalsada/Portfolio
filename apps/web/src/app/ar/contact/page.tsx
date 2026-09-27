@@ -4,7 +4,7 @@ import { generatePageMetadata } from '@/config/seo';
 
 export const metadata: Metadata = generatePageMetadata({
   title: 'تواصل',
-  description: 'تواصل مع أحمد أكرم السادة، مهندس DevOps في القاهرة، لمناقشة منصة موثوقة أو سؤال تقني.',
+  description: 'تواصل مع أحمد أكرم السادة، مهندس DevOps، لمناقشة منصة موثوقة أو سؤال تقني.',
   path: '/ar/contact',
 });
 

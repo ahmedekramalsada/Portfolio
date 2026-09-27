@@ -4,53 +4,47 @@ export const CONTACT = {
   email: 'Ahmedekramalsada@gmail.com',
   github: 'https://github.com/ahmedekramalsada',
   linkedin: 'https://www.linkedin.com/in/ahmedekramalsada',
-  location: 'Cairo, Egypt',
-};
-
-export const PROOF: Record<Locale, { label: string; value: string }[]> = {
-  en: [
-    { label: 'Based in', value: 'Cairo, Egypt' },
-    { label: 'Current focus', value: 'DevOps · platforms · cloud systems' },
-    { label: 'Training', value: '600+ hours at NTI' },
-    { label: 'Languages', value: 'Arabic native · English intermediate' },
-  ],
-  ar: [
-    { label: 'المقر', value: 'القاهرة، مصر' },
-    { label: 'التركيز الحالي', value: 'DevOps · منصات · أنظمة سحابية' },
-    { label: 'التدريب', value: 'أكثر من 600 ساعة في NTI' },
-    { label: 'اللغات', value: 'العربية لغة أم · الإنجليزية مستوى متوسط' },
-  ],
 };
 
 export const HELP: Record<Locale, { title: string; body: string }[]> = {
   en: [
-    { title: 'Reliable deployments', body: 'Container builds, CI/CD gates, reverse proxies, and a rollback path designed before the first release.' },
-    { title: 'Cloud foundations', body: 'Ubuntu servers, Docker, networking, storage, and the operating details that turn a demo into a service.' },
-    { title: 'Practical AI systems', body: 'Business-focused AI workflows connected to real systems, with clear boundaries between data, tools, and approval.' },
+    { title: 'Kubernetes', body: 'Workloads that survive the night. Deployments, services, and scaling that hold when traffic spikes.' },
+    { title: 'AI agents', body: 'Software that runs the errand. Agents that plan, act, and report back — with a human in charge.' },
+    { title: 'Terraform', body: 'Infrastructure reviewed like code. Every server born from a file, every change repeatable.' },
+    { title: 'AWS', body: 'Cloud that fits the bill. The right service at the right size — nothing idle, nothing mysterious.' },
+    { title: 'Docker', body: 'One image, every machine. Built once, running the same from laptop to server.' },
+    { title: 'CI/CD pipelines', body: 'Every push earns its release. Tests and gates pass before any user sees a change, with a rollback ready.' },
+    { title: 'AI chatbots', body: 'Support that never sleeps. Chatbots that answer from your real business data, not guesses.' },
+    { title: 'Observability', body: 'I hear it before you do. Metrics, logs, and alerts that wake me, not your users.' },
   ],
   ar: [
-    { title: 'إطلاقات موثوقة', body: 'بناء الحاويات، بوابات الجودة في CI/CD، والبروكسيات العكسية، مع خطة تراجع مصممة قبل أول إطلاق.' },
-    { title: 'أساسات سحابية', body: 'خوادم Ubuntu وDocker والشبكات والتخزين، والتفاصيل التشغيلية التي تحول العرض التجريبي إلى خدمة.' },
-    { title: 'أنظمة ذكاء اصطناعي عملية', body: 'مسارات ذكاء اصطناعي مرتبطة بأنظمة أعمال حقيقية، مع حدود واضحة بين البيانات والأدوات والموافقة.' },
+    { title: 'كوبرنيتس', body: 'أحمال تصمد طوال الليل: نشر وخدمات وتوسّع يتماسك وقت ذروة الزيارات.' },
+    { title: 'الوكلاء الأذكياء', body: 'برمجيات تنجز المهام: وكلاء يخططون وينفذون ثم يبلغونك، والإنسان هو المسؤول.' },
+    { title: 'تيرافورم', body: 'بنية تحتية تُراجَع مثل الكود: كل خادم يولد من ملف، وكل تغيير قابل للتكرار.' },
+    { title: 'AWS', body: 'سحابة على المقاس: الخدمة المناسبة بالحجم المناسب، بلا موارد نائمة ولا مفاجآت.' },
+    { title: 'دوكر', body: 'صورة واحدة لكل الأجهزة: تُبنى مرة واحدة وتعمل كما هي من اللابتوب إلى الخادم.' },
+    { title: 'خطوط التسليم CI/CD', body: 'كل تحديث يستحق إصداره: اختبارات وبوابات قبل أن يرى المستخدم أي تغيير، مع خطة تراجع جاهزة.' },
+    { title: 'روبوتات المحادثة', body: 'دعم لا ينام: روبوتات تجيب من بيانات عملك الحقيقية، لا من التخمين.' },
+    { title: 'المراقبة', body: 'أسمع العطل قبلك: مقاييس وسجلات وتنبيهات توقظني أنا، لا مستخدميك.' },
   ],
 };
 
 export const STAGES: Record<Locale, { title: string; body: string; command: string }[]> = {
   en: [
-    { title: 'A commit, and nothing more', body: 'Every change arrives as a reviewable diff. Nothing reaches a server by hand, so nothing depends on my memory of a Friday.', command: 'git push origin main' },
-    { title: 'Build the artifact once', body: 'The pipeline builds the image from a tagged revision and stores it. The exact thing tested is the exact thing that ships.', command: 'docker build -t api:$SHA .' },
-    { title: 'Verify before anybody trusts it', body: 'Tests run against the built artifact, then a health probe answers from inside the container — not from the host next to it.', command: 'curl -fsS localhost:8080/health' },
-    { title: 'Start the idle side', body: 'Blue and green run side by side. The new container starts behind the proxy, receiving no user traffic at all.', command: 'docker compose up -d --no-deps blue' },
-    { title: 'Move traffic only after the gate', body: 'The proxy switches to the new side once its health check has passed and stayed passed. Users never see a starting service.', command: 'traefik: router → blue' },
-    { title: 'Watch it, and stay able to undo it', body: 'Metrics, logs and alerts watch the new side. The previous revision is still up, one command away, until the change has earned trust.', command: './deploy.sh rollback' },
+    { title: 'One commit starts everything', body: 'Every change arrives as a reviewable diff. Nothing reaches a server by hand, so nothing depends on memory of a Friday.', command: 'git push origin main' },
+    { title: 'Test, then trust the quality gate', body: 'SonarQube scans every branch for bugs and smells. The pipeline stops here if the quality gate fails.', command: 'sonar-scanner -Dsonar.qualitygate.wait' },
+    { title: 'Build once, push to Docker Hub', body: 'The pipeline builds the image from the tagged revision and pushes it. The exact thing tested is the exact thing that ships.', command: 'docker push ahmed/api:$SHA' },
+    { title: 'ArgoCD delivers to Kubernetes', body: 'ArgoCD syncs the cluster to the declared state on AWS. No hands on servers, no drift between environments.', command: 'argocd app sync api' },
+    { title: 'Verify from inside the system', body: 'Rollout status plus a health probe answering from inside the container — not from the host next to it.', command: 'kubectl rollout status deploy/api' },
+    { title: 'Watch it, and stay able to undo it', body: 'Metrics, logs and alerts watch the new revision. The previous one is one command away until the change earns trust.', command: 'argocd app rollback api' },
   ],
   ar: [
-    { title: 'التزام واحد، لا أكثر', body: 'يصل كل تغيير على شكل فرق قابل للمراجعة. لا يصل أي شيء إلى الخادم يدويًا، حتى لا يعتمد النشر على الذاكرة.', command: 'git push origin main' },
-    { title: 'ابنِ نسخة النظام مرة واحدة', body: 'يبني خط البناء الصورة من نسخة موسومة ويخزنها. ما تم اختباره هو نفسه ما سيُطلق.', command: 'docker build -t api:$SHA .' },
-    { title: 'تحقق قبل أن يثق أحد', body: 'تعمل الاختبارات على النسخة المبنية، ثم يجيب فحص الصحة من داخل الحاوية، لا من المضيف المجاور لها.', command: 'curl -fsS localhost:8080/health' },
-    { title: 'ابدأ النسخة الجانبية', body: 'تعمل النسختان جنبًا إلى جنب. تبدأ الحاوية الجديدة خلف البروكسي ولا تستقبل أي مرور من المستخدمين.', command: 'docker compose up -d --no-deps blue' },
-    { title: 'حرّك المرور بعد البوابة فقط', body: 'ينقل البروكسي المرور بعد نجاح فحص الصحة وبقائه مستقرًا. لا يرى المستخدم خدمة في طور البدء.', command: 'traefik: router → blue' },
-    { title: 'راقب، وابق قادرًا على التراجع', body: 'تراقب المقاييس والسجلات والتنبيهات النسخة الجديدة. تبقى النسخة السابقة جاهزة للرجوع إليها بأمر واحد.', command: './deploy.sh rollback' },
+    { title: 'التزام واحد يبدأ كل شيء', body: 'يصل كل تغيير على شكل فرق قابل للمراجعة. لا يصل أي شيء إلى الخادم يدويًا، فلا يعتمد النشر على الذاكرة.', command: 'git push origin main' },
+    { title: 'اختبر، ثم اعبر بوابة الجودة', body: 'يفحص SonarQube كل فرع بحثًا عن الأخطاء، ويتوقف الخط هنا إذا فشلت بوابة الجودة.', command: 'sonar-scanner -Dsonar.qualitygate.wait' },
+    { title: 'ابنِ الصورة مرة وادفعها', body: 'يبني خط البناء الصورة من النسخة الموسومة ويدفعها إلى Docker Hub. ما تم اختباره هو نفسه ما سيُطلق.', command: 'docker push ahmed/api:$SHA' },
+    { title: 'ArgoCD يسلّم إلى كوبرنيتس', body: 'تزامن ArgoCD العنقود مع الحالة المعلنة على AWS. لا دخول يدوي إلى الخوادم ولا انحراف بين البيئات.', command: 'argocd app sync api' },
+    { title: 'تحقق من داخل النظام', body: 'حالة التدحرج مع فحص صحة يجيب من داخل الحاوية، لا من المضيف المجاور لها.', command: 'kubectl rollout status deploy/api' },
+    { title: 'راقب، والتراجع بأمر واحد', body: 'تراقب المقاييس والسجلات والتنبيهات النسخة الجديدة، والنسخة السابقة على بعد أمر واحد حتى تكسب الثقة.', command: 'argocd app rollback api' },
   ],
 };
 
@@ -61,9 +55,6 @@ export const TOOL_GROUPS: Record<Locale, { category: string; items: string[] }[]
     { category: 'Infrastructure', items: ['Terraform', 'Ansible', 'Traefik', 'NGINX', 'Linux', 'Bash'] },
     { category: 'Cloud', items: ['AWS', 'Cloudflare R2', 'VPS hosting'] },
     { category: 'Monitoring', items: ['Prometheus', 'Grafana', 'Loki', 'Alertmanager'] },
-    { category: 'Backend', items: ['NestJS', 'Spring Boot', 'PostgreSQL', 'MySQL', 'Redis'] },
-    { category: 'Frontend', items: ['Next.js', 'React', 'Tailwind'] },
-    { category: 'AI systems', items: ['OpenRouter', 'LLM APIs', 'Local models'] },
   ],
   ar: [
     { category: 'الحاويات', items: ['Docker', 'Docker Compose', 'Kubernetes', 'Helm'] },
@@ -71,22 +62,6 @@ export const TOOL_GROUPS: Record<Locale, { category: string; items: string[] }[]
     { category: 'البنية التحتية', items: ['Terraform', 'Ansible', 'Traefik', 'NGINX', 'Linux', 'Bash'] },
     { category: 'السحابة', items: ['AWS', 'Cloudflare R2', 'استضافة VPS'] },
     { category: 'المراقبة', items: ['Prometheus', 'Grafana', 'Loki', 'Alertmanager'] },
-    { category: 'الواجهات الخلفية', items: ['NestJS', 'Spring Boot', 'PostgreSQL', 'MySQL', 'Redis'] },
-    { category: 'الواجهات الأمامية', items: ['Next.js', 'React', 'Tailwind'] },
-    { category: 'أنظمة الذكاء الاصطناعي', items: ['OpenRouter', 'LLM APIs', 'Local models'] },
-  ],
-};
-
-export const REPOS: Record<Locale, { label: string; href: string }[]> = {
-  en: [
-    { label: 'End-to-end DevOps capstone', href: 'https://github.com/ahmedekramalsada/final-project-devops' },
-    { label: 'NTI final project', href: 'https://github.com/ahmedekramalsada/final-project' },
-    { label: 'Ahmed OS portfolio', href: 'https://github.com/ahmedekramalsada/Portfolio' },
-  ],
-  ar: [
-    { label: 'مشروع تخرج DevOps متكامل', href: 'https://github.com/ahmedekramalsada/final-project-devops' },
-    { label: 'مشروع NTI النهائي', href: 'https://github.com/ahmedekramalsada/final-project' },
-    { label: 'موقع Ahmed OS', href: 'https://github.com/ahmedekramalsada/Portfolio' },
   ],
 };
 
