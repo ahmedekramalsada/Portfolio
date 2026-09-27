@@ -25,7 +25,10 @@ const copy = {
 
 export async function PublicHome({ locale }: { locale: Locale }) {
   const t = copy[locale];
-  const [{ data: posts }, allProjects] = await Promise.all([getPosts({ locale, limit: 50 }), getProjects()]);
+  // A transient API blip must never take down the homepage — fall back to empty sections.
+  const [postResult, projectResult] = await Promise.all([getPosts({ locale, limit: 50 }), getProjects()]).catch(() => [{ data: [] }, []] as const);
+  const posts = postResult.data;
+  const allProjects = projectResult;
   const featured = posts[0];
   const latest = posts.slice(1, 3);
   const VARIANTS: ToolVariant[] = ['kubernetes', 'aiagents', 'terraform', 'aws', 'docker', 'cicd', 'aichat', 'observability'];

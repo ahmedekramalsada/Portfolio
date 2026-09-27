@@ -241,6 +241,7 @@ body {
   padding: .7rem .9rem; font-size: 14px; color: var(--color-foreground);
 }
 .field::placeholder { color: var(--color-dim); }
+input.field.pl-10 { padding-left: 2.5rem; }
 .field:focus { outline: none; border-color: var(--color-line-2); box-shadow: 0 0 0 3px rgba(231,169,94,.14); }
 .label-field {
   display: block; margin-bottom: .45rem; font-family: var(--font-mono); font-size: 11px;

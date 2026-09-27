@@ -55,6 +55,8 @@ export const TOOL_GROUPS: Record<Locale, { category: string; items: string[] }[]
     { category: 'Infrastructure', items: ['Terraform', 'Ansible', 'Traefik', 'NGINX', 'Linux', 'Bash'] },
     { category: 'Cloud', items: ['AWS', 'Cloudflare R2', 'VPS hosting'] },
     { category: 'Monitoring', items: ['Prometheus', 'Grafana', 'Loki', 'Alertmanager'] },
+    { category: 'AI Chatbots', items: ['RAG Answers', 'Business Data', 'Support Flows', 'Web Widgets'] },
+    { category: 'AI Agents', items: ['Tool Calling', 'Task Automation', 'RAG Context', 'Human-in-the-Loop'] },
   ],
   ar: [
     { category: 'الحاويات', items: ['Docker', 'Docker Compose', 'Kubernetes', 'Helm'] },
@@ -62,6 +64,8 @@ export const TOOL_GROUPS: Record<Locale, { category: string; items: string[] }[]
     { category: 'البنية التحتية', items: ['Terraform', 'Ansible', 'Traefik', 'NGINX', 'Linux', 'Bash'] },
     { category: 'السحابة', items: ['AWS', 'Cloudflare R2', 'استضافة VPS'] },
     { category: 'المراقبة', items: ['Prometheus', 'Grafana', 'Loki', 'Alertmanager'] },
+    { category: 'روبوتات المحادثة', items: ['RAG Answers', 'Business Data', 'Support Flows', 'Web Widgets'] },
+    { category: 'وكلاء الذكاء الاصطناعي', items: ['Tool Calling', 'Task Automation', 'RAG Context', 'Human-in-the-Loop'] },
   ],
 };
 

@@ -48,7 +48,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang={locale === 'ar' ? 'ar-EG' : 'en-US'} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="dark" suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/png" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <Script id="person-jsonld" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={getJsonLdScript(JSON.stringify(personJsonLd))} />
         <Script id="website-jsonld" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={getJsonLdScript(JSON.stringify(websiteJsonLd))} />
         <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} Writing`} href="/feed.xml" />
