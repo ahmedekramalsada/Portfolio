@@ -10,7 +10,7 @@ type Suggestion = { text: string; type: 'post' | 'project'; slug: string };
 
 const copy = {
   en: { label: 'Search', title: 'Find anything on this site', lede: 'Articles and selected work — searched by keyword in English.', placeholder: 'Search articles and projects…', results: 'result', resultsPlural: 'results', noResults: 'No results found. Try a different search term.', clear: 'Clear search', post: 'Article', project: 'Project' },
-  ar: { label: 'بحث', title: 'ابحث في الموقع', lede: 'ابحث عن المقالات والأعمال المختورة — بالعربية.', placeholder: 'ابحث في المقالات والأعمال…', results: 'نتيجة', resultsPlural: 'نتائج', noResults: 'لا توجد نتائج. جرّب كلمة أخرى.', clear: 'مسح البحث', post: 'مقال', project: 'مشروع' },
+  ar: { label: 'بحث', title: 'ابحث في الموقع', lede: 'ابحث في المقالات والأعمال المختارة — بالعربية أو بالإنجليزية.', placeholder: 'ابحث في المقالات والأعمال…', results: 'نتيجة', resultsPlural: 'نتائج', noResults: 'لا توجد نتائج. جرّب كلمة مختلفة.', clear: 'مسح البحث', post: 'مقال', project: 'مشروع' },
 } as const;
 
 export function PublicSearch({ locale, initialQuery = '' }: { locale: Locale; initialQuery?: string }) {

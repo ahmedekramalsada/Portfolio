@@ -8,7 +8,7 @@ import { formatDate, getCategories, getPosts } from '@/lib/public-content';
 
 const copy = {
   en: { label: 'Writing', title: 'Latest writing', lede: 'DevOps, cloud infrastructure, platform engineering, and practical AI systems — written from the decisions behind the work.', search: 'Search articles…', clear: 'clear', all: 'All', empty: 'No articles found', viewAll: 'View all articles', featured: 'Featured', read: 'Read', min: 'min read', startHere: 'Start here', topics: 'Topics', result: 'results for', results: 'results' },
-  ar: { label: 'الكتابة', title: 'أحدث الكتابة', lede: 'DevOps والبنية التحتية السحابية وهندسة المنصات وأنظمة الذكاء الاصطناعي العملية — من القرارات التي تقف خلف العمل.', search: 'ابحث في المقالات…', clear: 'مسح', all: 'كل المقالات', empty: 'لا توجد مقالات', viewAll: 'شاهد كل المقالات', featured: 'مقال مختار', read: 'اقرأ', min: 'دقيقة قراءة', startHere: 'ابدأ من هنا', topics: 'المواضيع', result: 'نتائج البحث عن', results: 'نتيجة' },
+  ar: { label: 'الكتابة', title: 'أحدث المقالات', lede: 'DevOps والبنية التحتية السحابية وهندسة المنصات وأنظمة الذكاء الاصطناعي العملية — مكتوبة من واقع القرارات وراء العمل.', search: 'ابحث في المقالات…', clear: 'مسح', all: 'كل المقالات', empty: 'لا توجد مقالات', viewAll: 'شاهد كل المقالات', featured: 'مقال مختار', read: 'اقرأ', min: 'دقائق قراءة', startHere: 'ابدأ من هنا', topics: 'المواضيع', result: '', results: 'نتائج' },
 } as const;
 
 export async function PublicBlog({ locale, searchParams }: { locale: Locale; searchParams: { page?: string; category?: string; q?: string } }) {

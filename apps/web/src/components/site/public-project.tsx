@@ -7,7 +7,7 @@ import { getProject } from '@/lib/public-content';
 import { projectCopy } from '@/lib/project-copy';
 import { notFound } from 'next/navigation';
 
-const copy = { en: { back: 'Back to work', problem: 'The problem', role: 'My role', result: 'The result', evidence: 'Evidence', stack: 'Stack', repository: 'View repository', live: 'Open live project', project: 'Project' }, ar: { back: 'العودة إلى الأعمال', problem: 'المشكلة', role: 'دوري', result: 'النتيجة', evidence: 'الدليل', stack: 'التقنيات', repository: 'شاهد المستودع', live: 'افتح المشروع الحي', project: 'مشروع' } } as const;
+const copy = { en: { back: 'Back to work', problem: 'The problem', role: 'My role', result: 'The result', evidence: 'Evidence', stack: 'Stack', repository: 'View repository', live: 'Open live project', project: 'Project' }, ar: { back: 'عودة للأعمال', problem: 'المشكلة', role: 'دوري في المشروع', result: 'النتيجة', evidence: 'ما يثبت ذلك', stack: 'التقنيات', repository: 'عرض المستودع', live: 'افتح المشروع', project: 'مشروع' } } as const;
 
 export async function PublicProject({ locale, slug }: { locale: Locale; slug: string }) {
   const details = projectCopy(locale, slug);

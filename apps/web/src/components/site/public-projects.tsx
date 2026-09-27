@@ -7,7 +7,7 @@ import { localePath, type Locale } from '@/lib/site-content';
 import { getProjects } from '@/lib/public-content';
 import { projectCopy, publicProjectSlugs } from '@/lib/project-copy';
 
-const copy = { en: { label: 'Work', title: 'Things I have built and kept understandable', lede: 'Infrastructure, delivery pipelines, and platforms — each one connected to a real repository or an honest project state.' }, ar: { label: 'الأعمال', title: 'أعمال بنيتها وشرحتها بوضوح', lede: 'بنية تحتية وخطوط تسليم ومنصات — كل عمل مرتبط بمستودع حقيقي أو بحالة مشروع صريحة.' } } as const;
+const copy = { en: { label: 'Work', title: 'Things I have built and kept understandable', lede: 'Infrastructure, delivery pipelines, and platforms — each one connected to a real repository or an honest project state.' }, ar: { label: 'الأعمال', title: 'أعمال بنيتها وشرحتها بوضوح', lede: 'بنية تحتية ومسارات تسليم ومنصات — كل عمل مرتبط بمستودع حقيقي أو بحالة مشروع صريحة.' } } as const;
 
 export async function PublicProjects({ locale }: { locale: Locale }) {
   const t = copy[locale];
