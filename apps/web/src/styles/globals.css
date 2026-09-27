@@ -635,3 +635,108 @@ body {
   .pcard-body { padding: 1rem 1.1rem 1.15rem; }
   .pcard-wide .pcard-media, .pcard-media { min-height: 0; }
 }
+
+/* ─── Deploy loader (plays once per page load) ─────────────────────────── */
+.dload-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  display: grid; place-items: center; padding: 20px;
+  background: var(--color-background);
+  transition: opacity .12s linear;
+}
+.dload-overlay.dload-gone { opacity: 0; pointer-events: none; }
+.dload-card {
+  width: min(560px, 100%);
+  background: var(--color-card);
+  border: 1px solid var(--color-line-2);
+  border-radius: 16px;
+  padding: 30px 28px;
+}
+.dload-top {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+.dload-dot {
+  display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--color-warm); box-shadow: 0 0 10px var(--color-warm);
+  margin-right: 8px; vertical-align: 1px;
+  animation: dload-blink 1.2s ease-in-out infinite;
+}
+@keyframes dload-blink { 50% { opacity: .35; } }
+.dload-pipe {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  position: relative; margin: 30px 2px 0;
+}
+.dload-track {
+  position: absolute; top: 21px; left: 32px; right: 32px; height: 2px;
+  background: #232b36; border-radius: 2px;
+}
+.dload-fill {
+  position: absolute; top: 21px; left: 32px; height: 2px; width: 0; border-radius: 2px;
+  background: linear-gradient(90deg, #a9763c, var(--color-warm));
+  box-shadow: 0 0 8px rgba(231, 169, 94, .6);
+}
+.dload-head {
+  position: absolute; top: 21px; left: 32px; width: 9px; height: 9px;
+  margin: -3.5px 0 0 -4.5px; border-radius: 50%;
+  background: #f6d9a8; box-shadow: 0 0 14px 4px rgba(231, 169, 94, .75);
+}
+.dload-st {
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  width: 76px; position: relative; z-index: 1;
+}
+.dload-node {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--color-card); border: 2px solid #2b333f;
+  display: grid; place-items: center; color: #5b6572;
+  transition: border-color .35s, color .35s, box-shadow .35s, transform .35s;
+}
+.dload-node svg {
+  width: 20px; height: 20px; stroke: currentColor; fill: none;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.dload-lbl {
+  font-family: var(--font-mono); font-size: 10.5px; color: #5b6572;
+  letter-spacing: .1em; text-transform: uppercase; transition: color .35s;
+}
+.dload-st.on .dload-node {
+  border-color: var(--color-warm); color: var(--color-warm); transform: scale(1.08);
+  box-shadow: 0 0 18px rgba(231, 169, 94, .55), inset 0 0 12px rgba(231, 169, 94, .12);
+}
+.dload-st.on .dload-lbl { color: var(--color-warm); }
+.dload-st.done .dload-node { border-color: var(--color-ok); color: var(--color-ok); }
+.dload-st.done .dload-lbl { color: var(--color-ok); }
+.dload-status {
+  text-align: center; margin-top: 28px;
+  font-family: var(--font-mono); font-size: 13.5px;
+  color: var(--color-muted-foreground); min-height: 22px;
+}
+.dload-status .dload-ok { color: var(--color-ok); font-weight: 700; }
+.dload-bar {
+  height: 4px; background: #232b36; border-radius: 4px;
+  margin-top: 14px; overflow: hidden; position: relative;
+}
+.dload-bar i {
+  display: block; height: 100%; width: 0; border-radius: 4px;
+  background: linear-gradient(90deg, #a9763c, var(--color-warm));
+  position: relative; overflow: hidden;
+}
+.dload-bar.live i { background: linear-gradient(90deg, var(--color-warm), var(--color-ok)); }
+.dload-bar i::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
+  animation: dload-shimmer 1.6s linear infinite;
+}
+@keyframes dload-shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+@media (max-width: 480px) {
+  .dload-card { padding: 24px 16px; }
+  .dload-st { width: 64px; gap: 7px; }
+  .dload-node { width: 38px; height: 38px; }
+  .dload-node svg { width: 17px; height: 17px; }
+  .dload-lbl { font-size: 9.5px; }
+  .dload-pipe { margin-top: 24px; }
+  .dload-track { left: 26px; right: 26px; top: 18px; }
+  .dload-top { font-size: 10px; }
+  .dload-status { font-size: 12.5px; }
+}

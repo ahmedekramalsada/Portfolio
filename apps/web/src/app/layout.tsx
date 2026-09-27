@@ -6,6 +6,7 @@ import { Providers } from '@/providers/providers';
 import { LocaleDocumentSync } from '@/providers/locale-document-sync';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
+import { DeployLoader } from '@/components/site/deploy-loader';
 import { defaultMetadata, getJsonLdScript, siteConfig } from '@/config/seo';
 import Script from 'next/script';
 
@@ -55,7 +56,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js-ready');" }} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}>
-        <Providers><LocaleDocumentSync />{bareChrome ? (<main className="min-h-screen">{children}</main>) : (<div className="flex min-h-screen flex-col"><Navbar /><main className="flex-1">{children}</main><Footer /></div>)}</Providers>
+        <Providers><DeployLoader /><LocaleDocumentSync />{bareChrome ? (<main className="min-h-screen">{children}</main>) : (<div className="flex min-h-screen flex-col"><Navbar /><main className="flex-1">{children}</main><Footer /></div>)}</Providers>
       </body>
     </html>
   );
