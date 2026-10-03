@@ -27,6 +27,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: SEO regression tests
+        run: node --experimental-strip-types --test apps/web/src/config/seo.test.mjs apps/cloudflare-api/src/seo.test.mjs
       - run: pnpm --filter @ahmed-os/web typecheck
       - run: pnpm --filter @ahmed-os/cloudflare-api typecheck
       - run: pnpm --filter @ahmed-os/web build:vinext
@@ -66,7 +68,7 @@ jobs:
   deploy-web:
     name: Deploy Web Worker
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: verify
+    needs: [verify, deploy-api]
     runs-on: ubuntu-latest
     environment: production
     steps:

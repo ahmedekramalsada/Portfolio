@@ -56,10 +56,10 @@ export async function getPosts(options: { locale?: Locale; category?: string; pa
 }
 
 export async function getPost(slug: string, locale: Locale) {
-  const response = await fetch(`${API_URL}/posts/${slug}`, { next: { revalidate: 60 } });
+  const response = await fetch(`${API_URL}/posts/${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
   if (!response.ok) return null;
   const post = (await response.json()) as Post;
-  if (post.language && post.language !== locale) return null;
+  if (post.language !== locale) return null;
   return post;
 }
 
@@ -71,7 +71,7 @@ export async function getProjects() {
 }
 
 export async function getProject(slug: string) {
-  const response = await fetch(`${API_URL}/projects/${slug}`, { next: { revalidate: 60 } });
+  const response = await fetch(`${API_URL}/projects/${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
   return response.ok ? (await response.json()) as Project : null;
 }
 

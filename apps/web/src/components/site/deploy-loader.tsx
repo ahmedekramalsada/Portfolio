@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 const WORDS = ['Pushing commit…', 'Building · 25 pages…', 'Running final verification…', 'Deploying to edge…'];
-const LOOP = 2200;
+const LOOP = 650;
 const LIVE_AT = 0.78;
 
 const ICONS = [

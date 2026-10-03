@@ -76,6 +76,8 @@ export function generatePageMetadata(overrides: { title?: string; description?: 
       } : undefined,
     },
     openGraph: {
+      type: 'website',
+      siteName: siteConfig.name,
       title,
       description,
       url,
@@ -83,9 +85,29 @@ export function generatePageMetadata(overrides: { title?: string; description?: 
       alternateLocale: language === 'ar' ? ['en_US'] : ['ar_EG'],
       images: [{ url: overrides.ogImage || siteConfig.ogImage, width: 1200, height: 630 }],
     },
-    twitter: { title, description, images: [overrides.ogImage || siteConfig.ogImage] },
-    robots: overrides.noIndex ? { index: false, follow: false } : undefined,
+    twitter: { card: 'summary_large_image', title, description, images: [overrides.ogImage || siteConfig.ogImage] },
+    robots: {
+      index: !overrides.noIndex,
+      follow: true,
+      googleBot: { index: !overrides.noIndex, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+    },
   };
 }
 
-export function getJsonLdScript(json: string) { return { __html: json }; }
+export function getJsonLdScript(json: string) { return { __html: json.replace(/</g, '\\u003c') }; }
+
+export function blogPageNumber(value?: string): number {
+  const page = Number(value);
+  return Number.isSafeInteger(page) && page > 0 ? page : 1;
+}
+
+export function generateBlogMetadata(locale: 'en' | 'ar', params: { page?: string; category?: string; q?: string }): Metadata {
+  const page = blogPageNumber(params.page);
+  const path = `${locale === 'ar' ? '/ar' : ''}/blog${page > 1 ? `?page=${page}` : ''}`;
+  return generatePageMetadata({
+    title: locale === 'ar' ? `الكتابة${page > 1 ? ` — صفحة ${page}` : ''}` : `Writing${page > 1 ? ` — Page ${page}` : ''}`,
+    description: locale === 'ar' ? 'مقالات في DevOps والبنية التحتية السحابية وهندسة المنصات وأنظمة الذكاء الاصطناعي العملية من أحمد أكرم السادة.' : 'Articles on DevOps, Docker, Kubernetes, CI/CD, cloud infrastructure, platform engineering, and practical AI systems by Ahmed Ekram Alsada.',
+    path,
+    noIndex: Boolean(params.q?.trim() || (params.category && params.category !== 'all')),
+  });
+}

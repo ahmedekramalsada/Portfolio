@@ -5,6 +5,7 @@ import { JsonLd } from '@/components/site/json-ld';
 import { TiltCard } from '@/components/site/tilt-card';
 import { localePath, type Locale } from '@/lib/site-content';
 import { formatDate, getCategories, getPosts } from '@/lib/public-content';
+import { blogPageNumber } from '@/config/seo';
 
 const copy = {
   en: { label: 'Writing', title: 'Latest writing', lede: 'DevOps, cloud infrastructure, platform engineering, and practical AI systems — written from the decisions behind the work.', search: 'Search articles…', clear: 'clear', all: 'All', empty: 'No articles found', viewAll: 'View all articles', featured: 'Featured', read: 'Read', min: 'min read', startHere: 'Start here', topics: 'Topics', result: 'results for', results: 'results' },
@@ -13,7 +14,7 @@ const copy = {
 
 export async function PublicBlog({ locale, searchParams }: { locale: Locale; searchParams: { page?: string; category?: string; q?: string } }) {
   const t = copy[locale];
-  const page = Number(searchParams.page) || 1;
+  const page = blogPageNumber(searchParams.page);
   const category = searchParams.category || 'all';
   const query = (searchParams.q || '').trim();
   const { data: allPosts, meta } = await getPosts({ locale, category, page, limit: 20 });

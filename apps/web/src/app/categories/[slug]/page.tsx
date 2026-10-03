@@ -1,12 +1,17 @@
-const API_URL = process.env.API_URL || 'http://localhost:4000/api/v1';
+import { SERVER_API_URL as API_URL } from '@/lib/api-config';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { generatePageMetadata } from '@/config/seo';
+import { getCategories } from '@/lib/public-content';
+import { notFound } from 'next/navigation';
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  return { title: slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' '), description: `English articles about ${slug}.`, robots: { index: false, follow: true } };
+  const category = (await getCategories()).find((item) => item.slug === slug);
+  if (!category) notFound();
+  return generatePageMetadata({ title: category.name, description: `English articles about ${category.name}.`, path: `/categories/${encodeURIComponent(slug)}`, noIndex: true, localized: false });
 }
 
 async function getPostsByCategory(slug: string) {
@@ -26,7 +31,9 @@ function formatDate(value?: string) {
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
   const posts = await getPostsByCategory(slug);
-  const categoryName = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
+  const category = (await getCategories()).find((item) => item.slug === slug);
+  if (!category) notFound();
+  const categoryName = category.name;
 
   return (
     <div className="page">

@@ -52,6 +52,7 @@ export default function LoginClient() {
             <input
               id="email"
               type="email"
+              autoComplete="username"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="field"
@@ -65,6 +66,7 @@ export default function LoginClient() {
             <input
               id="password"
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="field"

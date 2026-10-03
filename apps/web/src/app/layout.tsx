@@ -45,8 +45,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   };
 
   return (
-    <html lang={locale === 'ar' ? 'ar-EG' : 'en-US'} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="dark" suppressHydrationWarning>
+    <html lang={locale === 'ar' ? 'ar-EG' : 'en-US'} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
+        {(pathname === '/' || pathname === '/ar') && <link rel="preload" as="image" href="/profile-152.webp" imageSrcSet="/profile-152.webp 1x, /profile-304.webp 2x" fetchPriority="high" />}
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <Script id="person-jsonld" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={getJsonLdScript(JSON.stringify(personJsonLd))} />
@@ -56,7 +57,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js-ready');" }} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}>
-        <Providers><DeployLoader /><LocaleDocumentSync />{bareChrome ? (<main className="min-h-screen">{children}</main>) : (<div className="flex min-h-screen flex-col"><Navbar /><main className="flex-1">{children}</main><Footer /></div>)}</Providers>
+        <Providers><DeployLoader /><LocaleDocumentSync />{bareChrome ? (<main id="main-content" className="min-h-screen">{children}</main>) : (<div className="flex min-h-screen flex-col"><a href="#main-content" className="sr-only focus:not-sr-only fixed left-4 top-4 z-50 rounded-lg bg-foreground px-4 py-3 text-background">{locale === 'ar' ? 'انتقل إلى المحتوى' : 'Skip to content'}</a><Navbar /><main id="main-content" className="flex-1" tabIndex={-1}>{children}</main><Footer /></div>)}</Providers>
       </body>
     </html>
   );

@@ -1,16 +1,19 @@
 import Link from 'next/link';
+import { headers } from 'next/headers';
+import { localePath } from '@/lib/site-content';
 
-export default function NotFoundPage() {
+export default async function NotFoundPage() {
+  const locale = (await headers()).get('x-ahmed-locale') === 'ar' ? 'ar' : 'en';
   return (
     <div className="page text-center">
       <span className="label">404</span>
-      <h1 className="h1 mt-5">This page does not exist</h1>
+      <h1 className="h1 mt-5">{locale === 'ar' ? 'هذه الصفحة غير موجودة' : 'This page does not exist'}</h1>
       <p className="lede mx-auto">
-        The address you followed is wrong, or the page has been moved.
+        {locale === 'ar' ? 'العنوان غير صحيح، أو تم نقل الصفحة.' : 'The address you followed is wrong, or the page has been moved.'}
       </p>
       <div className="mt-9 flex flex-wrap justify-center gap-3">
-        <Link href="/" className="btn-primary">Go home <span aria-hidden>→</span></Link>
-        <Link href="/blog" className="btn-ghost">Read the writing</Link>
+        <Link href={localePath(locale)} className="btn-primary">{locale === 'ar' ? 'الصفحة الرئيسية' : 'Go home'} <span aria-hidden>→</span></Link>
+        <Link href={localePath(locale, '/blog')} className="btn-ghost">{locale === 'ar' ? 'اقرأ المقالات' : 'Read the writing'}</Link>
       </div>
     </div>
   );

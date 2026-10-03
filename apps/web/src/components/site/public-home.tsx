@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { Pipeline } from '@/components/site/pipeline';
 import { MotionProvider, Reveal } from '@/components/site/reveal';
 import { Spotlight } from '@/components/site/spotlight';
@@ -7,8 +8,7 @@ import { ToolSpotlight, type ToolVariant } from '@/components/site/tool-spotligh
 import { Cover } from '@/components/site/cover';
 import { JsonLd } from '@/components/site/json-ld';
 import { CONTACT, HELP, STAGES, localePath, type Locale } from '@/lib/site-content';
-import { getPosts, getProjects, formatDate, techName, projectInitials } from '@/lib/public-content';
-import { projectCopy, publicProjectSlugs } from '@/lib/project-copy';
+import { getPosts, formatDate } from '@/lib/public-content';
 
 const copy = {
   en: {
@@ -25,12 +25,6 @@ const copy = {
 
 export async function PublicHome({ locale }: { locale: Locale }) {
   const t = copy[locale];
-  // A transient API blip must never take down the homepage — fall back to empty sections.
-  const [postResult, projectResult] = await Promise.all([getPosts({ locale, limit: 50 }), getProjects()]).catch(() => [{ data: [] }, []] as const);
-  const posts = postResult.data;
-  const allProjects = projectResult;
-  const featured = posts[0];
-  const latest = posts.slice(1, 3);
   const VARIANTS: ToolVariant[] = ['kubernetes', 'aiagents', 'terraform', 'aws', 'docker', 'cicd', 'aichat', 'observability'];
   const signals = [
     { label: t.focusLabel, value: t.focusValue },
@@ -54,12 +48,12 @@ export async function PublicHome({ locale }: { locale: Locale }) {
       <section className="relative z-10 mx-auto max-w-[1200px] px-6 pb-16 pt-28 lg:px-8 lg:pt-36">
         <div className="panel atlas-identity">
           <div className="atlas-identity-photo">
-            <div className="fade-up relative h-[152px] w-[152px]">
+            <div className="relative h-[152px] w-[152px]">
               <span className="absolute -inset-1 rounded-full bg-gradient-to-br from-warm/35 to-live/25 blur-[10px]" aria-hidden />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/profile.webp" alt="Ahmed Ekram Alsada" width={152} height={152} className="relative h-[152px] w-[152px] rounded-full border border-line-2 object-cover" style={{ objectPosition: '50% 20%' }} />
+              <img src="/profile-152.webp" srcSet="/profile-152.webp 1x, /profile-304.webp 2x" alt="Ahmed Ekram Alsada" width={152} height={152} fetchPriority="high" className="relative h-[152px] w-[152px] rounded-full border border-line-2 object-cover" style={{ objectPosition: '50% 20%' }} />
             </div>
-            <div className="fade-up inline-flex items-center gap-2.5 rounded-full border border-line bg-card px-3.5 py-2 font-mono text-[11.5px] uppercase tracking-[.09em] text-muted-foreground"><span className="pulse-dot block h-1.5 w-1.5 rounded-full bg-ok" />{locale === 'ar' ? 'مهندس DevOps' : 'DevOps Engineer'}</div>
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-line bg-card px-3.5 py-2 font-mono text-[11.5px] uppercase tracking-[.09em] text-muted-foreground"><span className="pulse-dot block h-1.5 w-1.5 rounded-full bg-ok" />{locale === 'ar' ? 'مهندس DevOps' : 'DevOps Engineer'}</div>
           </div>
           <div>
             <span className="label">{t.aboutTitle}</span>
@@ -71,13 +65,23 @@ export async function PublicHome({ locale }: { locale: Locale }) {
           </div>
         </div>
       </section>
-      <section className="relative z-10 mx-auto max-w-[1200px] px-6 py-16 lg:px-8"><div className="atlas-writing-feature panel"><div><span className="label">{t.featuredTitle}</span>{featured ? <><h2 className="mt-4 text-[clamp(1.55rem,4vw,2.5rem)] font-semibold leading-[1.12] tracking-[-.035em]"><Link href={localePath(locale, `/blog/${featured.slug}`)} className="hover:text-warm">{featured.title}</Link></h2><p className="mt-4 max-w-[58ch] text-[15px] leading-relaxed text-muted-foreground">{featured.excerpt}</p></> : <p className="mt-4 text-muted-foreground">{locale === 'ar' ? 'المقالات الجديدة ستظهر هنا أولاً.' : 'New posts will appear here first. The latest 3 will stay on this page.'}</p>}<Link href={localePath(locale, '/blog')} className="mt-7 inline-flex min-h-[40px] items-center text-[14px] text-warm hover:underline">{t.readWriting} →</Link></div>{featured && <Link href={localePath(locale, `/blog/${featured.slug}`)} className="atlas-writing-art"><Cover src={featured.coverImage} alt={featured.title} fallback={(featured.title || '?')[0].toUpperCase()} /></Link>}</div></section>
-
-      {latest.length > 0 && <section className="relative z-10 mx-auto max-w-[1200px] px-6 pb-16 lg:px-8"><div className="flex items-end justify-between gap-4"><div><span className="label">{t.latestTitle}</span><h2 className="mt-4 text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">{locale === 'ar' ? 'يستحق القراءة' : 'Ideas worth reading'}</h2></div><Link href={localePath(locale, '/blog')} className="inline-flex min-h-[36px] items-center text-[14px] text-muted-foreground transition hover:text-warm">{t.readWriting} →</Link></div><div className="mt-8">{latest.map((post) => <Link key={post.id} href={localePath(locale, `/blog/${post.slug}`)} className="wrow group"><div className="min-w-0"><h3 className="wtitle text-[19px] font-medium leading-snug tracking-[-.02em] transition-colors">{post.title}</h3>{post.excerpt && <p className="mt-2 line-clamp-1 text-[14.2px] text-muted-foreground">{post.excerpt}</p>}</div><span className="shrink-0 font-mono text-[11.5px] uppercase tracking-[.08em] text-dim">{formatDate(post.publishedAt, locale)}</span></Link>)}</div></section>}
+      <Suspense fallback={<section className="mx-auto min-h-[280px] max-w-[1200px] px-6 py-16 lg:px-8" aria-busy="true"><span className="label">{t.featuredTitle}</span></section>}><HomeWriting locale={locale} /></Suspense>
 
       <section className="relative z-10 mx-auto max-w-[1200px] px-6 py-16 lg:px-8"><div className="atlas-section-head"><div><span className="label">{t.helpTitle}</span><h2 className="mt-4 max-w-[24ch] text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]}">{locale === 'ar' ? 'البنية التي أستخدمها في الإنتاج' : 'Stack I use in production.'}</h2></div></div><div className="mt-9 grid gap-6 lg:grid-cols-2">{HELP[locale].map((item, idx) => <ToolSpotlight key={item.title} index={idx} title={item.title} body={item.body} variant={VARIANTS[idx]} />)}</div></section>
       <section id="how-it-ships" className="relative z-10 mx-auto max-w-[1200px] scroll-mt-24 px-6 py-24 lg:px-8"><span className="label">{t.howTitle}</span><h2 className="mt-5 max-w-[24ch] text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">{locale === 'ar' ? 'ماذا يحدث بين كتابة الكود وتشغيل الخدمة' : 'What happens between a commit and a live service'}</h2><p className="mt-5 max-w-[62ch] text-[15.5px] leading-relaxed text-muted-foreground">{t.howLede}</p><Pipeline stages={STAGES[locale]} /></section>
       <Reveal className="relative z-10 mx-auto max-w-[1200px] px-6 pb-28 pt-20 lg:px-8"><span className="label">{locale === 'ar' ? 'الخطوة التالية' : 'Next'}</span><h2 className="mt-5 max-w-[26ch] text-[clamp(1.8rem,7vw,4rem)] font-semibold leading-[1.08] tracking-[-.04em]">{t.closingTitle}</h2><p className="mt-6 max-w-[58ch] text-[15.5px] leading-relaxed text-muted-foreground">{t.closingBody}</p><div className="mt-9 flex flex-wrap gap-3"><Link href={localePath(locale, '/contact')} className="btn-primary">{t.start} <span aria-hidden>→</span></Link><a href={`mailto:${CONTACT.email}`} className="btn-ghost">{t.email}</a></div></Reveal>
     </div>
   );
+}
+
+async function HomeWriting({ locale }: { locale: Locale }) {
+  const t = copy[locale];
+  // Only the writing section waits for the API, not the above-the-fold profile.
+  const { data: posts } = await getPosts({ locale, limit: 3 }).catch(() => ({ data: [] }));
+  const featured = posts[0];
+  const latest = posts.slice(1, 3);
+  return <>
+    <section className="relative z-10 mx-auto max-w-[1200px] px-6 py-16 lg:px-8"><div className="atlas-writing-feature panel"><div><span className="label">{t.featuredTitle}</span>{featured ? <><h2 className="mt-4 text-[clamp(1.55rem,4vw,2.5rem)] font-semibold leading-[1.12] tracking-[-.035em]"><Link href={localePath(locale, `/blog/${featured.slug}`)} className="hover:text-warm">{featured.title}</Link></h2><p className="mt-4 max-w-[58ch] text-[15px] leading-relaxed text-muted-foreground">{featured.excerpt}</p></> : <p className="mt-4 text-muted-foreground">{locale === 'ar' ? 'المقالات الجديدة ستظهر هنا أولاً.' : 'New posts will appear here first. The latest 3 will stay on this page.'}</p>}<Link href={localePath(locale, '/blog')} className="mt-7 inline-flex min-h-[40px] items-center text-[14px] text-warm hover:underline">{t.readWriting} →</Link></div>{featured && <Link href={localePath(locale, `/blog/${featured.slug}`)} className="atlas-writing-art"><Cover src={featured.coverImage} alt={featured.title} fallback={(featured.title || '?')[0].toUpperCase()} /></Link>}</div></section>
+    {latest.length > 0 && <section className="relative z-10 mx-auto max-w-[1200px] px-6 pb-16 lg:px-8"><div className="flex items-end justify-between gap-4"><div><span className="label">{t.latestTitle}</span><h2 className="mt-4 text-[clamp(1.55rem,5.6vw,2.9rem)] font-semibold leading-[1.12] tracking-[-.035em]">{locale === 'ar' ? 'يستحق القراءة' : 'Ideas worth reading'}</h2></div><Link href={localePath(locale, '/blog')} className="inline-flex min-h-[36px] items-center text-[14px] text-muted-foreground transition hover:text-warm">{t.readWriting} →</Link></div><div className="mt-8">{latest.map((post) => <Link key={post.id} href={localePath(locale, `/blog/${post.slug}`)} className="wrow group"><div className="min-w-0"><h3 className="wtitle text-[19px] font-medium leading-snug tracking-[-.02em] transition-colors">{post.title}</h3>{post.excerpt && <p className="mt-2 line-clamp-1 text-[14.2px] text-muted-foreground">{post.excerpt}</p>}</div><span className="shrink-0 font-mono text-[11.5px] uppercase tracking-[.08em] text-dim">{formatDate(post.publishedAt, locale)}</span></Link>)}</div></section>}
+  </>;
 }

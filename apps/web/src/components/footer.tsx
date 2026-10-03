@@ -23,7 +23,7 @@ export function Footer() {
         <div>
           <div className="flex items-center gap-3 text-[14.5px] font-semibold">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/profile.webp" alt="Ahmed Ekram Alsada" width={30} height={30} className="h-[30px] w-[30px] shrink-0 rounded-full border border-line-2 object-cover" style={{ objectPosition: '50% 20%' }} />
+            <img src="/profile-64.webp" alt="" width={30} height={30} loading="lazy" className="h-[30px] w-[30px] shrink-0 rounded-full border border-line-2 object-cover" style={{ objectPosition: '50% 20%' }} />
             {ar ? 'أحمد أكرم السادة' : 'Ahmed Ekram Alsada'}
           </div>
           <p className="mt-4 max-w-[34ch] text-[14px] leading-relaxed text-muted-foreground">{ar ? 'مهندس DevOps. أبني منصات سحابية وأنظمة أعمال موثوقة، وأكتب ما أتعلمه أثناء العمل.' : 'DevOps engineer. I build reliable cloud platforms and business systems, and I write down what I learn along the way.'}</p>

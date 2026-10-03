@@ -32,7 +32,7 @@
   --color-warm: #e7a95e;               /* the single accent */
   --color-live: #5eb0ef;
   --color-ok: #4ea87a;
-  --color-dim: #59606a;
+  --color-dim: #8b929b;                /* readable secondary text on dark surfaces */
 
   --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Helvetica Neue", Inter, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
@@ -182,7 +182,7 @@ body {
 .scard {
   position: relative;
   background: var(--color-card); border: 1px solid var(--color-line-2); border-radius: 18px;
-  padding: 18px 20px; opacity: .65; transition: opacity .3s, border-color .3s;
+  padding: 18px 20px; opacity: 1; transition: border-color .3s;
 }
 .snum { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; color: var(--color-dim); }
 .srow.is-on .scard { opacity: 1; }
@@ -637,13 +637,15 @@ input.field.pl-10 { padding-left: 2.5rem; }
   .pcard-wide .pcard-media, .pcard-media { min-height: 0; }
 }
 
-/* ─── Deploy loader (plays once per page load) ─────────────────────────── */
+/* Branded loading cue: never conceal content or delay visitor interaction. */
 .dload-overlay {
-  position: fixed; inset: 0; z-index: 100;
-  display: grid; place-items: center; padding: 20px;
-  background: var(--color-background);
+  position: fixed; inset: 0 0 auto; height: 3px; z-index: 100;
+  pointer-events: none; overflow: hidden;
   transition: opacity .12s linear;
 }
+.dload-overlay .dload-card { width: 100%; padding: 0; border: 0; border-radius: 0; background: transparent; }
+.dload-overlay .dload-top, .dload-overlay .dload-pipe, .dload-overlay .dload-status { display: none; }
+.dload-overlay .dload-bar { height: 3px; margin: 0; border-radius: 0; }
 .dload-overlay.dload-gone { opacity: 0; pointer-events: none; }
 .dload-card {
   width: min(560px, 100%);

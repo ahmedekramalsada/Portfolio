@@ -77,6 +77,10 @@ export function localePath(locale: Locale, path = '/'): string {
 }
 
 export function otherLocalePath(locale: Locale, path: string): string {
+  // Articles have no reciprocal translation mapping yet. Never send visitors
+  // to a made-up alternate article or an Arabic category route that does not exist.
+  if (/^\/(?:ar\/)?blog\/.+/.test(path)) return localePath(locale === 'en' ? 'ar' : 'en', '/blog');
+  if (path.startsWith('/categories/')) return '/ar/blog';
   if (locale === 'en') return localePath('ar', path);
   if (path === '/ar' || path === '/ar/') return '/';
   return path.startsWith('/ar/') ? path.slice(3) || '/' : path;

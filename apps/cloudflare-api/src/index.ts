@@ -27,6 +27,7 @@ import {
   withCors,
 } from './http';
 import type { Env, PostRecord, ProjectRecord, UserRecord } from './types';
+import { buildFeed, buildRobots, buildSitemap } from './seo';
 
 const POST_STATUSES = ['draft', 'scheduled', 'published', 'archived'];
 const PROJECT_STATUSES = ['planning', 'in_progress', 'completed', 'archived'];
@@ -632,33 +633,16 @@ async function search(env: Env, request: Request, url: URL) {
   return { data: offset, meta: { page, limit, total: offset.length, totalPages: offset.length ? 1 : 0 } };
 }
 
-function xmlEscape(value: string): string {
-  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
-}
-
 async function sitemap(env: Env) {
-  const site = env.SITE_URL.replace(/\/$/, '');
-  const entries: string[] = [
-    ['', 'daily', '1.0'], ['/about', 'monthly', '0.8'], ['/ar/about', 'monthly', '0.8'], ['/blog', 'daily', '0.9'], ['/ar/blog', 'daily', '0.9'], ['/projects', 'weekly', '0.9'], ['/ar/projects', 'weekly', '0.9'], ['/contact', 'monthly', '0.7'], ['/ar/contact', 'monthly', '0.7'],
-  ].map(([path, frequency, priority]) => `<url><loc>${xmlEscape(site + path)}</loc><changefreq>${frequency}</changefreq><priority>${priority}</priority></url>`);
   const posts = await env.DB.prepare("SELECT slug, language, updated_at FROM posts WHERE status = 'published' AND deleted_at IS NULL").all<{ slug: string; language: string; updated_at: string }>();
-  for (const post of posts.results || []) entries.push(`<url><loc>${xmlEscape(`${site}${post.language === 'ar' ? '/ar/blog' : '/blog'}/${post.slug}`)}</loc><lastmod>${xmlEscape(post.updated_at)}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>`);
-  const projects = await env.DB.prepare("SELECT slug FROM projects WHERE status IN ('completed', 'in_progress') AND deleted_at IS NULL").all<{ slug: string }>();
-  for (const project of projects.results || []) entries.push(`<url><loc>${xmlEscape(`${site}/projects/${project.slug}`)}</loc><changefreq>monthly</changefreq><priority>0.6</priority></url><url><loc>${xmlEscape(`${site}/ar/projects/${project.slug}`)}</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>`);
-  return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries.join('')}</urlset>`;
+  const projects = await env.DB.prepare("SELECT slug, updated_at FROM projects WHERE status IN ('completed', 'in_progress') AND deleted_at IS NULL").all<{ slug: string; updated_at: string }>();
+  return buildSitemap(env.SITE_URL, posts.results || [], projects.results || []);
 }
 
 async function feed(env: Env, url: URL) {
   const language = url.searchParams.get('lang') === 'ar' ? 'ar' : 'en';
-  const site = env.SITE_URL.replace(/\/$/, '');
-  const result = await env.DB.prepare("SELECT title, slug, excerpt, content, published_at, updated_at FROM posts WHERE status = 'published' AND deleted_at IS NULL AND language = ? ORDER BY COALESCE(published_at, created_at) DESC LIMIT 50").bind(language).all<Record<string, unknown>>();
-  const items = (result.results || []).map((post) => {
-    const path = `${language === 'ar' ? '/ar/blog' : '/blog'}/${String(post.slug)}`;
-    const urlItem = `${site}${path}`;
-    const date = new Date(String(post.published_at || post.updated_at)).toUTCString();
-    return `<item><title>${xmlEscape(String(post.title))}</title><link>${xmlEscape(urlItem)}</link><guid isPermaLink="true">${xmlEscape(urlItem)}</guid><pubDate>${xmlEscape(date)}</pubDate>${post.excerpt ? `<description>${xmlEscape(String(post.excerpt))}</description>` : ''}</item>`;
-  }).join('');
-  return `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Ahmed Ekram Alsada</title><link>${xmlEscape(site)}</link><description>DevOps, cloud infrastructure, and practical AI systems.</description>${items}</channel></rss>`;
+  const result = await env.DB.prepare("SELECT title, slug, excerpt, published_at, updated_at FROM posts WHERE status = 'published' AND deleted_at IS NULL AND language = ? ORDER BY COALESCE(published_at, created_at) DESC LIMIT 50").bind(language).all<{ title: string; slug: string; excerpt: string | null; published_at: string | null; updated_at: string }>();
+  return buildFeed(env.SITE_URL, language, result.results || []);
 }
 
 function jsonLdPerson(site: string) {
@@ -673,7 +657,7 @@ async function route(request: Request, env: Env): Promise<Response> {
   if (!isAllowedOrigin(request, env)) return errorResponse(403, 'Origin is not allowed');
 
   if (rawPath === '/health' || rawPath === '/api/v1/health') return json({ status: 'ok', service: 'ahmed-os-api' });
-  if (rawPath === '/robots.txt') return text(`User-agent: *\nAllow: /\nDisallow: /dashboard\nDisallow: /login\nSitemap: ${env.SITE_URL.replace(/\/$/, '')}/sitemap.xml\n`);
+  if (rawPath === '/robots.txt') return text(buildRobots(env.SITE_URL));
   if (rawPath === '/sitemap.xml') return text(await sitemap(env), 200, 'application/xml; charset=utf-8');
   if (rawPath === '/feed.xml') return text(await feed(env, url), 200, 'application/rss+xml; charset=utf-8');
   if (rawPath === '/json-ld/person') return json(jsonLdPerson(env.SITE_URL.replace(/\/$/, '')));

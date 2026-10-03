@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export type ToolVariant = 'kubernetes' | 'terraform' | 'aws' | 'docker' | 'cicd' | 'observability' | 'aichat' | 'aiagents';
 
@@ -24,10 +23,6 @@ export function ToolSpotlight({
   variant?: ToolVariant;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const rx = useMotionValue(0);
-  const ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 180, damping: 22 });
-  const sry = useSpring(ry, { stiffness: 180, damping: 22 });
 
   const handleMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const node = ref.current;
@@ -36,22 +31,20 @@ export function ToolSpotlight({
     const rect = node.getBoundingClientRect();
     const px = (event.clientX - rect.left) / rect.width - 0.5;
     const py = (event.clientY - rect.top) / rect.height - 0.5;
-    ry.set(px * 9);
-    rx.set(-py * 9);
+    node.style.transform = `rotateX(${-py * 9}deg) rotateY(${px * 9}deg)`;
   };
 
   const reset = () => {
-    rx.set(0);
-    ry.set(0);
+    if (ref.current) ref.current.style.transform = '';
   };
 
   return (
     <div className="tool3d-stage">
-      <motion.div
+      <div
         ref={ref}
         onMouseMove={handleMove}
         onMouseLeave={reset}
-        style={{ rotateX: srx, rotateY: sry, transformStyle: 'preserve-3d' }}
+        style={{ transformStyle: 'preserve-3d', transition: 'transform 180ms ease-out' }}
         className="panel tool3d-card"
       >
         <div className="tool3d-glow" aria-hidden />
@@ -261,7 +254,7 @@ export function ToolSpotlight({
           <h3>{title}</h3>
           <p>{body}</p>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
