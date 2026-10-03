@@ -1,11 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-
-const WORDS = ['Pushing commit…', 'Building · 25 pages…', 'Running final verification…', 'Deploying to edge…'];
-const LOOP = 650;
-const LIVE_AT = 0.78;
 
 const ICONS = [
   <svg key="c" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.4" /><circle cx="6" cy="18" r="2.4" /><circle cx="18" cy="8" r="2.4" /><path d="M6 8.4v7.2M18 10.4c0 4-5 3.6-8.5 3.6" /></svg>,
@@ -18,93 +14,64 @@ const LABELS = ['commit', 'build', 'test', 'deploy'];
 export function DeployLoader() {
   const pathname = usePathname();
   const [gone, setGone] = useState(false);
-  const [fading, setFading] = useState(false);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const fillRef = useRef<HTMLDivElement>(null);
-  const headRef = useRef<HTMLDivElement>(null);
-  const msgRef = useRef<HTMLDivElement>(null);
-  const barRef = useRef<HTMLDivElement>(null);
-  const barFillRef = useRef<HTMLElement>(null);
-  const stageRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const arabic = pathname === '/ar' || pathname?.startsWith('/ar/');
+
+  const dismiss = () => {
+    document.documentElement.classList.remove('intro-enabled');
+    setGone(true);
+  };
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const root = document.documentElement;
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const finish = () => {
+      root.classList.remove('intro-enabled');
       setGone(true);
+    };
+    if (!root.classList.contains('intro-enabled') || motion.matches) {
+      finish();
       return;
     }
-    const t0 = performance.now();
-    let raf = 0;
-    const tick = () => {
-      const p = (performance.now() - t0) / LOOP;
-      const track = trackRef.current;
-      if (!track) return;
-      const tLeft = track.offsetLeft;
-      const span = track.offsetWidth;
-      const tTop = track.offsetTop;
-      const fill = fillRef.current!;
-      const head = headRef.current!;
-      fill.style.left = `${tLeft}px`;
-      fill.style.top = `${tTop}px`;
-      head.style.top = `${tTop}px`;
-      if (p >= LIVE_AT) {
-        const lp = (p - LIVE_AT) / (1 - LIVE_AT);
-        fill.style.width = `${span}px`;
-        head.style.left = `${tLeft + span}px`;
-        barFillRef.current!.style.width = '100%';
-        stageRefs.current.forEach((s) => {
-          s?.classList.add('done');
-          s?.classList.remove('on');
-        });
-        msgRef.current!.innerHTML = '<span class="dload-ok">✓ live — ahmedekram.site</span>';
-        barRef.current!.classList.add('live');
-        if (lp > 0.72 && overlayRef.current) {
-          overlayRef.current.style.opacity = String(Math.max(0, 1 - (lp - 0.72) / 0.28));
-        }
-        if (p >= 1) {
-          setFading(true);
-          window.setTimeout(() => setGone(true), 120);
-          return;
-        }
-      } else {
-        const q = p / LIVE_AT;
-        const idx = Math.min(3, Math.floor(q * 4));
-        fill.style.width = `${span * q}px`;
-        head.style.left = `${tLeft + span * q}px`;
-        barFillRef.current!.style.width = `${q * 100}%`;
-        stageRefs.current.forEach((s, i) => {
-          s?.classList.toggle('done', i < idx);
-          s?.classList.toggle('on', i === idx);
-        });
-        if (msgRef.current) msgRef.current.textContent = WORDS[idx];
-        barRef.current!.classList.remove('live');
-        if (overlayRef.current) overlayRef.current.style.opacity = String(Math.min(1, p / 0.04));
-      }
-      raf = requestAnimationFrame(tick);
+    // The CSS animation has its own deadline even if hydration fails.
+    const timeout = window.setTimeout(finish, 1800);
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' || event.key === 'Tab') finish();
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    const onMotion = () => { if (motion.matches) finish(); };
+    window.addEventListener('keydown', onKey);
+    motion.addEventListener('change', onMotion);
+    return () => {
+      window.clearTimeout(timeout);
+      window.removeEventListener('keydown', onKey);
+      motion.removeEventListener('change', onMotion);
+      root.classList.remove('intro-enabled');
+    };
   }, []);
 
   if (gone || pathname === '/login' || pathname?.startsWith('/dashboard')) return null;
 
   return (
-    <div ref={overlayRef} className={`dload-overlay${fading ? ' dload-gone' : ''}`} aria-hidden="true">
+    <div className="dload-overlay" onAnimationEnd={(event) => {
+      if (event.target === event.currentTarget) dismiss();
+    }}>
       <div className="dload-card">
-        <div className="dload-top"><span><span className="dload-dot" />Deploying</span><span>ahmedekram.site</span></div>
-        <div className="dload-pipe">
-          <div ref={trackRef} className="dload-track" />
-          <div ref={fillRef} className="dload-fill" />
-          <div ref={headRef} className="dload-head" />
-          {ICONS.map((icon, i) => (
-            <div key={LABELS[i]} ref={(el) => { stageRefs.current[i] = el; }} className="dload-st">
-              <span className="dload-node">{icon}</span>
-              <span className="dload-lbl">{LABELS[i]}</span>
-            </div>
-          ))}
+        <div aria-hidden="true" dir="ltr">
+          <div className="dload-top"><span><span className="dload-dot" />Deploying</span><span>ahmedekram.site</span></div>
+          <div className="dload-pipe">
+            <div className="dload-track" />
+            <div className="dload-fill" />
+            <div className="dload-head" />
+            {ICONS.map((icon, i) => <div key={LABELS[i]} className="dload-st" style={{ '--stage-delay': `${i * 280}ms` } as React.CSSProperties}>
+              <span className="dload-node">{icon}</span><span className="dload-lbl">{LABELS[i]}</span>
+            </div>)}
+          </div>
+          <div className="dload-status">
+            <span className="dload-message">{arabic ? 'من الفكرة إلى التشغيل…' : 'From commit to live…'}</span>
+            <span className="dload-ok">✓ live — ahmedekram.site</span>
+          </div>
+          <div className="dload-bar"><i /></div>
         </div>
-        <div ref={msgRef} className="dload-status">…</div>
-        <div ref={barRef} className="dload-bar"><i ref={barFillRef} /></div>
+        <button type="button" onClick={dismiss} className="dload-skip">{arabic ? 'تخطي المقدمة' : 'Skip intro'}</button>
       </div>
     </div>
   );

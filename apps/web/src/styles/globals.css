@@ -637,16 +637,20 @@ input.field.pl-10 { padding-left: 2.5rem; }
   .pcard-wide .pcard-media, .pcard-media { min-height: 0; }
 }
 
-/* Branded loading cue: never conceal content or delay visitor interaction. */
+/* First-visit portfolio intro. Hidden by default: no JS/storage = no overlay.
+   CSS closes it independently of hydration; page content is never removed. */
 .dload-overlay {
-  position: fixed; inset: 0 0 auto; height: 3px; z-index: 100;
-  pointer-events: none; overflow: hidden;
-  transition: opacity .12s linear;
+  position: fixed; inset: 0; z-index: 100;
+  display: grid; place-items: center; padding: 20px;
+  background: var(--color-background);
+  visibility: hidden; opacity: 0; pointer-events: none;
 }
-.dload-overlay .dload-card { width: 100%; padding: 0; border: 0; border-radius: 0; background: transparent; }
-.dload-overlay .dload-top, .dload-overlay .dload-pipe, .dload-overlay .dload-status { display: none; }
-.dload-overlay .dload-bar { height: 3px; margin: 0; border-radius: 0; }
-.dload-overlay.dload-gone { opacity: 0; pointer-events: none; }
+.intro-enabled .dload-overlay { animation: dload-intro 1500ms linear both; }
+@keyframes dload-intro {
+  0%, 85% { opacity: 1; visibility: visible; pointer-events: auto; }
+  99% { visibility: visible; }
+  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+}
 .dload-card {
   width: min(560px, 100%);
   background: var(--color-card);
@@ -664,7 +668,7 @@ input.field.pl-10 { padding-left: 2.5rem; }
   display: inline-block; width: 7px; height: 7px; border-radius: 50%;
   background: var(--color-warm); box-shadow: 0 0 10px var(--color-warm);
   margin-right: 8px; vertical-align: 1px;
-  animation: dload-blink 1.2s ease-in-out infinite;
+  animation: dload-blink .6s ease-in-out 2;
 }
 @keyframes dload-blink { 50% { opacity: .35; } }
 .dload-pipe {
@@ -680,6 +684,10 @@ input.field.pl-10 { padding-left: 2.5rem; }
   background: linear-gradient(90deg, #a9763c, var(--color-warm));
   box-shadow: 0 0 8px rgba(231, 169, 94, .6);
 }
+.intro-enabled .dload-fill { width: calc(100% - 64px); transform-origin: left; animation: dload-progress 1120ms ease-out both; }
+.intro-enabled .dload-head { animation: dload-travel 1120ms ease-out both; }
+@keyframes dload-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes dload-travel { from { left: 32px; } to { left: calc(100% - 32px); } }
 .dload-head {
   position: absolute; top: 21px; left: 32px; width: 9px; height: 9px;
   margin: -3.5px 0 0 -4.5px; border-radius: 50%;
@@ -692,7 +700,7 @@ input.field.pl-10 { padding-left: 2.5rem; }
 .dload-node {
   width: 44px; height: 44px; border-radius: 50%;
   background: var(--color-card); border: 2px solid #2b333f;
-  display: grid; place-items: center; color: #5b6572;
+  display: grid; place-items: center; color: var(--color-muted-foreground);
   transition: border-color .35s, color .35s, box-shadow .35s, transform .35s;
 }
 .dload-node svg {
@@ -700,7 +708,7 @@ input.field.pl-10 { padding-left: 2.5rem; }
   stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
 }
 .dload-lbl {
-  font-family: var(--font-mono); font-size: 10.5px; color: #5b6572;
+  font-family: var(--font-mono); font-size: 10.5px; color: var(--color-muted-foreground);
   letter-spacing: .1em; text-transform: uppercase; transition: color .35s;
 }
 .dload-st.on .dload-node {
@@ -710,12 +718,27 @@ input.field.pl-10 { padding-left: 2.5rem; }
 .dload-st.on .dload-lbl { color: var(--color-warm); }
 .dload-st.done .dload-node { border-color: var(--color-ok); color: var(--color-ok); }
 .dload-st.done .dload-lbl { color: var(--color-ok); }
+.intro-enabled .dload-node { animation: dload-stage 280ms ease-out var(--stage-delay) both; }
+.intro-enabled .dload-lbl { animation: dload-label 280ms ease-out var(--stage-delay) both; }
+@keyframes dload-stage {
+  0% { border-color: #2b333f; color: var(--color-muted-foreground); }
+  35%, 70% { border-color: var(--color-warm); color: var(--color-warm); box-shadow: 0 0 18px rgba(231,169,94,.4); transform: scale(1.08); }
+  100% { border-color: var(--color-ok); color: var(--color-ok); transform: scale(1); }
+}
+@keyframes dload-label { 0% { color: var(--color-muted-foreground); } 50% { color: var(--color-warm); } 100% { color: var(--color-ok); } }
 .dload-status {
   text-align: center; margin-top: 28px;
   font-family: var(--font-mono); font-size: 13.5px;
   color: var(--color-muted-foreground); min-height: 22px;
 }
 .dload-status .dload-ok { color: var(--color-ok); font-weight: 700; }
+.dload-status { display: grid; }
+.dload-status > span { grid-area: 1 / 1; }
+.dload-status .dload-ok { visibility: hidden; }
+.intro-enabled .dload-message { animation: dload-message-out 1ms 1120ms both; }
+.intro-enabled .dload-status .dload-ok { animation: dload-message-in 1ms 1120ms both; }
+@keyframes dload-message-out { to { visibility: hidden; } }
+@keyframes dload-message-in { to { visibility: visible; } }
 .dload-bar {
   height: 4px; background: #232b36; border-radius: 4px;
   margin-top: 14px; overflow: hidden; position: relative;
@@ -726,10 +749,17 @@ input.field.pl-10 { padding-left: 2.5rem; }
   position: relative; overflow: hidden;
 }
 .dload-bar.live i { background: linear-gradient(90deg, var(--color-warm), var(--color-ok)); }
+.intro-enabled .dload-bar i { width: 100%; transform-origin: left; animation: dload-progress 1120ms ease-out both; }
+.dload-skip { display: block; min-height: 44px; margin: 12px auto -8px; padding: 8px 16px; font-size: 13px; color: var(--color-muted-foreground); cursor: pointer; }
+.dload-skip:hover { color: var(--color-foreground); }
+@media (prefers-reduced-motion: reduce) {
+  .intro-enabled .dload-overlay { animation: none; visibility: hidden; opacity: 0; pointer-events: none; }
+  .dload-overlay *, .dload-overlay *::after { animation: none !important; transition: none !important; }
+}
 .dload-bar i::after {
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
-  animation: dload-shimmer 1.6s linear infinite;
+  animation: dload-shimmer 1.2s linear 1;
 }
 @keyframes dload-shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 @media (max-width: 480px) {
@@ -740,6 +770,9 @@ input.field.pl-10 { padding-left: 2.5rem; }
   .dload-lbl { font-size: 9.5px; }
   .dload-pipe { margin-top: 24px; }
   .dload-track { left: 26px; right: 26px; top: 18px; }
+  .intro-enabled .dload-fill { left: 26px; top: 18px; width: calc(100% - 52px); }
+  .intro-enabled .dload-head { top: 18px; animation-name: dload-travel-mobile; }
   .dload-top { font-size: 10px; }
   .dload-status { font-size: 12.5px; }
 }
+@keyframes dload-travel-mobile { from { left: 26px; } to { left: calc(100% - 26px); } }

@@ -55,6 +55,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} Writing`} href="/feed.xml" />
         <link rel="alternate" type="application/rss+xml" title={`${siteConfig.name} — الكتابة`} href="/feed.xml?lang=ar" />
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js-ready');" }} />
+        {!bareChrome && <script dangerouslySetInnerHTML={{ __html: "try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&sessionStorage.getItem('ahmed-intro-seen')!=='1'){sessionStorage.setItem('ahmed-intro-seen','1');document.documentElement.classList.add('intro-enabled')}}catch{}" }} />}
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}>
         <Providers><DeployLoader /><LocaleDocumentSync />{bareChrome ? (<main id="main-content" className="min-h-screen">{children}</main>) : (<div className="flex min-h-screen flex-col"><a href="#main-content" className="sr-only focus:not-sr-only fixed left-4 top-4 z-50 rounded-lg bg-foreground px-4 py-3 text-background">{locale === 'ar' ? 'انتقل إلى المحتوى' : 'Skip to content'}</a><Navbar /><main id="main-content" className="flex-1" tabIndex={-1}>{children}</main><Footer /></div>)}</Providers>
