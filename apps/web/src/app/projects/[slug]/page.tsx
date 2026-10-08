@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const details = projectCopy('en', slug);
   const project = await getProject(slug);
-  if (!details || !project) return generatePageMetadata({ title: 'Project not found', description: 'The project could not be found.', path: `/projects/${slug}` });
+  if (!details || !project) return generatePageMetadata({ title: 'Project not found', description: 'The project could not be found.', path: `/projects/${slug}`, noIndex: true, localized: false });
   return generatePageMetadata({ title: details.title, description: details.result, path: `/projects/${slug}`, ogImage: project.coverImage || undefined, localized: true });
 }
 

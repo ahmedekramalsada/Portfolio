@@ -17,6 +17,7 @@ function base64UrlDecode(value: string): Uint8Array {
 }
 
 async function hmacKey(env: Env): Promise<CryptoKey> {
+  if (!env.AUTH_SIGNING_KEY || env.AUTH_SIGNING_KEY.length < 32) throw new Error('AUTH_SIGNING_KEY misconfigured');
   return crypto.subtle.importKey('raw', encoder.encode(env.AUTH_SIGNING_KEY), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
 }
 
@@ -83,6 +84,12 @@ async function verifyAccessToken(env: Env, token: string, now = Date.now()): Pro
   const parts = token.split('.');
   if (parts.length !== 3) return null;
   const [header, payload, signature] = parts;
+  try {
+    const decodedHeader = JSON.parse(new TextDecoder().decode(base64UrlDecode(header))) as { alg?: string };
+    if (decodedHeader.alg !== 'HS256') return null;
+  } catch {
+    return null;
+  }
   if (!(await hmacVerify(env, `${header}.${payload}`, signature))) return null;
   try {
     const claims = JSON.parse(new TextDecoder().decode(base64UrlDecode(payload))) as TokenClaims;
@@ -117,6 +124,12 @@ export async function optionalAuth(env: Env, request: Request): Promise<AuthCont
 export async function requireAuth(env: Env, request: Request): Promise<AuthContext> {
   const context = await optionalAuth(env, request);
   if (!context) throw new HttpError(401, 'Authentication required');
+  return context;
+}
+
+export async function requireRole(env: Env, request: Request, roles: string[]): Promise<AuthContext> {
+  const context = await requireAuth(env, request);
+  if (!roles.includes(context.user.role)) throw new HttpError(403, 'Insufficient permissions');
   return context;
 }
 

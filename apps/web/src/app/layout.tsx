@@ -39,11 +39,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     url: siteConfig.url,
     description: siteConfig.description,
     inLanguage: ['en-US', 'ar-EG'],
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: { '@type': 'EntryPoint', urlTemplate: `${siteConfig.url}/search?q={search_term_string}` },
-      'query-input': 'required name=search_term_string',
-    },
   };
 
   return (

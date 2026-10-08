@@ -39,7 +39,8 @@ test('pagination is self-canonical and localized; filtered search is noindex', (
   const ar = generateBlogMetadata('ar', { page: '2' });
   assert.equal(en.alternates.canonical, 'https://ahmedekram.site/blog?page=2');
   assert.deepEqual(en.alternates.languages, ar.alternates.languages);
-  assert.equal(en.robots.index, true);
+  assert.equal(en.robots.index, false);
+  assert.equal(generateBlogMetadata('en', {}).robots.index, true);
   assert.equal(generateBlogMetadata('en', { q: 'docker' }).robots.googleBot.index, false);
   assert.equal(generateBlogMetadata('ar', { category: 'devops' }).robots.index, false);
   for (const value of ['-1', 'NaN', '2.5', 'Infinity', '10000000000000000000']) assert.equal(blogPageNumber(value), 1);

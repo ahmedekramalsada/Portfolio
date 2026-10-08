@@ -13,8 +13,8 @@ export function json(data: unknown, status = 200, headers: Record<string, string
   });
 }
 
-export function text(body: string, status = 200, contentType = 'text/plain; charset=utf-8'): Response {
-  return new Response(body, { status, headers: { 'Content-Type': contentType } });
+export function text(body: string, status = 200, contentType = 'text/plain; charset=utf-8', headers: Record<string, string> = {}): Response {
+  return new Response(body, { status, headers: { 'Content-Type': contentType, ...headers } });
 }
 
 export function errorResponse(status: number, message: string): Response {
@@ -73,8 +73,10 @@ export function requiredString(value: unknown, field: string, max = 10_000): str
 export function optionalString(value: unknown, max = 10_000): string | null {
   if (value === undefined || value === null || value === '') return null;
   if (typeof value !== 'string') throw new HttpError(400, 'Expected a string value');
-  if (value.length > max) throw new HttpError(400, 'Value is too long');
-  return value;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (trimmed.length > max) throw new HttpError(400, 'Value is too long');
+  return trimmed;
 }
 
 export function slugValue(value: unknown): string {

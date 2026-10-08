@@ -18,8 +18,9 @@ export function buildSitemap(base: string, posts: SitemapPost[], projects: Sitem
   const site = base.replace(/\/$/, '');
   const entries: string[] = [];
   const portrait = `${site}/ahmed-ekram-alsada.webp`;
-  const portraitCaption = 'Ahmed Ekram Alsada — DevOps Engineer';
-  const imageTag = (loc: string, caption = portraitCaption) => `<image:image><image:loc>${xmlEscape(loc)}</image:loc><image:caption>${xmlEscape(caption)}</image:caption><image:title>${xmlEscape('Ahmed Ekram Alsada')}</image:title></image:image>`;
+  const portraitCaptionEn = 'Ahmed Ekram Alsada — DevOps Engineer';
+  const portraitCaptionAr = 'أحمد أكرم السادة — مهندس DevOps';
+  const imageTag = (loc: string, caption = portraitCaptionEn) => `<image:image><image:loc>${xmlEscape(loc)}</image:loc><image:caption>${xmlEscape(caption)}</image:caption><image:title>${xmlEscape('Ahmed Ekram Alsada')}</image:title></image:image>`;
   const entry = (path: string, alternates?: { en: string; ar: string }, updated?: string | null, images?: string) => {
     const date = isoDate(updated);
     const links = alternates ? [['en-US', alternates.en], ['ar-EG', alternates.ar], ['x-default', alternates.en]]
@@ -29,16 +30,15 @@ export function buildSitemap(base: string, posts: SitemapPost[], projects: Sitem
   for (const path of ['', '/about', '/blog', '/projects', '/contact']) {
     const alternates = { en: path, ar: `/ar${path}` };
     const images = path === '' || path === '/about' ? imageTag(portrait) : '';
+    const imagesAr = path === '' || path === '/about' ? imageTag(portrait, portraitCaptionAr) : '';
     entry(alternates.en, alternates, undefined, images);
-    entry(alternates.ar, alternates, undefined, images);
+    entry(alternates.ar, alternates, undefined, imagesAr);
   }
   for (const post of posts) {
     if (post.language !== 'en' && post.language !== 'ar') continue;
     entry(`${post.language === 'ar' ? '/ar' : ''}/blog/${encodeURIComponent(post.slug)}`, undefined, post.updated_at);
   }
-  // Match the verified public project routes in web/src/lib/project-copy.ts.
-  const publicProjectSlugs = new Set(['final-project-devops', 'final-project', 'ahmed-os']);
-  for (const project of projects.filter((item) => publicProjectSlugs.has(item.slug))) {
+  for (const project of projects) {
     const path = `/projects/${encodeURIComponent(project.slug)}`;
     const alternates = { en: path, ar: `/ar${path}` };
     entry(alternates.en, alternates, project.updated_at);

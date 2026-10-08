@@ -15,15 +15,15 @@ test('posts have only their real locale; projects have both; XML and dates are s
   const xml = buildSitemap('https://ahmedekram.site', [
     { slug: 'english', language: 'en', updated_at: '2026-10-01 12:30:00' },
     { slug: 'عربي', language: 'ar', updated_at: 'invalid' },
-  ], [{ slug: 'ahmed-os', updated_at: '2026-10-02T10:00:00Z' }, { slug: 'unsupported-project' }]);
+  ], [{ slug: 'ahmed-os', updated_at: '2026-10-02T10:00:00Z' }, { slug: 'another-project' }]);
   assert.match(xml, /\/blog\/english/);
   assert.doesNotMatch(xml, /\/ar\/blog\/english/);
   assert.match(xml, /\/ar\/blog\/%D8/);
   assert.match(xml, /<lastmod>2026-10-01T12:30:00.000Z<\/lastmod>/);
   assert.doesNotMatch(xml, /<lastmod>invalid/);
-  assert.doesNotMatch(xml, /unsupported-project/);
-  assert.equal((xml.match(/<url>/g) || []).length, 14);
-  assert.equal((xml.match(/<xhtml:link/g) || []).length, 36);
+  assert.match(xml, /another-project/);
+  assert.equal((xml.match(/<url>/g) || []).length, 16);
+  assert.equal((xml.match(/<xhtml:link/g) || []).length, 42);
 });
 
 test('feed declares language and self link, escapes content, and omits invalid dates', () => {

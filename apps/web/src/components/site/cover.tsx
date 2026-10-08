@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 
-type Props = { src?: string | null; alt: string; fallback: string; className?: string; fallbackFontSize?: string };
+type Props = { src?: string | null; alt: string; fallback: string; className?: string; fallbackFontSize?: string; eager?: boolean };
 
-export function Cover({ src, alt, fallback, className, fallbackFontSize }: Props) {
+export function Cover({ src, alt, fallback, className, fallbackFontSize, eager = false }: Props) {
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   if (!src || failed) {
-    return <span className={`pcard-art ${className || ''}`} style={fallbackFontSize ? { fontSize: fallbackFontSize } : undefined}>{fallback}</span>;
+    return <span role="img" aria-label={alt} className={`pcard-art ${className || ''}`} style={fallbackFontSize ? { fontSize: fallbackFontSize } : undefined}>{fallback}</span>;
   }
 
   return (
@@ -17,6 +17,9 @@ export function Cover({ src, alt, fallback, className, fallbackFontSize }: Props
       <img
         src={src}
         alt={alt}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        fetchPriority={eager ? 'high' : 'auto'}
         className={`h-full w-full object-cover ${className || ''}`}
         onLoad={(event) => {
           const image = event.currentTarget;

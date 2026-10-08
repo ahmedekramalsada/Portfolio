@@ -24,14 +24,14 @@ export async function proxy(request: NextRequest) {
   if (article && (request.method === 'GET' || request.method === 'HEAD')) {
     // Validate before streaming the layout. notFound() in an async child alone
     // can send a 200 status before it discovers that the article is absent.
+    // Fail open: on upstream error, let the page handle it instead of 503.
     try {
-      const response = await fetch(`${SERVER_API_URL}/posts/${article[1]}`, { signal: AbortSignal.timeout(8000) });
+      const response = await fetch(`${SERVER_API_URL}/posts/${encodeURIComponent(article[1])}`, { signal: AbortSignal.timeout(2500) });
       if (response.status === 404 || (response.ok && (await response.json()).language !== locale)) {
         return NextResponse.rewrite(new URL('/article-not-found', request.url), { request: { headers: requestHeaders } });
       }
-      if (!response.ok) return new NextResponse('Content is temporarily unavailable.', { status: 503, headers: { 'Retry-After': '60' } });
     } catch {
-      return new NextResponse('Content is temporarily unavailable.', { status: 503, headers: { 'Retry-After': '60' } });
+      // Let the page render and handle fetch errors itself.
     }
   }
   const response = NextResponse.next({ request: { headers: requestHeaders } });

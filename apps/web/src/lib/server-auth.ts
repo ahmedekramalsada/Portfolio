@@ -27,8 +27,8 @@ export async function getAuthenticatedUser(): Promise<AuthUser | null> {
   }
 }
 
-export async function requireDashboardUser(): Promise<AuthUser> {
+export async function requireDashboardUser(roles: string[] = ['admin', 'editor']): Promise<AuthUser> {
   const user = await getAuthenticatedUser();
-  if (!user) redirect('/login');
+  if (!user || !roles.includes(user.role)) redirect('/login');
   return user;
 }

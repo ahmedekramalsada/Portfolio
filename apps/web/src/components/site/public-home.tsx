@@ -51,7 +51,7 @@ export async function PublicHome({ locale }: { locale: Locale }) {
             <div className="relative h-[152px] w-[152px]">
               <span className="absolute -inset-1 rounded-full bg-gradient-to-br from-warm/35 to-live/25 blur-[10px]" aria-hidden />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/ahmed-ekram-alsada-152.webp" srcSet="/ahmed-ekram-alsada-152.webp 1x, /ahmed-ekram-alsada-304.webp 2x" alt="Ahmed Ekram Alsada — DevOps Engineer" title="Ahmed Ekram Alsada" width={152} height={152} fetchPriority="high" className="relative h-[152px] w-[152px] rounded-full border border-line-2 object-cover" style={{ objectPosition: '50% 20%' }} />
+              <img src="/ahmed-ekram-alsada-152.webp" srcSet="/ahmed-ekram-alsada-152.webp 1x, /ahmed-ekram-alsada-304.webp 2x" alt={locale === 'ar' ? 'أحمد أكرم السادة — مهندس DevOps' : 'Ahmed Ekram Alsada — DevOps Engineer'} title="Ahmed Ekram Alsada" width={152} height={152} fetchPriority="high" className="relative h-[152px] w-[152px] rounded-full border border-line-2 object-cover" style={{ objectPosition: '50% 20%' }} />
             </div>
             <div className="inline-flex items-center gap-2.5 rounded-full border border-line bg-card px-3.5 py-2 font-mono text-[11.5px] uppercase tracking-[.09em] text-muted-foreground"><span className="pulse-dot block h-1.5 w-1.5 rounded-full bg-ok" />{locale === 'ar' ? 'مهندس DevOps' : 'DevOps Engineer'}</div>
           </div>

@@ -7,6 +7,7 @@ import {
   newToken,
   optionalAuth,
   requireAuth,
+  requireRole,
   verifyPassword,
 } from './auth';
 import {
@@ -77,6 +78,41 @@ function rejectUnknown(body: Body, allowed: string[]): void {
   if (unknown.length) throw new HttpError(400, `Unknown field: ${unknown[0]}`);
 }
 
+const WRITE_ROLES = ['admin', 'editor'];
+
+async function checkRateLimit(env: Env, key: string, limit: number, windowSeconds: number): Promise<void> {
+  const now = Date.now();
+  const expires = new Date(now + windowSeconds * 1000).toISOString();
+  try {
+    await env.DB.prepare('DELETE FROM rate_limits WHERE expires_at <= datetime(\'now\')').run();
+    const row = await env.DB.prepare('SELECT count, expires_at FROM rate_limits WHERE key = ?').bind(key).first<{ count: number; expires_at: string }>();
+    if (row && row.count >= limit) {
+      const retryAfter = Math.max(1, Math.ceil((new Date(row.expires_at).getTime() - now) / 1000));
+      throw new HttpError(429, `Too many requests. Try again in ${retryAfter} seconds.`);
+    }
+    if (row) {
+      await env.DB.prepare('UPDATE rate_limits SET count = count + 1 WHERE key = ?').bind(key).run();
+    } else {
+      await env.DB.prepare('INSERT INTO rate_limits (key, count, expires_at) VALUES (?1, 1, ?2)').bind(key, expires).run();
+    }
+  } catch (error) {
+    if (error instanceof HttpError) throw error;
+    // Fail open when the rate_limits table has not been migrated yet.
+  }
+}
+
+async function verifyTurnstile(env: Env, token: unknown, ip: string | null): Promise<void> {
+  if (!env.TURNSTILE_SECRET) return;
+  if (typeof token !== 'string' || !token) throw new HttpError(400, 'Human verification is required');
+  const form = new FormData();
+  form.append('secret', env.TURNSTILE_SECRET);
+  form.append('response', token);
+  if (ip) form.append('remoteip', ip);
+  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: form });
+  const result = (await response.json()) as { success?: boolean };
+  if (!result.success) throw new HttpError(400, 'Human verification failed');
+}
+
 function mapPost(row: Record<string, unknown>): PostRecord {
   return {
     id: String(row.id),
@@ -129,11 +165,41 @@ async function tagsForPost(env: Env, postId: string) {
   return result.results || [];
 }
 
+async function tagsForPosts(env: Env, postIds: string[]): Promise<Map<string, Array<{ id: string; name: string; slug: string }>>> {
+  const map = new Map<string, Array<{ id: string; name: string; slug: string }>>();
+  if (!postIds.length) return map;
+  const placeholders = postIds.map(() => '?').join(',');
+  const result = await env.DB.prepare(
+    `SELECT pt.post_id AS post_id, t.id, t.name, t.slug FROM tags t JOIN post_tags pt ON pt.tag_id = t.id WHERE pt.post_id IN (${placeholders}) ORDER BY t.name`,
+  ).bind(...postIds).all<{ post_id: string; id: string; name: string; slug: string }>();
+  for (const row of result.results || []) {
+    const list = map.get(row.post_id) || [];
+    list.push({ id: row.id, name: row.name, slug: row.slug });
+    map.set(row.post_id, list);
+  }
+  return map;
+}
+
 async function technologiesForProject(env: Env, projectId: string) {
   const result = await env.DB.prepare(
     `SELECT t.id, t.name, t.slug, t.icon FROM technologies t JOIN project_technologies pt ON pt.technology_id = t.id WHERE pt.project_id = ? ORDER BY t.name`,
   ).bind(projectId).all<{ id: string; name: string; slug: string; icon: string | null }>();
   return result.results || [];
+}
+
+async function technologiesForProjects(env: Env, projectIds: string[]): Promise<Map<string, Array<{ id: string; name: string; slug: string; icon: string | null }>>> {
+  const map = new Map<string, Array<{ id: string; name: string; slug: string; icon: string | null }>>();
+  if (!projectIds.length) return map;
+  const placeholders = projectIds.map(() => '?').join(',');
+  const result = await env.DB.prepare(
+    `SELECT pt.project_id AS project_id, t.id, t.name, t.slug, t.icon FROM technologies t JOIN project_technologies pt ON pt.technology_id = t.id WHERE pt.project_id IN (${placeholders}) ORDER BY t.name`,
+  ).bind(...projectIds).all<{ project_id: string; id: string; name: string; slug: string; icon: string | null }>();
+  for (const row of result.results || []) {
+    const list = map.get(row.project_id) || [];
+    list.push({ id: row.id, name: row.name, slug: row.slug, icon: row.icon });
+    map.set(row.project_id, list);
+  }
+  return map;
 }
 
 async function postById(env: Env, id: string, allowDeleted = false): Promise<PostRecord> {
@@ -209,20 +275,24 @@ async function listPosts(env: Env, request: Request, url: URL, auth: boolean) {
     values.push(categoryId);
   }
   const where = clauses.join(' AND ');
-  const count = await env.DB.prepare(
-    `SELECT count(*) AS count FROM posts p LEFT JOIN categories c ON c.id = p.category_id WHERE ${where}`,
-  ).bind(...values).first<{ count: number }>();
+  const [count, rows] = await Promise.all([
+    env.DB.prepare(
+      `SELECT count(*) AS count FROM posts p LEFT JOIN categories c ON c.id = p.category_id WHERE ${where}`,
+    ).bind(...values).first<{ count: number }>(),
+    env.DB.prepare(
+      `SELECT p.id, p.title, p.slug, p.excerpt, p.language, p.cover_image, p.status, p.seo_title, p.seo_description, p.canonical_url, p.reading_time, p.published_at, p.created_at, p.updated_at, p.author_id, p.category_id, u.name AS author_name, c.name AS category_name, c.slug AS category_slug
+         FROM posts p JOIN users u ON u.id = p.author_id LEFT JOIN categories c ON c.id = p.category_id
+        WHERE ${where} ORDER BY COALESCE(p.published_at, p.created_at) DESC LIMIT ? OFFSET ?`,
+    ).bind(...values, limit, (page - 1) * limit).all<Record<string, unknown>>(),
+  ]);
   const total = Number(count?.count || 0);
-  const rows = await env.DB.prepare(
-    `SELECT p.*, u.id AS author_id, u.name AS author_name, c.name AS category_name, c.slug AS category_slug
-       FROM posts p JOIN users u ON u.id = p.author_id LEFT JOIN categories c ON c.id = p.category_id
-      WHERE ${where} ORDER BY COALESCE(p.published_at, p.created_at) DESC LIMIT ? OFFSET ?`,
-  ).bind(...values, limit, (page - 1) * limit).all<Record<string, unknown>>();
-  const data = await Promise.all((rows.results || []).map(async (row) => {
+  const list = rows.results || [];
+  const tagsByPost = await tagsForPosts(env, list.map((row) => String(row.id)));
+  const data = list.map((row) => {
     const post = mapPost(row);
-    post.tags = await tagsForPost(env, post.id);
+    post.tags = tagsByPost.get(post.id) || [];
     return post;
-  }));
+  });
   return { data, meta: { page, limit, total, totalPages: Math.ceil(total / limit) } };
 }
 
@@ -244,19 +314,23 @@ async function listProjects(env: Env, request: Request, url: URL, auth: boolean)
     values.push(boolValue(featured) ? 1 : 0);
   }
   const where = clauses.join(' AND ');
-  const count = await env.DB.prepare(`SELECT count(*) AS count FROM projects WHERE ${where}`).bind(...values).first<{ count: number }>();
+  const [count, rows] = await Promise.all([
+    env.DB.prepare(`SELECT count(*) AS count FROM projects WHERE ${where}`).bind(...values).first<{ count: number }>(),
+    env.DB.prepare(`SELECT id, title, slug, description, cover_image, github_url, demo_url, featured, status, difficulty, role, start_date, end_date, created_at, updated_at FROM projects WHERE ${where} ORDER BY featured DESC, created_at DESC LIMIT ? OFFSET ?`).bind(...values, limit, (page - 1) * limit).all<Record<string, unknown>>(),
+  ]);
   const total = Number(count?.count || 0);
-  const rows = await env.DB.prepare(`SELECT * FROM projects WHERE ${where} ORDER BY featured DESC, created_at DESC LIMIT ? OFFSET ?`).bind(...values, limit, (page - 1) * limit).all<Record<string, unknown>>();
-  const data = await Promise.all((rows.results || []).map(async (row) => {
+  const list = rows.results || [];
+  const techByProject = await technologiesForProjects(env, list.map((row) => String(row.id)));
+  const data = list.map((row) => {
     const project = mapProject(row);
-    project.technologies = await technologiesForProject(env, project.id);
+    project.technologies = techByProject.get(project.id) || [];
     return project;
-  }));
+  });
   return { data, meta: { page, limit, total, totalPages: Math.ceil(total / limit) } };
 }
 
 async function createPost(env: Env, request: Request) {
-  const context = await requireAuth(env, request);
+  const context = await requireRole(env, request, WRITE_ROLES);
   const body = await readJson<Body>(request);
   rejectUnknown(body, POST_PUBLIC_FIELDS);
   const title = requiredString(body.title, 'title', 300);
@@ -277,8 +351,8 @@ async function createPost(env: Env, request: Request) {
 }
 
 async function updatePost(env: Env, request: Request, id: string) {
-  const context = await requireAuth(env, request);
-  const existing = await postById(env, id, true);
+  const context = await requireRole(env, request, WRITE_ROLES);
+  const existing = await postById(env, id);
   if (!existing) throw new HttpError(404, 'Post not found');
   const body = await readJson<Body>(request);
   rejectUnknown(body, POST_PUBLIC_FIELDS);
@@ -310,22 +384,22 @@ async function updatePost(env: Env, request: Request, id: string) {
 }
 
 async function deletePost(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
+  await requireRole(env, request, ['admin']);
   const existing = await postById(env, id);
   await env.DB.prepare('DELETE FROM posts WHERE id = ?').bind(existing.id).run();
   return { message: 'Post deleted' };
 }
 
 async function publishPost(env: Env, request: Request, id: string, archive = false) {
-  await requireAuth(env, request);
-  const post = await postById(env, id, true);
+  await requireRole(env, request, WRITE_ROLES);
+  const post = await postById(env, id);
   await env.DB.prepare('UPDATE posts SET status = ?, published_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
     .bind(archive ? 'archived' : 'published', archive ? post.publishedAt : nowIso(), id).run();
   return postById(env, id, true);
 }
 
 async function createProject(env: Env, request: Request) {
-  await requireAuth(env, request);
+  await requireRole(env, request, WRITE_ROLES);
   const body = await readJson<Body>(request);
   rejectUnknown(body, [...PROJECT_PUBLIC_FIELDS, 'technologies']);
   const id = newId();
@@ -341,8 +415,8 @@ async function createProject(env: Env, request: Request) {
 }
 
 async function updateProject(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
-  const existing = await projectById(env, id, true);
+  await requireRole(env, request, WRITE_ROLES);
+  const existing = await projectById(env, id);
   const body = await readJson<Body>(request);
   rejectUnknown(body, [...PROJECT_PUBLIC_FIELDS, 'technologies']);
   const assignments: string[] = [];
@@ -369,7 +443,7 @@ async function updateProject(env: Env, request: Request, id: string) {
 }
 
 async function deleteProject(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
+  await requireRole(env, request, ['admin']);
   const existing = await projectById(env, id);
   await env.DB.prepare('DELETE FROM projects WHERE id = ?').bind(existing.id).run();
   return { message: 'Project deleted' };
@@ -389,7 +463,7 @@ async function listSkills(env: Env) {
 }
 
 async function createSkill(env: Env, request: Request) {
-  await requireAuth(env, request);
+  await requireRole(env, request, WRITE_ROLES);
   const body = await readJson<Body>(request);
   rejectUnknown(body, ['name', 'category', 'level', 'icon']);
   const id = newId();
@@ -399,7 +473,7 @@ async function createSkill(env: Env, request: Request) {
 }
 
 async function updateSkill(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
+  await requireRole(env, request, WRITE_ROLES);
   const body = await readJson<Body>(request);
   rejectUnknown(body, ['name', 'category', 'level', 'icon']);
   const current = await env.DB.prepare('SELECT id FROM skills WHERE id = ?').bind(id).first();
@@ -415,7 +489,7 @@ async function updateSkill(env: Env, request: Request, id: string) {
 }
 
 async function deleteSkill(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
+  await requireRole(env, request, ['admin']);
   const result = await env.DB.prepare('DELETE FROM skills WHERE id = ?').bind(id).run();
   if (!result.meta?.changes) throw new HttpError(404, 'Skill not found');
   return { message: 'Skill deleted' };
@@ -427,7 +501,7 @@ async function listExperiences(env: Env) {
 }
 
 async function createCategory(env: Env, request: Request) {
-  await requireAuth(env, request);
+  await requireRole(env, request, WRITE_ROLES);
   const body = await readJson<Body>(request);
   rejectUnknown(body, ['name', 'slug', 'description', 'color']);
   const id = newId();
@@ -437,7 +511,7 @@ async function createCategory(env: Env, request: Request) {
 }
 
 async function updateCategory(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
+  await requireRole(env, request, WRITE_ROLES);
   const body = await readJson<Body>(request);
   rejectUnknown(body, ['name', 'slug', 'description', 'color']);
   const current = await env.DB.prepare('SELECT id FROM categories WHERE id = ?').bind(id).first();
@@ -453,7 +527,7 @@ async function updateCategory(env: Env, request: Request, id: string) {
 }
 
 async function deleteCategory(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
+  await requireRole(env, request, ['admin']);
   const current = await env.DB.prepare('SELECT id FROM categories WHERE id = ?').bind(id).first();
   if (!current) throw new HttpError(404, 'Category not found');
   const inUse = await env.DB.prepare('SELECT 1 AS used FROM posts WHERE category_id = ? AND deleted_at IS NULL LIMIT 1').bind(id).first();
@@ -463,7 +537,7 @@ async function deleteCategory(env: Env, request: Request, id: string) {
 }
 
 async function createExperience(env: Env, request: Request) {
-  await requireAuth(env, request);
+  await requireRole(env, request, WRITE_ROLES);
   const body = await readJson<Body>(request);
   rejectUnknown(body, ['company', 'position', 'startDate', 'endDate', 'description']);
   const id = newId();
@@ -473,7 +547,7 @@ async function createExperience(env: Env, request: Request) {
 }
 
 async function updateExperience(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
+  await requireRole(env, request, WRITE_ROLES);
   const body = await readJson<Body>(request);
   rejectUnknown(body, ['company', 'position', 'startDate', 'endDate', 'description']);
   const current = await env.DB.prepare('SELECT id FROM experiences WHERE id = ?').bind(id).first();
@@ -490,7 +564,7 @@ async function updateExperience(env: Env, request: Request, id: string) {
 }
 
 async function deleteExperience(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
+  await requireRole(env, request, ['admin']);
   await env.DB.prepare('DELETE FROM experiences WHERE id = ?').bind(id).run();
   return { message: 'Experience deleted' };
 }
@@ -502,7 +576,7 @@ async function listSettings(env: Env, publicOnly = false) {
 }
 
 async function updateSettings(env: Env, request: Request) {
-  await requireAuth(env, request);
+  await requireRole(env, request, ['admin']);
   const body = await readJson<{ settings?: unknown }>(request, 100_000);
   if (!Array.isArray(body.settings)) throw new HttpError(400, 'settings must be an array');
   const seen = new Set<string>();
@@ -510,12 +584,14 @@ async function updateSettings(env: Env, request: Request) {
     if (!item || typeof item !== 'object') throw new HttpError(400, 'Each setting must be an object');
     const record = item as Record<string, unknown>;
     const key = requiredString(record.key, 'key', 120);
+    if (!/^[a-z0-9_.:-]+$/i.test(key)) throw new HttpError(400, 'Setting key contains invalid characters');
     if (seen.has(key)) throw new HttpError(400, `Duplicate setting: ${key}`);
     seen.add(key);
     const value = String(record.value ?? '');
     if (value.length > 100_000) throw new HttpError(400, 'Setting value is too long');
     const group = optionalString(record.group, 120);
     const type = optionalString(record.type, 40) || 'string';
+    if (!['string', 'number', 'boolean', 'json'].includes(type)) throw new HttpError(400, 'Setting type is invalid');
     const isPublic = boolValue(record.public);
     const current = await env.DB.prepare('SELECT id FROM settings WHERE key = ?').bind(key).first();
     if (current) {
@@ -542,7 +618,7 @@ async function listMedia(env: Env, request: Request, url: URL) {
 }
 
 async function uploadMedia(env: Env, request: Request) {
-  const context = await requireAuth(env, request);
+  const context = await requireRole(env, request, WRITE_ROLES);
   const contentLength = Number(request.headers.get('Content-Length') || 0);
   if (contentLength > 11_000_000) throw new HttpError(413, 'File is too large (maximum 10 MB)');
   let form: FormData;
@@ -550,10 +626,12 @@ async function uploadMedia(env: Env, request: Request) {
   const value = form.get('file');
   if (!(value instanceof File)) throw new HttpError(400, 'file is required');
   if (value.size <= 0 || value.size > 10 * 1024 * 1024) throw new HttpError(400, 'File is too large or empty (maximum 10 MB)');
+  const ALLOWED_UPLOAD_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif']);
+  if (!ALLOWED_UPLOAD_TYPES.has(value.type)) throw new HttpError(400, 'Unsupported file type');
   const safeName = value.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 180) || 'file';
   const key = `media/${newId()}-${safeName}`;
   const publicUrl = `${env.R2_PUBLIC_URL.replace(/\/$/, '')}/${key}`;
-  await env.MEDIA.put(key, value.stream(), { httpMetadata: { contentType: value.type || 'application/octet-stream' } });
+  await env.MEDIA.put(key, value.stream(), { httpMetadata: { contentType: value.type, cacheControl: 'public, max-age=31536000, immutable' } });
   const id = newId();
   await env.DB.prepare('INSERT INTO media (id, filename, original_name, mime_type, size, provider, path, public_url, uploaded_by, created_at, updated_at) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?10)')
     .bind(id, safeName, value.name, value.type || 'application/octet-stream', value.size, 'r2', key, publicUrl, context.user.id, nowIso()).run();
@@ -561,7 +639,7 @@ async function uploadMedia(env: Env, request: Request) {
 }
 
 async function updateMedia(env: Env, request: Request, id: string) {
-  const context = await requireAuth(env, request);
+  const context = await requireRole(env, request, WRITE_ROLES);
   const body = await readJson<Body>(request);
   rejectUnknown(body, ['projectId']);
   if ('projectId' in body) await env.DB.prepare('UPDATE media SET project_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').bind(optionalString(body.projectId, 100), id).run();
@@ -572,7 +650,7 @@ async function updateMedia(env: Env, request: Request, id: string) {
 }
 
 async function deleteMedia(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
+  await requireRole(env, request, ['admin']);
   const row = await env.DB.prepare('SELECT path FROM media WHERE id = ? AND deleted_at IS NULL').bind(id).first<{ path: string }>();
   if (!row) throw new HttpError(404, 'Media not found');
   await env.MEDIA.delete(row.path);
@@ -581,9 +659,12 @@ async function deleteMedia(env: Env, request: Request, id: string) {
 }
 
 async function createContact(env: Env, request: Request) {
+  const ip = request.headers.get('CF-Connecting-IP');
+  await checkRateLimit(env, `contact:${ip || 'unknown'}`, 3, 3600);
   const body = await readJson<Body>(request, 20_000);
-  rejectUnknown(body, ['name', 'email', 'subject', 'message', 'website']);
-  if (typeof body.website === 'string' && body.website.trim()) throw new HttpError(400, 'Unable to submit this message');
+  rejectUnknown(body, ['name', 'email', 'subject', 'message', 'website', 'turnstileToken']);
+  if (body.website) throw new HttpError(400, 'Unable to submit this message');
+  await verifyTurnstile(env, body.turnstileToken, ip);
   const name = requiredString(body.name, 'name', 120);
   const email = requiredString(body.email, 'email', 254);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new HttpError(400, 'email is invalid');
@@ -591,20 +672,19 @@ async function createContact(env: Env, request: Request) {
   if (message.length < 10) throw new HttpError(400, 'message is too short');
   const subject = optionalString(body.subject, 160);
   const id = newId();
-  const ip = request.headers.get('CF-Connecting-IP');
   await env.DB.prepare('INSERT INTO contacts (id, name, email, subject, message, ip, created_at) VALUES (?1,?2,?3,?4,?5,?6,?7)').bind(id, name, email, subject, message, ip, nowIso()).run();
   return { id, name, email, subject, message, createdAt: nowIso() };
 }
 
 async function listContacts(env: Env, request: Request, url: URL) {
-  await requireAuth(env, request);
+  await requireRole(env, request, ['admin']);
   const limit = limitParam(url, 100, 100);
   const result = await env.DB.prepare('SELECT id, name, email, subject, message, read, created_at FROM contacts ORDER BY created_at DESC LIMIT ?').bind(limit).all<Record<string, unknown>>();
   return (result.results || []).map((row) => ({ id: String(row.id), name: String(row.name), email: String(row.email), subject: row.subject ? String(row.subject) : null, message: String(row.message), read: Boolean(row.read), createdAt: String(row.created_at) }));
 }
 
 async function deleteContact(env: Env, request: Request, id: string) {
-  await requireAuth(env, request);
+  await requireRole(env, request, ['admin']);
   await env.DB.prepare('DELETE FROM contacts WHERE id = ?').bind(id).run();
   return { message: 'Deleted' };
 }
@@ -618,19 +698,45 @@ async function search(env: Env, request: Request, url: URL) {
   if (language && language !== 'en' && language !== 'ar') throw new HttpError(400, 'language must be en or ar');
   if (!query) return { data: [], meta: { page, limit, total: 0, totalPages: 0 } };
   const like = `%${query.replace(/[\\%_]/g, '\\$&')}%`;
-  const postWhere = ["deleted_at IS NULL", "status = 'published'", 'lower(title) LIKE lower(?) ESCAPE \'\\\''];
-  const projectWhere = ["deleted_at IS NULL", "status IN ('completed', 'in_progress')", "lower(title) LIKE lower(?) ESCAPE '\\'"];
-  const results: Array<Record<string, unknown>> = [];
+  const match = `lower(title) LIKE lower(?) ESCAPE '\\' OR lower(excerpt) LIKE lower(?) ESCAPE '\\'`;
+  const projectMatch = `lower(title) LIKE lower(?) ESCAPE '\\' OR lower(description) LIKE lower(?) ESCAPE '\\'`;
+  const tasks: Array<Promise<{ rows: Record<string, unknown>[]; total: number }>> = [];
   if (!type || type === 'posts' || type === 'post') {
-    const rows = await env.DB.prepare(`SELECT id, title, slug, excerpt, language, 'post' AS type FROM posts WHERE ${postWhere.join(' AND ')} ${language ? 'AND language = ?' : ''} ORDER BY created_at DESC LIMIT ? OFFSET ?`).bind(...(language ? [like, language, limit, (page - 1) * limit] : [like, limit, (page - 1) * limit])).all<Record<string, unknown>>();
-    results.push(...(rows.results || []).map((row) => ({ ...row, excerpt: row.excerpt ? String(row.excerpt) : null, language: row.language ? String(row.language) : null })));
+    tasks.push((async () => {
+      const langFilter = language ? 'AND language = ?' : '';
+      const params = language ? [like, like, language] : [like, like];
+      const [count, rows] = await Promise.all([
+        env.DB.prepare(`SELECT count(*) AS count FROM posts WHERE deleted_at IS NULL AND status = 'published' AND (${match}) ${langFilter}`).bind(...params).first<{ count: number }>(),
+        env.DB.prepare(`SELECT id, title, slug, excerpt, language, published_at, 'post' AS type,
+          CASE WHEN lower(title) LIKE lower(?) ESCAPE '\\' THEN 2 ELSE 1 END AS rank
+          FROM posts WHERE deleted_at IS NULL AND status = 'published' AND (${match}) ${langFilter}
+          ORDER BY rank DESC, COALESCE(published_at, created_at) DESC LIMIT ? OFFSET ?`).bind(like, ...params, limit, (page - 1) * limit).all<Record<string, unknown>>(),
+      ]);
+      return {
+        rows: (rows.results || []).map((row) => ({ ...row, excerpt: row.excerpt ? String(row.excerpt) : null, language: row.language ? String(row.language) : null })),
+        total: Number(count?.count || 0),
+      };
+    })());
   }
   if (!type || type === 'projects' || type === 'project') {
-    const rows = await env.DB.prepare(`SELECT id, title, slug, description AS excerpt, NULL AS language, 'project' AS type FROM projects WHERE ${projectWhere.join(' AND ')} ORDER BY created_at DESC LIMIT ? OFFSET ?`).bind(like, limit, (page - 1) * limit).all<Record<string, unknown>>();
-    results.push(...(rows.results || []).map((row) => ({ ...row, excerpt: row.excerpt ? String(row.excerpt) : null })));
+    tasks.push((async () => {
+      const [count, rows] = await Promise.all([
+        env.DB.prepare(`SELECT count(*) AS count FROM projects WHERE deleted_at IS NULL AND status IN ('completed', 'in_progress') AND (${projectMatch})`).bind(like, like).first<{ count: number }>(),
+        env.DB.prepare(`SELECT id, title, slug, description AS excerpt, NULL AS language, created_at, 'project' AS type,
+          CASE WHEN lower(title) LIKE lower(?) ESCAPE '\\' THEN 2 ELSE 1 END AS rank
+          FROM projects WHERE deleted_at IS NULL AND status IN ('completed', 'in_progress') AND (${projectMatch})
+          ORDER BY rank DESC, created_at DESC LIMIT ? OFFSET ?`).bind(like, like, like, limit, (page - 1) * limit).all<Record<string, unknown>>(),
+      ]);
+      return {
+        rows: (rows.results || []).map((row) => ({ ...row, excerpt: row.excerpt ? String(row.excerpt) : null })),
+        total: Number(count?.count || 0),
+      };
+    })());
   }
-  const offset = results.slice((page - 1) * limit, page * limit);
-  return { data: offset, meta: { page, limit, total: offset.length, totalPages: offset.length ? 1 : 0 } };
+  const settled = await Promise.all(tasks);
+  const total = settled.reduce((sum, item) => sum + item.total, 0);
+  const results = settled.flatMap((item) => item.rows).sort((a, b) => Number(b.rank || 0) - Number(a.rank || 0));
+  return { data: results, meta: { page, limit, total, totalPages: total ? Math.ceil(total / limit) : 0 } };
 }
 
 async function sitemap(env: Env) {
@@ -640,7 +746,8 @@ async function sitemap(env: Env) {
 }
 
 async function feed(env: Env, url: URL) {
-  const language = url.searchParams.get('lang') === 'ar' ? 'ar' : 'en';
+  const lang = url.searchParams.get('lang') || url.searchParams.get('language') || '';
+  const language = lang === 'ar' ? 'ar' : 'en';
   const result = await env.DB.prepare("SELECT title, slug, excerpt, published_at, updated_at FROM posts WHERE status = 'published' AND deleted_at IS NULL AND language = ? ORDER BY COALESCE(published_at, created_at) DESC LIMIT 50").bind(language).all<{ title: string; slug: string; excerpt: string | null; published_at: string | null; updated_at: string }>();
   return buildFeed(env.SITE_URL, language, result.results || []);
 }
@@ -657,20 +764,23 @@ async function route(request: Request, env: Env): Promise<Response> {
   if (!isAllowedOrigin(request, env)) return errorResponse(403, 'Origin is not allowed');
 
   if (rawPath === '/health' || rawPath === '/api/v1/health') return json({ status: 'ok', service: 'ahmed-os-api' });
-  if (rawPath === '/robots.txt') return text(buildRobots(env.SITE_URL));
-  if (rawPath === '/sitemap.xml') return text(await sitemap(env), 200, 'application/xml; charset=utf-8');
-  if (rawPath === '/feed.xml') return text(await feed(env, url), 200, 'application/rss+xml; charset=utf-8');
-  if (rawPath === '/json-ld/person') return json(jsonLdPerson(env.SITE_URL.replace(/\/$/, '')));
-  if (rawPath === '/json-ld/website') return json({ '@context': 'https://schema.org', '@type': 'WebSite', name: 'Ahmed Ekram Alsada', url: env.SITE_URL, inLanguage: ['en-US', 'ar-EG'] });
+  if (rawPath === '/robots.txt') return text(buildRobots(env.SITE_URL), 200, 'text/plain; charset=utf-8', { 'Cache-Control': 'public, max-age=3600, s-maxage=3600' });
+  if (rawPath === '/sitemap.xml') return text(await sitemap(env), 200, 'application/xml; charset=utf-8', { 'Cache-Control': 'public, max-age=3600, s-maxage=3600' });
+  if (rawPath === '/feed.xml') return text(await feed(env, url), 200, 'application/rss+xml; charset=utf-8', { 'Cache-Control': 'public, max-age=3600, s-maxage=3600' });
+  if (rawPath === '/json-ld/person') return json(jsonLdPerson(env.SITE_URL.replace(/\/$/, '')), 200, { 'Cache-Control': 'public, max-age=3600, s-maxage=3600' });
+  if (rawPath === '/json-ld/website') return json({ '@context': 'https://schema.org', '@type': 'WebSite', name: 'Ahmed Ekram Alsada', url: env.SITE_URL, inLanguage: ['en-US', 'ar-EG'] }, 200, { 'Cache-Control': 'public, max-age=3600, s-maxage=3600' });
 
   const path = rawPath.replace(/^\/api\/v1/, '') || '/';
   const segments = path.split('/').filter(Boolean);
 
   if (path === '/auth/login' && method === 'POST') {
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
     const body = await readJson<{ email?: unknown; password?: unknown }>(request, 10_000);
+    const rawEmail = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+    await checkRateLimit(env, `login:${ip}:${rawEmail}`, 5, 600);
     const email = requiredString(body.email, 'email', 254).toLowerCase();
     const password = requiredString(body.password, 'password', 1_000);
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 6) throw new HttpError(400, 'Invalid email or password');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 6) throw new HttpError(401, 'Invalid credentials');
     const user = await env.DB.prepare('SELECT id, email, name, role, avatar, status, password_hash FROM users WHERE lower(email) = ? LIMIT 1').bind(email).first<UserRecord>();
     if (!user || user.status !== 'active' || !(await verifyPassword(password, user.password_hash))) throw new HttpError(401, 'Invalid credentials');
     const jti = newToken();
@@ -733,7 +843,7 @@ async function route(request: Request, env: Env): Promise<Response> {
   if (path === '/experiences' && method === 'POST') return json(await createExperience(env, request), 201);
   if (segments[0] === 'experiences' && segments[1] && method === 'PATCH') return json(await updateExperience(env, request, segments[1]));
   if (segments[0] === 'experiences' && segments[1] && method === 'DELETE') return json(await deleteExperience(env, request, segments[1]));
-  if (path === '/settings' && method === 'GET') return json(await listSettings(env, Boolean(await optionalAuth(env, request))));
+  if (path === '/settings' && method === 'GET') return json(await listSettings(env, !(await optionalAuth(env, request))));
   if (path === '/settings' && method === 'PATCH') return json(await updateSettings(env, request));
   if (path === '/media' && method === 'GET') return json(await listMedia(env, request, url));
   if (path === '/media/upload' && method === 'POST') return json(await uploadMedia(env, request), 201);
@@ -757,12 +867,13 @@ export default {
       const message = error instanceof Error ? error.message : 'Internal server error';
       console.error(JSON.stringify({ event: 'request_error', status, message }));
       response = errorResponse(status, status === 500 ? 'Internal server error' : message);
+      if (status === 429) response.headers.set('Retry-After', '60');
     }
     response = withCors(request, env, response);
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
     response.headers.set('X-Frame-Options', 'DENY');
-    response.headers.set('Cache-Control', 'no-store');
+    if (!response.headers.has('Cache-Control')) response.headers.set('Cache-Control', 'no-store');
     return response;
   },
 } satisfies ExportedHandler<Env>;

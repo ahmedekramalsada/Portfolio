@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
   // Hide the development indicator: it floats over page content and gets
   // mistaken for part of the design.
   devIndicators: false,
+  poweredByHeader: false,
+
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
 
   images: {
     remotePatterns: [
@@ -25,7 +30,16 @@ const nextConfig: NextConfig = {
       { source: '/sitemap.xml', destination: `${seoApiBase}/sitemap.xml` },
       { source: '/robots.txt', destination: `${seoApiBase}/robots.txt` },
       { source: '/feed.xml', destination: `${seoApiBase}/feed.xml` },
-      { source: '/json-ld/:path*', destination: `${seoApiBase}/json-ld/:path*` },
+      { source: '/json-ld/person', destination: `${seoApiBase}/json-ld/person` },
+      { source: '/json-ld/website', destination: `${seoApiBase}/json-ld/website` },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/:all*(webp|avif|png|jpg|jpeg|svg|ico|woff2)',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
     ];
   },
 };

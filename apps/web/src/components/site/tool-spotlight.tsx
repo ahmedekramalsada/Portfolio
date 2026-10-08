@@ -23,18 +23,28 @@ export function ToolSpotlight({
   variant?: ToolVariant;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const rafRef = useRef(0);
 
   const handleMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    const node = ref.current;
-    if (!node) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const rect = node.getBoundingClientRect();
-    const px = (event.clientX - rect.left) / rect.width - 0.5;
-    const py = (event.clientY - rect.top) / rect.height - 0.5;
-    node.style.transform = `rotateX(${-py * 9}deg) rotateY(${px * 9}deg)`;
+    if (rafRef.current) return;
+    const { clientX, clientY, currentTarget } = event;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = 0;
+      const node = ref.current;
+      if (!node) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const rect = currentTarget.getBoundingClientRect();
+      const px = (clientX - rect.left) / rect.width - 0.5;
+      const py = (clientY - rect.top) / rect.height - 0.5;
+      node.style.transform = `rotateX(${-py * 9}deg) rotateY(${px * 9}deg)`;
+    });
   };
 
   const reset = () => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    }
     if (ref.current) ref.current.style.transform = '';
   };
 

@@ -24,15 +24,8 @@ function getLocale(pathname: string): Locale {
   return pathname === '/ar' || pathname.startsWith('/ar/') ? 'ar' : 'en';
 }
 
-export function Navbar() {
-  const pathname = usePathname() || '/';
-  const locale = getLocale(pathname);
-  const navLinks = navByLocale[locale];
-  const otherPath = otherLocalePath(locale, pathname);
-  const otherLabel = locale === 'en' ? 'العربية' : 'English';
-  const [solid, setSolid] = useState(false);
+function ScrollProgress() {
   const [progress, setProgress] = useState(0);
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     let frame = 0;
@@ -40,7 +33,6 @@ export function Navbar() {
       frame = 0;
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;
       setProgress(scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0);
-      setSolid(window.scrollY > 40);
     };
     const onScroll = () => {
       if (frame) return;
@@ -54,11 +46,30 @@ export function Navbar() {
     };
   }, []);
 
+  return <span className="fixed left-0 top-0 z-40 h-0.5 bg-gradient-to-r from-live to-warm" style={{ width: `${progress}%` }} aria-hidden />;
+}
+
+export function Navbar() {
+  const pathname = usePathname() || '/';
+  const locale = getLocale(pathname);
+  const navLinks = navByLocale[locale];
+  const otherPath = otherLocalePath(locale, pathname);
+  const otherLabel = locale === 'en' ? 'العربية' : 'English';
+  const [solid, setSolid] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const update = () => setSolid(window.scrollY > 40);
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+    return () => window.removeEventListener('scroll', update);
+  }, []);
+
   useEffect(() => setMobileOpen(false), [pathname]);
 
   return (
     <header className={`fixed inset-x-0 top-0 z-30 border-b transition-colors duration-300 ${solid ? 'border-line bg-background/72 backdrop-blur-xl' : 'border-transparent'}`}>
-      <span className="fixed left-0 top-0 z-40 h-0.5 bg-gradient-to-r from-live to-warm" style={{ width: `${progress}%` }} aria-hidden />
+      <ScrollProgress />
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-3 px-6 lg:px-8">
         <Link href={localePath(locale)} className="flex min-w-0 items-center gap-3 text-[14.5px] font-semibold">
           {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -35,7 +35,7 @@ export const defaultMetadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image' as const,
-    title: siteConfig.name,
+    title: siteConfig.title,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
   },
@@ -57,7 +57,7 @@ function localizedPaths(path: string) {
   return { en: path || '/', ar: path === '/' ? '/ar' : `/ar${path}` };
 }
 
-export function generatePageMetadata(overrides: { title?: string; description?: string; path?: string; ogImage?: string; noIndex?: boolean; localized?: boolean } = {}): Metadata {
+export function generatePageMetadata(overrides: { title?: string; description?: string; path?: string; ogImage?: string; ogImageAlt?: string; noIndex?: boolean; localized?: boolean } = {}): Metadata {
   const path = overrides.path || '/';
   const url = `${siteConfig.url}${path === '/' ? '' : path}`;
   const language = path === '/ar' || path.startsWith('/ar/') ? 'ar' : 'en';
@@ -65,6 +65,8 @@ export function generatePageMetadata(overrides: { title?: string; description?: 
   const paths = localizedPaths(path);
   const title = overrides.title || siteConfig.title;
   const description = overrides.description || (language === 'ar' ? siteConfig.arabicDescription : siteConfig.description);
+  const ogImage = overrides.ogImage || siteConfig.ogImage;
+  const ogImageAlt = overrides.ogImageAlt || title;
   return {
     title,
     description,
@@ -75,6 +77,7 @@ export function generatePageMetadata(overrides: { title?: string; description?: 
         'ar-EG': `${siteConfig.url}${paths.ar === '/' ? '' : paths.ar}`,
         'x-default': `${siteConfig.url}${paths.en === '/' ? '' : paths.en}`,
       } : undefined,
+      types: { 'application/rss+xml': `${siteConfig.url}/feed.xml${language === 'ar' ? '?lang=ar' : ''}` },
     },
     openGraph: {
       type: 'website',
@@ -84,9 +87,9 @@ export function generatePageMetadata(overrides: { title?: string; description?: 
       url,
       locale: language === 'ar' ? 'ar_EG' : 'en_US',
       alternateLocale: language === 'ar' ? ['en_US'] : ['ar_EG'],
-      images: [{ url: overrides.ogImage || siteConfig.ogImage, width: 1200, height: 630 }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: ogImageAlt }],
     },
-    twitter: { card: 'summary_large_image', title, description, images: [overrides.ogImage || siteConfig.ogImage] },
+    twitter: { card: 'summary_large_image', title, description, images: [ogImage] },
     robots: {
       index: !overrides.noIndex,
       follow: true,
@@ -109,6 +112,6 @@ export function generateBlogMetadata(locale: 'en' | 'ar', params: { page?: strin
     title: locale === 'ar' ? `الكتابة${page > 1 ? ` — صفحة ${page}` : ''}` : `Writing${page > 1 ? ` — Page ${page}` : ''}`,
     description: locale === 'ar' ? 'مقالات في DevOps والبنية التحتية السحابية وهندسة المنصات وأنظمة الذكاء الاصطناعي العملية من أحمد أكرم السادة.' : 'Articles on DevOps, Docker, Kubernetes, CI/CD, cloud infrastructure, platform engineering, and practical AI systems by Ahmed Ekram Alsada.',
     path,
-    noIndex: Boolean(params.q?.trim() || (params.category && params.category !== 'all')),
+    noIndex: page > 1 || Boolean(params.q?.trim() || (params.category && params.category !== 'all')),
   });
 }

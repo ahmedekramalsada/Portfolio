@@ -6,6 +6,7 @@ export interface Env {
   CONTENT_API_USER_EMAIL: string;
   ALLOWED_ORIGINS: string;
   AUTH_SIGNING_KEY: string;
+  TURNSTILE_SECRET?: string;
 }
 
 export interface UserRecord {

@@ -1,6 +1,9 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { localePath } from '@/lib/site-content';
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function NotFoundPage() {
   const locale = (await headers()).get('x-ahmed-locale') === 'ar' ? 'ar' : 'en';

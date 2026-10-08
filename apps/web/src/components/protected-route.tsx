@@ -1,26 +1,31 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading, fetchMe, accessToken } = useAuthStore();
+  const { isAuthenticated, isLoading, fetchMe } = useAuthStore();
+  const [checking, setChecking] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    if (accessToken && !isAuthenticated) {
-      fetchMe();
-    }
-  }, [accessToken, isAuthenticated, fetchMe]);
+    let cancelled = false;
+    fetchMe().finally(() => {
+      if (!cancelled) setChecking(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchMe]);
 
   useEffect(() => {
-    if (!isLoading && !accessToken) {
+    if (!checking && !isLoading && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isLoading, accessToken, router]);
+  }, [checking, isLoading, isAuthenticated, router]);
 
-  if (!accessToken) {
+  if (checking || isLoading || !isAuthenticated) {
     return (
       <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center">
         <p className="text-muted-foreground">Redirecting to login...</p>

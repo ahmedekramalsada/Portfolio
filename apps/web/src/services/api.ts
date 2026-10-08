@@ -5,6 +5,7 @@ export { API_BASE_URL };
 interface RequestOptions {
   headers?: Record<string, string>;
   params?: Record<string, string | number>;
+  signal?: AbortSignal;
 }
 
 class ApiClient {
@@ -39,6 +40,7 @@ class ApiClient {
       headers,
       body: body ? JSON.stringify(body) : undefined,
       credentials: 'include',
+      signal: options?.signal,
     });
 
     if (!response.ok) {
