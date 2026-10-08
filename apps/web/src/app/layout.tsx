@@ -26,6 +26,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     name: siteConfig.name,
     alternateName: siteConfig.arabicName,
     url: siteConfig.url,
+    image: siteConfig.portrait,
+    description: siteConfig.description,
     jobTitle: 'DevOps Engineer',
     sameAs: [siteConfig.links.github, siteConfig.links.linkedin],
     knowsAbout: ['DevOps', 'Docker', 'Kubernetes', 'CI/CD', 'Cloud infrastructure', 'AI systems'],
@@ -47,7 +49,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang={locale === 'ar' ? 'ar-EG' : 'en-US'} dir={locale === 'ar' ? 'rtl' : 'ltr'} className="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
-        {(pathname === '/' || pathname === '/ar') && <link rel="preload" as="image" href="/profile-152.webp" imageSrcSet="/profile-152.webp 1x, /profile-304.webp 2x" fetchPriority="high" />}
+        {(pathname === '/' || pathname === '/ar') && <link rel="preload" as="image" href="/ahmed-ekram-alsada-152.webp" imageSrcSet="/ahmed-ekram-alsada-152.webp 1x, /ahmed-ekram-alsada-304.webp 2x" fetchPriority="high" />}
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <Script id="person-jsonld" type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={getJsonLdScript(JSON.stringify(personJsonLd))} />

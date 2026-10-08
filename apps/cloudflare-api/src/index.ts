@@ -646,7 +646,7 @@ async function feed(env: Env, url: URL) {
 }
 
 function jsonLdPerson(site: string) {
-  return { '@context': 'https://schema.org', '@type': 'Person', name: 'Ahmed Ekram Alsada', alternateName: 'أحمد أكرم السادة', url: site, jobTitle: 'DevOps Engineer', workLocation: { '@type': 'Place', name: 'Cairo, Egypt' }, knowsLanguage: ['Arabic', 'English'] };
+  return { '@context': 'https://schema.org', '@type': 'Person', name: 'Ahmed Ekram Alsada', alternateName: 'أحمد أكرم السادة', url: site, image: `${site}/ahmed-ekram-alsada.webp`, description: 'Ahmed Ekram Alsada is a DevOps Engineer building reliable cloud platforms and AI-powered business systems.', jobTitle: 'DevOps Engineer', sameAs: ['https://github.com/ahmedekramalsada', 'https://www.linkedin.com/in/ahmedekramalsada'], workLocation: { '@type': 'Place', name: 'Cairo, Egypt' }, knowsLanguage: ['Arabic', 'English'] };
 }
 
 async function route(request: Request, env: Env): Promise<Response> {

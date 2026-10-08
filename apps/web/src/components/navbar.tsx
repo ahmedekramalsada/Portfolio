@@ -62,7 +62,7 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-3 px-6 lg:px-8">
         <Link href={localePath(locale)} className="flex min-w-0 items-center gap-3 text-[14.5px] font-semibold">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-           <img src="/profile-64.webp" alt="" width={32} height={32} className="h-8 w-8 shrink-0 rounded-full border border-line-2 object-cover" style={{ objectPosition: '50% 20%' }} />
+           <img src="/ahmed-ekram-alsada-64.webp" alt="Ahmed Ekram Alsada" width={32} height={32} className="h-8 w-8 shrink-0 rounded-full border border-line-2 object-cover" style={{ objectPosition: '50% 20%' }} />
           <span className="truncate">{locale === 'ar' ? 'أحمد أكرم السادة' : 'Ahmed Ekram Alsada'}</span>
         </Link>
 

@@ -17,16 +17,20 @@ function isoDate(value?: string | null): string | undefined {
 export function buildSitemap(base: string, posts: SitemapPost[], projects: SitemapProject[]): string {
   const site = base.replace(/\/$/, '');
   const entries: string[] = [];
-  const entry = (path: string, alternates?: { en: string; ar: string }, updated?: string | null) => {
+  const portrait = `${site}/ahmed-ekram-alsada.webp`;
+  const portraitCaption = 'Ahmed Ekram Alsada — DevOps Engineer';
+  const imageTag = (loc: string, caption = portraitCaption) => `<image:image><image:loc>${xmlEscape(loc)}</image:loc><image:caption>${xmlEscape(caption)}</image:caption><image:title>${xmlEscape('Ahmed Ekram Alsada')}</image:title></image:image>`;
+  const entry = (path: string, alternates?: { en: string; ar: string }, updated?: string | null, images?: string) => {
     const date = isoDate(updated);
     const links = alternates ? [['en-US', alternates.en], ['ar-EG', alternates.ar], ['x-default', alternates.en]]
       .map(([language, url]) => `<xhtml:link rel="alternate" hreflang="${language}" href="${xmlEscape(site + url)}"/>`).join('') : '';
-    entries.push(`<url><loc>${xmlEscape(site + path)}</loc>${date ? `<lastmod>${date}</lastmod>` : ''}${links}</url>`);
+    entries.push(`<url><loc>${xmlEscape(site + path)}</loc>${date ? `<lastmod>${date}</lastmod>` : ''}${links}${images || ''}</url>`);
   };
   for (const path of ['', '/about', '/blog', '/projects', '/contact']) {
     const alternates = { en: path, ar: `/ar${path}` };
-    entry(alternates.en, alternates);
-    entry(alternates.ar, alternates);
+    const images = path === '' || path === '/about' ? imageTag(portrait) : '';
+    entry(alternates.en, alternates, undefined, images);
+    entry(alternates.ar, alternates, undefined, images);
   }
   for (const post of posts) {
     if (post.language !== 'en' && post.language !== 'ar') continue;
@@ -40,7 +44,7 @@ export function buildSitemap(base: string, posts: SitemapPost[], projects: Sitem
     entry(alternates.en, alternates, project.updated_at);
     entry(alternates.ar, alternates, project.updated_at);
   }
-  return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${entries.join('')}</urlset>`;
+  return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">${entries.join('')}</urlset>`;
 }
 
 export function buildRobots(base: string): string {

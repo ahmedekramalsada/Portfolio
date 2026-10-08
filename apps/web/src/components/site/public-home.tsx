@@ -40,7 +40,7 @@ export async function PublicHome({ locale }: { locale: Locale }) {
         name: locale === 'ar' ? 'أحمد أكرم السادة — مهندس DevOps' : 'Ahmed Ekram Alsada — DevOps Engineer',
         url: `https://ahmedekram.site${localePath(locale)}`,
         inLanguage: locale === 'ar' ? 'ar-EG' : 'en-US',
-        mainEntity: { '@type': 'Person', name: locale === 'ar' ? 'أحمد أكرم السادة' : 'Ahmed Ekram Alsada', jobTitle: 'DevOps Engineer', url: `https://ahmedekram.site${localePath(locale, '/about')}`, sameAs: [CONTACT.github, CONTACT.linkedin] },
+        mainEntity: { '@type': 'Person', name: locale === 'ar' ? 'أحمد أكرم السادة' : 'Ahmed Ekram Alsada', alternateName: locale === 'ar' ? 'Ahmed Ekram Alsada' : 'أحمد أكرم السادة', jobTitle: 'DevOps Engineer', url: `https://ahmedekram.site${localePath(locale, '/about')}`, image: 'https://ahmedekram.site/ahmed-ekram-alsada.webp', description: t.heroBody, sameAs: [CONTACT.github, CONTACT.linkedin] },
         description: t.heroBody,
       }} />
       <MotionProvider />
@@ -51,14 +51,14 @@ export async function PublicHome({ locale }: { locale: Locale }) {
             <div className="relative h-[152px] w-[152px]">
               <span className="absolute -inset-1 rounded-full bg-gradient-to-br from-warm/35 to-live/25 blur-[10px]" aria-hidden />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/profile-152.webp" srcSet="/profile-152.webp 1x, /profile-304.webp 2x" alt="Ahmed Ekram Alsada" width={152} height={152} fetchPriority="high" className="relative h-[152px] w-[152px] rounded-full border border-line-2 object-cover" style={{ objectPosition: '50% 20%' }} />
+              <img src="/ahmed-ekram-alsada-152.webp" srcSet="/ahmed-ekram-alsada-152.webp 1x, /ahmed-ekram-alsada-304.webp 2x" alt="Ahmed Ekram Alsada — DevOps Engineer" title="Ahmed Ekram Alsada" width={152} height={152} fetchPriority="high" className="relative h-[152px] w-[152px] rounded-full border border-line-2 object-cover" style={{ objectPosition: '50% 20%' }} />
             </div>
             <div className="inline-flex items-center gap-2.5 rounded-full border border-line bg-card px-3.5 py-2 font-mono text-[11.5px] uppercase tracking-[.09em] text-muted-foreground"><span className="pulse-dot block h-1.5 w-1.5 rounded-full bg-ok" />{locale === 'ar' ? 'مهندس DevOps' : 'DevOps Engineer'}</div>
           </div>
           <div>
             <span className="label">{t.aboutTitle}</span>
-            <h1 className="mt-4 text-[clamp(1.9rem,5vw,3.2rem)] font-semibold leading-[1.1] tracking-[-.035em]">{locale === 'ar' ? 'من أنا' : 'Who I am'}</h1>
-            <p className="mt-2 text-[clamp(1.4rem,4vw,2.2rem)] font-semibold leading-[1.15] tracking-[-.03em] text-warm">{locale === 'ar' ? 'أحمد أكرم السادة' : 'Ahmed Ekram Alsada'}</p>
+            <p className="mt-4 text-[clamp(1.9rem,5vw,3.2rem)] font-semibold leading-[1.1] tracking-[-.035em]">{locale === 'ar' ? 'من أنا' : 'Who I am'}</p>
+            <h1 className="mt-2 text-[clamp(1.4rem,4vw,2.2rem)] font-semibold leading-[1.15] tracking-[-.03em] text-warm">{locale === 'ar' ? 'أحمد أكرم السادة' : 'Ahmed Ekram Alsada'}</h1>
             <p className="mt-4 max-w-[58ch] text-[15.5px] leading-relaxed text-muted-foreground">{t.aboutBody}</p>
             <Link href={localePath(locale, '/about')} className="mt-7 inline-flex min-h-[40px] items-center text-[14px] text-warm hover:underline">{t.seeAbout} →</Link>
             <div className="atlas-about-signals">{signals.map((item) => <div key={item.label}><span>{item.label}</span><strong>{item.value}</strong></div>)}</div>
