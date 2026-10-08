@@ -1,0 +1,34 @@
+{
+  "name": "@ahmed-os/video",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf out .turbo",
+    "render:title": "remotion render TitleCard out/title.mp4",
+    "render:title-vertical": "remotion render TitleCardVertical out/title-vertical.mp4",
+    "render:project": "remotion render ProjectShowcase out/project.mp4",
+    "render:zero-downtime": "remotion render ZeroDowntimeDeploys out/zero-downtime-deploys.mp4",
+    "preview:nex": "remotion still NexReferenceComparison out/nex-reference-comparison.png --frame 0",
+    "render:nex": "remotion render NexReferenceDemo out/nex-reference-demo.mp4",
+    "preview:nex-code": "remotion still NexProceduralComparison out/nex-procedural-comparison.png --frame 0",
+    "render:nex-code": "remotion render NexProceduralDemo out/nex-procedural-demo.mp4",
+    "render:ai-robot": "remotion render AiRobotOriginal out/ai-robot-original.mp4",
+    "render:ai-robot-education": "remotion render AiRobotEducation out/ai-robot-education.mp4",
+    "render:ai-robot-showcase": "remotion render AiRobotShowcase out/ai-robot-showcase.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.350",
+    "@remotion/lottie": "4.0.532",
+    "lottie-web": "5.12.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "remotion": "^4.0.350"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.5.0"
+  }
+}
